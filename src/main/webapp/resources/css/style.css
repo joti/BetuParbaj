@@ -1,0 +1,966 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2018.12.31., 0:56:35
+    Author     : Joti
+*/
+
+/* NetBeans does not support css variables :(
+
+   lightgreen1: #f9faee; // RGB: 249 250 238
+   lightgreen2: #f4f6e9; // RGB: 244 246 233 // háttér négyzetrács kitöltőszíne
+   midgreen1: #dee4b9; // RGB: 222 228 185
+   midgreen2: #c6ce92; // RGB: 198 206 146
+   midgreen3: #919b55; // RGB: 145 155 85
+   darkgreen1: #808571; // RGB: 128	133	113 // pl. gombok szövege
+   darkgreen2: #555c23; // RGB: 85 92 35 // pl. cím 
+   gray1: #d9d8bf // RGB: 217 216 191 // Keretek alsó és jobboldala
+*/
+
+#table_game {
+  opacity: 0.8;
+}
+
+#drawmoderadio label {
+  margin-right: 55 px;
+}
+
+.text {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: normal;
+  color: #555C23;
+  line-height: 1.7;
+}
+
+.textsmall {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: normal;
+  color: #555C23;
+  line-height: 1;
+}
+
+.inputname {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: normal;
+  color: #555C23;
+  line-height: 1;
+  /*background-color: #f8fceb;*/
+  padding: 2px;
+  padding-bottom: 1px;
+  background: transparent;
+  border-width: 0 0 2px;
+  border-color: #808571;
+}
+
+.inputtextsmall {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;	
+  color: #555C23;
+  line-height: 1;
+  background-color: #f4f6e9;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #707561;
+  border-right-color: #707561;
+  padding: 3px;
+  overflow-y:scroll;
+  resize: none;
+}
+
+.rulestext {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  color: #555C23;
+  line-height: 1;
+  background-color: #f9faee;
+  padding: 3px;
+  resize: none;
+  transform:scale(0.9,1.0);
+  transform-origin: left center;
+}
+
+.inputtextchatsmall {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  transform:scale(0.8,1.0);
+  transform-origin: left center;
+  color: #555C23;
+  line-height: 1;
+  background-color: #f4f6e9;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #707561;
+  border-right-color: #707561;
+  padding: 3px;
+  overflow-y:scroll;
+  resize: none;
+  box-shadow: none;
+}
+
+.idtext {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  transform:scale(0.8,1.0);
+  transform-origin: right center;
+  color: #555C23;
+  line-height: 1;
+  padding: 3px;
+  resize: none;
+}
+
+.errortext {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: normal;
+  color: red;
+  line-height: 1;
+}
+
+.tooltiptext { 
+  background: #F9FAEE;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  font-weight: normal;
+  color: #808571;
+  line-height: 1.2;
+}
+
+.gridheader {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: bold;
+  color: #808571;
+  background-color: #f7fbea;
+}
+
+.gameareatitle {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: bold;
+  color: #808571;
+  line-height: 1.7;
+}
+
+.gamearea { 
+  background: transparent;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  float:left;    
+}
+
+.gamesetuparea { 
+  background: transparent;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  float:left;   
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  font-weight: normal;
+  color: #808571;
+  line-height: 1.2;
+}
+
+.gamebg { 
+  background: #F9FAEE;
+  border-width: 0px;
+  opacity: 0.8;
+}
+
+.gamesetupframe { 
+  background: transparent;
+  border-width: 1px;
+  border-style: dotted;
+  border-left-color: #d9d8bf; 
+  border-top-color: #d9d8bf; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  /*opacity: 0.8;*/
+}
+
+.gameidarea { 
+  background: transparent;
+  border-width: 0px;
+  float:left;   
+  line-height: 1;
+  text-align: right;
+}
+
+.invisible {
+  visibility: hidden;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  width: 0px;
+  height: 0px;
+}
+
+.loginbutton {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;	
+  font-weight: bold;
+  border: 2px solid;
+  border-radius: 5px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  outline: 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 9px;
+  padding-right: 8px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.loginbutton:hover {
+  background-color: #c6ce92;
+}
+
+.gamebutton {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;	
+  font-weight: bold;
+  border: 2px solid;
+  border-radius: 5px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  outline: 0;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 7px;
+  padding-right: 7px;
+  display: inline-block;
+  text-shadow: 0px 1px 0px white;
+}
+
+.gamebutton:hover {
+  background-color: #c6ce92;
+}
+
+.gamebutton:disabled {
+  color: #A0A591;
+  border-color: #A0A591;
+  background-color: #f9faee;
+}
+
+.button2 {
+  height: 30px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: bold;
+  border: 2px solid;
+  border-radius: 4px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  outline: 0;
+  padding: 3px;
+  padding-left: 7px;
+  padding-right: 7px;
+  text-align: center;
+  box-shadow: 0 0 0 0;
+  text-shadow: 0px 1px 0px white;
+}
+
+.button2:hover {
+  background-color: #c6ce92;
+}
+
+.buttonsmall {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;	
+  font-weight: bold;
+  border: 2px solid;
+  border-radius: 3px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  outline: 0;
+  padding: 2px;
+  height: 24px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.buttonsmall:hover {
+  background-color: #c6ce92;
+}
+
+.buttonsmall2 {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;	
+  font-weight: bold;
+  border: 2px solid;
+  border-radius: 3px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  outline: 0;
+  height: 24px;
+  margin-bottom: 4px;
+  padding: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
+  transform:scale(0.85,1.0);
+  transform-origin: left center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.buttonsmall2:hover {
+  background-color: #c6ce92;
+}
+
+.buttonsmall2:disabled {
+  color: #A0A591;
+  border-color: #A0A591;
+  background-color: #f9faee;
+}
+
+.buttonsmall3 {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;	
+  font-weight: bold;
+  width: 25px;
+  height: 25px;
+  border: 2px solid;
+  border-radius: 2px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  outline: 0;
+  padding: 1px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.buttonsmall3:hover {
+  background-color: #c6ce92;
+}
+
+.buttonsmall4 {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;	
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border: 2px solid;
+  border-radius: 2px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  outline: 0;
+  padding: 0px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.buttonsmall4:hover {
+  background-color: #c6ce92;
+}
+
+.buttonsmall5 {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border: 2px solid;
+  border-radius: 2px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  background-position-x: -145px;
+  background-position-y: -80px;
+  background-image: url("/betuparbaj/images/bp-icons.png");  
+  outline: 0;
+  padding: 0px;
+  margin-right: 13px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.buttonsmall5:hover {
+  background-color: #c6ce92;
+}
+
+.buttonsmall6 {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border: 2px solid;
+  border-radius: 2px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  background-position-x: -130px;
+  background-position-y: -80px;
+  background-image: url("/betuparbaj/images/bp-icons.png");  
+  outline: 0;
+  padding: 0px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.buttonsmall6:hover {
+  background-color: #c6ce92;
+}
+
+.table1header{
+  border: 1px solid;
+  border-color: #808571;
+  background-color: #C6CE92;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: bold;
+  text-align: left;
+  color: #555C23;
+  line-height: 1.4;
+  padding: 1px;
+  padding-left: 10px;
+}
+
+.lobbytable{
+  /*border-collapse: collapse;*/
+  border: 0px solid;
+  border-color: #808571;
+  border-bottom-color: #d9d8bf;
+  border-right-color: #d9d8bf;
+  /*background-color: #a8aceb;*/
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  font-weight: normal;
+  color: #808571;
+  line-height: 1.2;
+  padding: 3px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+/*.table1 tr:nth-child(even){
+    background-color: #eaecdc;
+}*/
+
+.lobbyrowborder {
+  border: 2px solid; 
+  border-color: #808571;
+  border-bottom-color: #b9b89f;
+  border-right-color: #b9b89f;
+  border-top-color: #d9d8bf;
+  border-left-color: #d9d8bf;
+  margin: 3px; 
+  margin-top: 7px;
+  margin-bottom: 0px;
+  padding: 1px;
+  background: transparent;
+} 
+
+.lobbytablerow{
+  border-collapse: collapse;
+  border-width: 0px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: normal;
+  background: rgba(188,196,166,0.2);
+  color: #808571;
+  line-height: 1.2;
+  margin: 0px;
+}
+
+.lobbyrowplayers{
+  table-layout: fixed ;
+  width: 100% ;  
+  border-collapse: collapse;
+  border: 0px;
+  background: transparent;
+}
+
+.lobbyrowplayers td{
+  width: 25%;  
+  text-align: left;
+}
+
+.lobbyrowplayer{
+  display: inline-block;
+  padding: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 20px;
+  width: 90%;
+  font-weight: bold;
+  color: #656E28;
+  text-overflow: ellipsis;
+  margin-left: 3px;
+  margin-top: 2px;
+  vertical-align: middle;
+  border-radius: 2px;
+  border: 2px solid #cad1a5;
+  background-color: rgba(198,206,146,0.4);
+}
+
+.lobbyrowrules{
+  table-layout: fixed ;
+  width: 100% ;  
+  border-collapse: collapse;
+  vertical-align: middle;
+}
+
+.lobbyrowrulescol1{
+  width: 80%;
+  height: 25px;
+  max-height: 25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.lobbyrowrulescol2{
+  width: 20%;
+  text-align: right;
+}
+
+.lobbyrowrule{
+  display: inline-block;
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-left: 8px;
+  margin-bottom: 2px;
+  height: 20px;
+  font-size: 12px;
+  border-radius: 2px;
+  border: 1px solid #ced4a9;
+  background-color: rgba(249,250,238,0.5);
+  vertical-align: middle;
+}
+
+.lobbyrowimage{
+  max-width:20px;
+  max-height:20px;
+  width: auto;
+  height: auto;  
+  vertical-align: middle;
+}
+
+.adminplimage{
+  max-width:15px;
+  max-height:15px;
+  width: auto;
+  height: auto;  
+  vertical-align: text-bottom;
+}
+
+.dialogtable{
+  border: 2px solid;
+  border-color: #808571;
+  background-color: #f8fceb;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;	
+  font-weight: normal;
+  color: #808571;
+  line-height: 1.5;
+  padding: 3px;
+}
+
+.gameoptionspg {
+
+}
+
+.gamemainpg {
+
+}
+
+.mainpg {
+
+}
+
+.ui-tooltip {
+  border: 1px solid #ccc;
+  box-shadow: 0 0 2px 0 #ddd;
+  -moz-box-shadow: 0 0 10px 0 #ddd;
+  -webkit-box-shadow: 0 0 10px 0 #ddd;
+}
+
+.ui-state-disabled{
+  opacity: 0.7;
+}
+
+/**********************************/
+/* p:selectOneRadio elemei        */
+/**********************************/
+.select2 {
+  background: transparent;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  font-weight: normal;
+}
+
+.select2 label {
+  margin-left: 8px;
+  margin-right: 5px;
+}
+
+.select2 label.ui-state-disabled{
+  opacity: 1.0;
+}
+
+.select2 .ui-radiobutton.ui-widget{
+}
+
+.select2 .ui-radiobutton-box.ui-widget.ui-corner-all.ui-state-default.ui-state-active{
+  width: 15px;
+  height: 15px;
+  border-width: 2px;
+  border-color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+}
+
+.select2 .ui-radiobutton-box.ui-widget.ui-corner-all.ui-state-default{
+  width: 15px;
+  height: 15px;
+  border-width: 2px;
+  border-color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  box-shadow: none;
+}
+
+.select2 .ui-radiobutton-box.ui-widget.ui-corner-all.ui-state-hover{
+  background: #c6ce92 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  box-shadow: none;
+}
+
+.select2 .ui-radiobutton-icon.ui-icon.ui-icon-bullet{
+  background-position-x: -81px;
+  background-position-y: -144px;
+  background-image: url("/betuparbaj/images/bp-icons.png");
+}
+
+/**********************************/
+/* p:selectOneMenu elemei         */
+/**********************************/
+.select3 {
+  background: transparent;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;	
+  font-weight: normal;
+  height: 20px;
+  border-width: 2px;
+  border-color: #808571;
+  box-shadow: none;
+}
+
+.select3 label {
+  background: transparent;
+  font-family: "Courier New", Courier, monospace;
+  box-shadow: none;
+  padding: 3px;
+  font-size: 13px;	
+  color: #808571;
+}
+
+.select3 .ui-selectonemenu-trigger.ui-state-default.ui-corner-right{
+  box-shadow: none;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  width: 11px;
+}
+
+.select3 .ui-selectonemenu-trigger.ui-state-default.ui-corner-right.ui-state-hover{
+  box-shadow: none;
+  background: #c6ce92 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+}
+
+.select3 .ui-icon.ui-icon-triangle-1-s.ui-c{
+  background-position-x: -67px;
+  background-position-y: -16px;
+  background-image: url("/betuparbaj/images/bp-icons.png");
+}
+
+.select3 .ui-widget-content{
+  background: transparent;
+}
+
+.select3 .ui-selectonemenu-panel .ui-selectonemenu-list{
+  background: transparent;
+}
+
+.select3 .ui-selectonemenu-label{
+  font-family: "Courier New", Courier, monospace;
+  box-shadow: none;
+  font-size: 13px;	
+}
+
+.ui-selectonemenu-panel{
+  background: #f9faee;
+}
+
+.ui-selectonemenu-items-wrapper{
+  background: #f9faee;
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-list{
+  background: #f9faee;
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-item{
+  font-family: "Courier New", Courier, monospace;
+  color: #808571;
+  font-size: 13px;	
+  background: #f9faee;
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-item.ui-state-hover{
+  box-shadow: 1px 1px 1px 1px #808571;
+  text-shadow: 0px 1px 0px white;
+  background: #f9faee;
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-item.ui-state-highlight{
+  box-shadow: 1px 1px 1px 1px #808571;
+  text-shadow: 0px 1px 0px white;
+  font-weight: bold;
+  background: #f4f6e9;
+}
+
+/**********************************/
+/* p:selectBooleanCheckbox elemei */
+/**********************************/
+
+.select1.ui-chkbox.ui-widget{
+  width: 16px;
+  height: 16px;
+  border: none;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+}
+
+.select1 .ui-chkbox-box.ui-widget.ui-corner-all.ui-state-default{
+  width: 15px;
+  height: 15px;
+  background: transparent;
+  border: 2px solid;
+  border-radius: 2px;
+  border-color: #808571;
+}
+
+.select1 .ui-chkbox-box.ui-widget.ui-corner-all.ui-state-default.ui-state-hover{
+  background: #c6ce92 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  box-shadow: none;
+  border: 2px solid;
+  border-radius: 2px;
+  border-color: #808571;
+}
+
+.select1 .ui-chkbox-box.ui-widget.ui-corner-all.ui-state-default.ui-state-disabled{
+  background-color: #f9faee;
+  text-shadow: none;
+  opacity: 0.7;
+  border: 2px solid;
+  border-radius: 2px;
+  border-color: #808571;
+}
+
+.select1 .ui-chkbox-box.ui-widget.ui-corner-all.ui-state-default.ui-state-active{
+  width: 15px;
+  height: 15px;
+  background: transparent;
+  border: 2px solid;
+  border-radius: 2px;
+  border-color: #808571;
+}
+
+.select1 .ui-chkbox-box.ui-widget.ui-corner-all.ui-state-default.ui-state-active.ui-state-hover{
+  background: #c6ce92 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  box-shadow: none;
+  border: 2px solid;
+  border-radius: 2px;
+  border-color: #808571;
+}  
+
+.select1 .ui-chkbox-box.ui-widget.ui-corner-all.ui-state-default.ui-state-active.ui-state-disabled{
+  background-color: #f9faee;
+  text-shadow: none;
+  opacity: 0.7;
+  border: 2px solid;
+  border-radius: 2px;
+  border-color: #808571;
+}
+  
+.select1 .ui-chkbox-icon.ui-icon-check {
+  width: 15px;
+  height: 15px;
+  background-position-x: -97px;
+  background-position-y: -128px;
+  background-image: url("/betuparbaj/images/bp-icons.png");
+}
+
+.select1 .ui-icon-box {
+  width: 15px;
+  height: 15px;
+  color: red;
+}
+
+/************************/
+/* ConfirmDialog elemei */
+/************************/
+
+.confirmdialog{
+  position: absolute;
+  left: 50% !important;
+  top: 250px !important;
+  background-color: #f8fceb;
+  font-family: "Courier New", Courier, monospace;
+  border: 2px solid;
+  border-color: #808571;
+}
+
+/* Fejléc */
+div.ui-dialog-titlebar.ui-widget-header.ui-helper-clearfix.ui-corner-top {
+  background-color: #dee4b9;
+}
+
+/* "Megerősítés" szöveg */
+span.ui-dialog-title{
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;	
+  font-weight: bold;
+  color: #808571;
+}
+
+/* x a sarokban */
+.ui-dialog-titlebar-icon.ui-dialog-titlebar-close.ui-corner-all{
+  background-color: #dee4b9;
+}
+
+/* Ikon eltüntetése a kérdés mellől */
+.ui-dialog-content > .ui-icon {
+  display: none;
+}
+
+/* kérdés szövege */
+span.ui-confirm-dialog-message {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;	
+  font-weight: normal;
+  color: #808571;
+}
+
+/* gombok befoglalója */
+.ui-dialog-buttonpane.ui-dialog-footer.ui-widget-content.ui-helper-clearfix{
+  background-color: #f9faee;
+  color: #808571;
+  text-align: center;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+/* "Igen" gomb */
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.ui-confirmdialog-yes{
+  color:#808571;
+  width: 80px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: bold;
+  border: 2px solid;
+  border-radius: 4px;
+  border-color: #808571;
+  background-color: #dee4b9;
+  outline: 0;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  text-align: center;
+  box-shadow: 0 0 0 0;
+}
+
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.ui-confirmdialog-yes:hover {
+  background-color: #c6ce92;
+  box-shadow: 0 0 0 0;
+}
+
+/* "Nem" gomb */
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.ui-confirmdialog-no{
+  color:#808571;
+  width: 80px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: bold;
+  border: 2px solid;
+  border-radius: 4px;
+  border-color: #808571;
+  background-color: #dee4b9;
+  outline: 0;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  text-align: center;
+  box-shadow: 0 0 0 0;
+}
+
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.ui-confirmdialog-no:hover {
+  background-color: #c6ce92;
+  box-shadow: 0 0 0 0;
+}
+
+/* gombok szövege */
+.ui-button-text.ui-c{
+  padding: 0px 0px 0px 0px;
+  line-height: 1.0;
+}
+
+.ui-button.ui-button-text{
+  line-height: 1.0;
+}
+
+.ui-button-text-only.ui-button-text{
+  line-height: 1.0;
+  padding: 1px 1px 1px 1px;
+}
