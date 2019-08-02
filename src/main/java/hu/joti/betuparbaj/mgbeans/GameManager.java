@@ -58,10 +58,10 @@ public class GameManager implements Serializable {
     if (lobby != null) {
       Set<Integer> gamesInLobby = new HashSet<>();
       int sec = loginData.getSeconds();
-      
+
       for (Game g : lobby.getGamesInLobby()) {
         gamesInLobby.add(g.getId());
-        
+
         if (g.getMaxPlayers() <= g.getNumberOfPlayers()) {
           if (!fadedGames.contains(g.getId())) {
             if (!fadingGames.contains(g.getId())) {
@@ -79,9 +79,9 @@ public class GameManager implements Serializable {
           fadedGames.remove(g.getId());
         }
       }
-      
+
       for (Integer gId : fadingGames) {
-        if (!gamesInLobby.contains(gId)){
+        if (!gamesInLobby.contains(gId)) {
           if (fadingGames.remove(gId)) {
             logger.debug("Game " + gId + " is not in lobby any more at " + sec + " s");
           }
@@ -100,10 +100,13 @@ public class GameManager implements Serializable {
   }
 
   public void debug(String text) {
-    logger.debug(text);
+    if (loginData != null)
+      logger.debug(text + " (" + loginData.getName() + ")");
+    else
+      logger.debug(text);
   }
 
-  public void login(){
+  public void login() {
     loginData.doLogin();
 
     for (Game g : lobby.getGamesInLobby()) {
@@ -114,7 +117,7 @@ public class GameManager implements Serializable {
       }
     }
   }
-  
+
   public void createGame() {
     int gameId = lobby.getGameId();
     game = new Game(gameId, true, true, true, 1, 2, 4, 30);
@@ -133,8 +136,12 @@ public class GameManager implements Serializable {
   }
 
   public void quitGame() {
-    System.out.println("QUITGAME");
+    System.out.println("QUITGAME - " + loginData.getName());
     if (game != null) {
+      System.out.println("activePlayers: " + game.getNumberOfActivePlayers());
+      for (int i = 0; i < game.getBoards().size(); i++) {
+        System.out.println(i + 1 + ". játékos kilépése: " + game.getBoards().get(i).getQuitDate());
+      }
       game.removePlayer(loginData.getName());
       System.out.println(loginData.getName() + " removed from game " + game.getId());
       game = null;
@@ -191,7 +198,7 @@ public class GameManager implements Serializable {
 
   public void startGame() {
     if (game != null) {
-      game.setStartDate(new Date());
+      game.start();
       lobby.getGamesInLobby().remove(game);
       lobby.getGamesInProgress().add(game);
     }
@@ -218,42 +225,6 @@ public class GameManager implements Serializable {
     }
 
     game = null;
-  }
-
-  public String getTestString() {
-    String ts = "";
-
-    if (game != null) {
-      for (Game g : lobby.getGamesInLobby()) {
-        if (g.getId() == game.getId()) {
-          ts = g.getTestString();
-        }
-      }
-      logger.debug(loginData.getName() + " << " + ts);
-    }
-    return ts;
-  }
-
-  public void setTestString(String testString) {
-    if (game != null) {
-      logger.debug(loginData.getName() + " >> " + testString);
-      for (Game g : lobby.getGamesInLobby()) {
-        if (g.getId() == game.getId()) {
-          g.setTestString(testString);
-        }
-      }
-    }
-  }
-
-  public void appendToTestString() {
-    if (game != null) {
-      logger.debug("appendToTestString()");
-      String testString = getTestString();
-      logger.debug(testString);
-      String append = testString.length() % 10 + "";
-      logger.debug(append);
-      setTestString(testString + append);
-    }
   }
 
   public int getGameState() {
@@ -297,7 +268,7 @@ public class GameManager implements Serializable {
 
   public String getGameSetupString() {
     if (game != null) {
-      return game.getGameDataString();
+      return game.getGameSetupString();
     } else {
       return "";
     }
@@ -307,7 +278,7 @@ public class GameManager implements Serializable {
     if (game != null) {
       for (Game g : lobby.getGamesInLobby()) {
         if (g.getId() == game.getId()) {
-          return g.getGameDataString();
+          return g.getGameSetupString();
         }
       }
 
@@ -315,6 +286,18 @@ public class GameManager implements Serializable {
     } else {
       return "";
     }
+  }
+
+  public String getGameHistString() {
+    String gameHistString = "";
+    if (game != null && game.getStartDate() != null) {
+      gameHistString = game.getGameHistString();
+    }
+    if (game != null) {
+      logger.debug(game.getStartDate());
+      logger.debug(loginData.getName() + " GAMEHISTSTRING=" + gameHistString);
+    }
+    return gameHistString;
   }
 
   public void switchPlayers(int pos1, int pos2) {

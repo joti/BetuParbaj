@@ -23,9 +23,9 @@ public class Game implements Serializable {
   public static final int PLAYER_DRAW = 1;
   public static final int RANDOM_DRAW = 2;
 
-  public final static String[] TESTPLAYERS = {"Pali","Sanyiarettenthetetlensanyi","Fecó","Bruckner Szigfrid","Szilveszter","Juliska","Mariska","Ákóisz Igor","LevenGyula","Ősember","Maci Laci","Róbert Gida","Mekk Elek","szigfrid"};
+  public final static String[] TESTPLAYERS = {"Pali", "Sanyiarettenthetetlensanyi", "Fecó", "Bruckner Szigfrid", "Szilveszter", "Juliska", "Mariska", "Ákóisz Igor", "LevenGyula", "Ősember", "Maci Laci", "Róbert Gida", "Mekk Elek", "szigfrid"};
   private final static int ALPHABETSETTINGSSTRING_MODE = 2;
-  
+
   private int id;
   private List<Board> boards;
 
@@ -37,18 +37,19 @@ public class Game implements Serializable {
   private int maxPlayers;
   private int numberOfPlayers;
   private int adminPlayerPos;
+  private int numberOfActivePlayers;
   private boolean randomOrder;
   private int timeLimit;
   private Date openDate; // A játék elérhetővé válik a lobbyban, játékosok csatlakozására vár
   private Date startDate; // A játék elindul
   private Date endDate; // A játék véget ér
 
-  private String testString;
-  
+  private String[] selectedLetters;
+  private int round;
+  private int currentPlayer;
+
   public Game() {
-    boards = new ArrayList<>();
-    numberOfPlayers = 0;
-    testString = "";
+    init();
   }
 
   public Game(int id, boolean easyVowelRule, boolean noDigraph, boolean includeY, int drawmode, int minPlayers, int maxPlayers, int timeLimit) {
@@ -60,9 +61,7 @@ public class Game implements Serializable {
     this.minPlayers = minPlayers;
     this.maxPlayers = maxPlayers;
     this.timeLimit = timeLimit;
-    boards = new ArrayList<>();
-    numberOfPlayers = 0;
-    testString = "";
+    init();
   }
 
   public Game(boolean easyVowelRule, boolean noDigraph, boolean includeY, int drawmode, int minPlayers, int maxPlayers, int timeLimit) {
@@ -73,11 +72,16 @@ public class Game implements Serializable {
     this.minPlayers = minPlayers;
     this.maxPlayers = maxPlayers;
     this.timeLimit = timeLimit;
-    boards = new ArrayList<>();
-    numberOfPlayers = 0;
-    testString = "";
+    init();
   }
 
+  private void init(){
+    boards = new ArrayList<>();
+    numberOfPlayers = 0;
+    selectedLetters = new String[36];
+    round = 0;
+  }
+  
   public void addPlayer(String name) {
     Board board = new Board(name);
     boards.add(board);
@@ -88,36 +92,42 @@ public class Game implements Serializable {
 
   public void removePlayer(String name) {
     Iterator iter = boards.iterator();
-    
-    while (iter.hasNext()){
-      Board board = (Board)iter.next();
+
+    while (iter.hasNext()) {
+      Board board = (Board) iter.next();
       if (board.getName().equals(name)) {
-        iter.remove();
-        numberOfPlayers--;
+        if (startDate == null) {
+          iter.remove();
+          numberOfPlayers--;
+        } else {
+          board.setQuitDate(new Date());
+          numberOfActivePlayers--;
+        }
         break;
       }
     }
-    setAdminPlayer();
+    if (startDate == null)
+      setAdminPlayer();
   }
 
-  public void switchPlayers(int pos1, int pos2){
+  public void switchPlayers(int pos1, int pos2) {
     Board board1 = boards.get(pos1);
     boards.set(pos1, boards.get(pos2));
     boards.set(pos2, board1);
     setAdminPlayer();
   }
-  
-  public String getPlayerName(Long pos){
-    int playerpos = (int)(long)pos;
-    if (boards.size() > pos){
+
+  public String getPlayerName(Long pos) {
+    int playerpos = (int) (long) pos;
+    if (boards.size() > pos) {
       return boards.get(playerpos).getName();
     }
     if (playerpos >= minPlayers)
       return "..........?";
-    else  
+    else
       return "..........!";
   }
-  
+
   public void decMinPlayers() {
     if (minPlayers > 2) {
       minPlayers--;
@@ -150,6 +160,9 @@ public class Game implements Serializable {
 
   public void start() {
     startDate = new Date();
+    numberOfActivePlayers = numberOfPlayers;
+    round = 1;
+    currentPlayer = 0;
   }
 
   public String getSettingsString() {
@@ -164,20 +177,20 @@ public class Game implements Serializable {
 
   public String getAlphabetSettingsString() {
     String settings;
-    if (ALPHABETSETTINGSSTRING_MODE == 1){
+    if (ALPHABETSETTINGSSTRING_MODE == 1) {
       settings = "A,Á,B,C,D," + "\u2026" + " ";
       if (!easyVowelRule) {
         settings += "+Í,Ó," + "\u2026" + " ";
       }
-      if (!noDigraph){
-        settings += "+CS,GY,"+ "\u2026" + " ";
+      if (!noDigraph) {
+        settings += "+CS,GY," + "\u2026" + " ";
       }
-      if (includeY){
+      if (includeY) {
         settings += "+Y ";
       }
-    } else {  
+    } else {
       settings = "A,Á,B,C,";
-      if (!noDigraph){
+      if (!noDigraph) {
         settings += "CS,";
       } else {
         settings += "D,";
@@ -189,18 +202,18 @@ public class Game implements Serializable {
         settings += "U,Ú,Ü,Ű,";
       }
       settings += "V,";
-      if (includeY){
+      if (includeY) {
         settings += "Y,";
       }
-      if (!noDigraph){
+      if (!noDigraph) {
         settings += "Z,ZS";
       } else {
         settings += "Z";
       }
-    }  
+    }
     return settings;
   }
-  
+
   public String getCreator() {
     if (boards.size() > 0) {
       return boards.get(0).getName();
@@ -224,19 +237,41 @@ public class Game implements Serializable {
     return players;
   }
 
-  public String getGameDataString(){
-    return id + ":" + getPlayersString() + ":" + adminPlayerPos + ":" + getAlphabetSettingsString() + ":" 
-           + ":" + drawmode + ":" + timeLimit + "." + (randomOrder?"+":"-") ;
+  public String getGameSetupString() {
+    return id + ":" + getPlayersString() + ":" + adminPlayerPos + ":" + getAlphabetSettingsString() + ":"
+            + ":" + drawmode + ":" + timeLimit + "." + (randomOrder ? "+" : "-");
+  }
+
+  public String getGameHistString() {
+    String gameHist = "";
+    for (Board board : boards) {
+      if (!gameHist.isEmpty()) {
+        gameHist += "/";
+      }
+      gameHist += (board.getQuitDate() == null ? "+" : "-");
+    }
+    gameHist += ":";
+    System.out.println("round=" + round);
+    for (int i = 0; i < round; i++) {
+      if (i > 0)
+        gameHist += ",";
+      System.out.println("selLetNull=" + (selectedLetters == null));
+      if (selectedLetters[i] != null) {
+        System.out.println(i + ". betű: " + selectedLetters[i]);
+        gameHist += selectedLetters[i];
+      }
+    }
+    return gameHist;
   }
 
   public void setAdminPlayer() {
     Date minDate = new Date();
     Date joinDate;
     int pos = 0;
-    
+
     for (int i = 0; i < boards.size(); i++) {
       joinDate = boards.get(i).getJoinDate();
-      if (joinDate.before(minDate)){
+      if (joinDate.before(minDate)) {
         minDate = joinDate;
         pos = i;
       }
@@ -244,7 +279,7 @@ public class Game implements Serializable {
     System.out.println("Adminplayerpos: " + pos);
     adminPlayerPos = pos;
   }
-  
+
   public List<Board> getBoards() {
     return boards;
   }
@@ -309,7 +344,7 @@ public class Game implements Serializable {
   public void setNumberOfPlayers(int numberOfPlayers) {
     this.numberOfPlayers = numberOfPlayers;
   }
-  
+
   public boolean isRandomOrder() {
     return randomOrder;
   }
@@ -358,14 +393,6 @@ public class Game implements Serializable {
     this.openDate = openDate;
   }
 
-  public String getTestString() {
-    return testString;
-  }
-
-  public void setTestString(String testString) {
-    this.testString = testString;
-  }
-
   public int getAdminPlayerPos() {
     return adminPlayerPos;
   }
@@ -373,5 +400,37 @@ public class Game implements Serializable {
   public void setAdminPlayerPos(int adminPlayerPos) {
     this.adminPlayerPos = adminPlayerPos;
   }
-  
+
+  public int getNumberOfActivePlayers() {
+    return numberOfActivePlayers;
+  }
+
+  public void setNumberOfActivePlayers(int numberOfActivePlayers) {
+    this.numberOfActivePlayers = numberOfActivePlayers;
+  }
+
+  public String[] getSelectedLetters() {
+    return selectedLetters;
+  }
+
+  public void setSelectedLetters(String[] selectedLetters) {
+    this.selectedLetters = selectedLetters;
+  }
+
+  public int getRound() {
+    return round;
+  }
+
+  public void setRound(int round) {
+    this.round = round;
+  }
+
+  public int getCurrentPlayer() {
+    return currentPlayer;
+  }
+
+  public void setCurrentPlayer(int currentPlayer) {
+    this.currentPlayer = currentPlayer;
+  }
+
 }

@@ -85,9 +85,8 @@ public class Lobby implements Serializable {
   public String getGamesInLobbyString(){
     String gamesString = ":";
     for (Game game : gamesInLobby) {
-      gamesString += game.getGameDataString() + ";";
+      gamesString += game.getGameSetupString() + ";";
     }
-//    System.out.println("games = " + gamesString);
     return gamesString;
   }
   

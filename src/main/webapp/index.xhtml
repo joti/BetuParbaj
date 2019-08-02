@@ -133,7 +133,7 @@
 
                         <div id="lobbybuttons" style="position: absolute; top: 468px;">
                           <h:commandButton class="gamebutton" style="margin:auto;" value="Új asztal indítása" action="#{gameManager.createGame()}">
-                            <f:ajax execute="" render="pg_main pg_polls"/>
+                            <f:ajax execute="" render="pg_main"/>
                           </h:commandButton>
                           <h:commandButton id="btn_lobbyrefresh" style="display:none" action="#{gameManager.debug('lobbyrefresh')}">
                             <f:ajax render="dt_lobby"/>
@@ -355,38 +355,54 @@
                           <h:panelGroup id="pg_gamesetupbuttons" style="position: absolute; top: 468px;">
                             <h:commandButton class="gamebutton" style="width: 178px" value="Asztal eldobása" action="#{gameManager.dropGame()}"
                                              rendered="#{gameManager.game.boards.size() eq 1}">
-                              <f:ajax execute="" render="pg_main pg_polls"/>
+                              <f:ajax execute="" render="pg_main"/>
                             </h:commandButton>
                             <h:commandButton class="gamebutton" style="width: 178px" value="Asztal elhagyása" action="#{gameManager.quitGame()}"
                                              rendered="#{gameManager.game.boards.size() gt 1}">
-                              <f:ajax execute="" render="pg_main pg_polls"/>
+                              <f:ajax execute="" render="pg_main"/>
                             </h:commandButton>
                             <h:commandButton class="gamebutton" style="width: 178px; margin-left: 8px;" value="Asztal megnyitása" action="#{gameManager.openGame()}"
                                              rendered="#{gameManager.game.openDate == null}">
-                              <f:ajax execute="" render="pg_main pg_polls"/>
+                              <f:ajax execute="" render="pg_main"/>
                             </h:commandButton>
                             <h:commandButton class="gamebutton" style="width: 178px; margin-left: 8px;" value="Asztal indítása" action="#{gameManager.startGame()}" 
                                              rendered="#{gameManager.game.openDate != null}" disabled="#{gameManager.game.numberOfPlayers lt gameManager.game.minPlayers}">
-                              <f:ajax execute="" render="pg_main pg_polls"/>
+                              <f:ajax execute="" render="pg_main"/>
                             </h:commandButton>
                           </h:panelGroup>
                         </h:panelGroup> <!-- pg_gamesetup -->
 
-                        <h:panelGroup id="pg_gameplay" class="text" rendered="#{(gameManager.gameExists() == true) &amp;&amp; (gameManager.game.startDate != null)}">
+                        <h:panelGroup id="pg_gameplay" class="text" rendered="#{gameManager.isInGameState(3,4)}">
                           <div id="gameplaytitle" class="gameareatitle">>>>> Játék folyamatban:</div>
 
                           <div id="gameplaybg" class="gamebg" style='position: absolute; top: 37px; width: 547px; height: 422px'>
                           </div>
 
-                          <div id="gameplay" class="gamearea" style='position: absolute; top: 37px; width: 547px; height: 422px'>
-                            <h:graphicImage style="position: absolute; top: 56px; left: 302px;" url="/images/bp6x6.jpg" />
-                          </div>
+                          <h:panelGroup id="pg_gameplayarea" class="gamearea" style='position: absolute; top: 37px; width: 547px; height: 422px'>
+                            <h:graphicImage style="position: absolute; top: 54px; left: 302px;" url="/images/bp6x6.jpg" />
 
-                          <div id="gameplaybuttons" style="position: absolute; top: 468px;">
-                            <h:commandButton class="gamebutton" value="Játék megszakítása" action="#{gameManager.dropGame()}" rendered="#{gameManager.game.endDate == null}">
+                            <h:commandButton id="btn_playrefresh" style="display:none" action="#{gameManager.debug('playrefresh')}">
+                              <f:ajax render="pg_gameplayarea pg_gameplaybuttons"/>
+                            </h:commandButton>      
+                          </h:panelGroup>
+
+                          <h:outputText id="ot_gamehist" style="display:none"/>
+
+                          <h:panelGroup id="pg_gameplaybuttons" style="position: absolute; top: 468px;">
+                            <h:commandButton class="gamebutton" style="width: 208px" value="Játék megszakítása" action="#{gameManager.dropGame()}"
+                                             rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers eq 1}">
                               <f:ajax execute="" render="pg_main"/>
                             </h:commandButton>
-                          </div>
+                            <h:commandButton class="gamebutton" style="width: 208px" value="Asztal elhagyása" action="#{gameManager.quitGame()}"
+                                             rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers gt 1}">
+                              <f:ajax execute="" render="pg_main"/>
+                            </h:commandButton>
+
+                            <h:commandButton class="gamebutton" style="width: 208px" value="Asztal bezárása" action="#{gameManager.dropGame()}"
+                                             rendered="#{gameManager.game.endDate != null}">
+                              <f:ajax execute="" render="pg_main"/>
+                            </h:commandButton>
+                          </h:panelGroup>
                         </h:panelGroup> <!-- pg_gameplay -->
                       </h:panelGroup> <!-- pg_gamemain -->
                     </h:panelGroup> <!-- pg_main -->
@@ -473,6 +489,7 @@
                     <h:outputText id="ot_gamestate" />
                   </h:panelGroup>
                   <h:outputText id="ot_gamesetup2" style="display:block; color:blue" value="#{gameManager.getGameSetupString()}"/>
+                  <h:outputText id="ot_gamehist2" style="display:block; color:brown" value="#{gameManager.getGameHistString()}"/>
 
                   <div>
                     <h:inputTextarea id="ita_names2" class="inputtextsmall" rows="100" cols="20" style="width:287px;height:81px;float:left;display:none" 
@@ -492,7 +509,7 @@
                   </div>  
 
                   <p:poll id="poll1s" interval="1" listener="#{gameManager.refresh()}" 
-                          update="ot_seconds ot_gamestate2 ot_names ot_gamesetup2 ita_names2 ita_messages2 ita_gamesinlobby2" 
+                          update="ot_seconds ot_gamestate2 ot_names ot_gamesetup2 ot_gamehist2 ita_names2 ita_messages2 ita_gamesinlobby2" 
                           oncomplete="setMessages(xhr, status, args);"/>
 
                 </td>

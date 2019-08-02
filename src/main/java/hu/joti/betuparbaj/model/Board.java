@@ -26,6 +26,8 @@ public class Board implements Serializable {
   private int score;
   // csatlakozás időpontja
   private Date joinDate;
+  // kilépés időpontja
+  private Date quitDate;
 
   public Board() {
     letters = new String[6][6];
@@ -77,5 +79,13 @@ public class Board implements Serializable {
   public void setJoinDate(Date joinDate) {
     this.joinDate = joinDate;
   }
-  
+
+  public Date getQuitDate() {
+    return quitDate;
+  }
+
+  public void setQuitDate(Date quitDate) {
+    this.quitDate = quitDate;
+  }
+
 }

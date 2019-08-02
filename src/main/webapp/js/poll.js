@@ -71,11 +71,7 @@ function setMessages(xhr, status, args) {
       console.log("gamestate change");
       prevVal = ot_prevgamestate.innerHTML;
       newVal = ot_newgamestate.innerHTML;
-      //ot_prevgamestate.innerHTML = newVal;
-      console.log(prevVal === newVal);
-      console.log(prevVal === "");
-      console.log(newVal === "0");
-      console.log(newVal === "3");
+      ot_prevgamestate.innerHTML = newVal;
 
       if ((newVal === "0" && prevVal !== newVal && prevVal !== "") // vissza a lobbiba
       || (newVal === "3" && prevVal !== newVal)) // indul a játék
@@ -89,7 +85,7 @@ function setMessages(xhr, status, args) {
       }  
     }    
   }
-  console.log("b-bb");
+  console.log("b-b");
 
   var ot_newgamesetup = document.getElementById("pageform:ot_gamesetup2");
   console.log("gamesetup");
@@ -102,7 +98,7 @@ function setMessages(xhr, status, args) {
     if (ot_prevgamesetup !== null) {
       console.log(ot_prevgamesetup.innerHTML);
       if (ot_prevgamesetup.innerHTML !== ot_newgamesetup.innerHTML) {
-        //ot_prevgamesetup.innerHTML = ot_newgamesetup.innerHTML;
+        ot_prevgamesetup.innerHTML = ot_newgamesetup.innerHTML;
         needsetuprefresh = true;
         console.log(ot_prevgamesetup.innerHTML);
         console.log("c-c");
@@ -116,8 +112,37 @@ function setMessages(xhr, status, args) {
         btn.dispatchEvent(new Event("click"));
       }
     }
-    
   }
+
+  console.log("d-d");
+
+  var ot_newgamehist = document.getElementById("pageform:ot_gamehist2");
+  console.log("gamehist");
+  console.log(ot_newgamehist === null);
+  if (ot_newgamehist !== null) {
+    console.log(ot_newgamehist.innerHTML);
+    var needplayrefresh = false;
+    var ot_prevgamehist = document.getElementById("pageform:ot_gamehist");
+
+    if (ot_prevgamehist !== null) {
+      console.log(ot_prevgamehist.innerHTML);
+      if (ot_prevgamehist.innerHTML !== ot_newgamehist.innerHTML) {
+        ot_prevgamehist.innerHTML = ot_newgamehist.innerHTML;
+        needplayrefresh = true;
+        console.log(ot_prevgamehist.innerHTML);
+        console.log("e-e");
+      }  
+    }
+    
+    if (needplayrefresh){
+      btn = document.getElementById("pageform:btn_playrefresh");
+      if (btn !== null) {
+        console.log("PLAYREFRESH");
+        btn.dispatchEvent(new Event("click"));
+      }
+    }
+  }
+
 }
 
 
