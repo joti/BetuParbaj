@@ -5,7 +5,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough" 
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
   <f:view locale="#{chatRoom.locale}" encoding="UTF-8" contentType="text/html"> 
     <h:head>
@@ -386,6 +387,14 @@
                               <h:inputTextarea id="ita_gamemsg" class="inputtextplay" rows="7" cols="20" 
                                                style="position: absolute; top: 24px; left: 24px; width:240px; height:209px;" 
                                                readonly="true" value="#{gameManager.gameMsg}"/>
+                              <h:panelGroup id="pg_letters" style="position: absolute; top: 95px; left: 33px; width: 230px; text-align: center" 
+                                            rendered="#{gameManager.canPlayerSelectLetter()}">
+                                  <ui:repeat value="#{gameManager.letters}" var="let">
+                                    <h:commandButton id="btn_let0" class="letterbutton" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let)}" rendered="#{gameManager.canSelectLetter(let)}">
+                                      <f:ajax render="pg_gamemsg"/>
+                                    </h:commandButton>
+                                  </ui:repeat>  
+                              </h:panelGroup>
                             </h:panelGroup>
 
                             <div class="gamesetupframe" style='position: absolute; top: 14px; left: 295px; width: 237px; height: 237px;'>

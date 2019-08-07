@@ -382,6 +382,30 @@ public class Game implements Serializable {
     }
   }  
 
+  public void selectLetter(String letter){
+    selectedVowelTypes[turn] = getLetterVowelType(letter);
+    selectedLetters[turn] = letter;
+  }
+
+  public void selectLetter(int letterIndex){
+    if (letterIndex > ALPHABET.length)
+      letterIndex = 0;
+    String letter = ALPHABET[letterIndex];
+    selectedVowelTypes[turn] = getLetterVowelType(letter);
+    selectedLetters[turn] = letter;
+  }
+
+  public boolean isLetterAvailable(String letter){
+    return availableLetters.containsKey(letter);
+  }
+  
+  public boolean isLetterAvailable(int letterIndex){
+    if (letterIndex > ALPHABET.length)
+      letterIndex = 0;
+    String letter = ALPHABET[letterIndex];
+    return availableLetters.containsKey(letter);
+  }
+  
   public String drawLetter() {
     int count = 0;
     String selectedLetter = "";
@@ -624,6 +648,10 @@ public class Game implements Serializable {
 
   public void setCurrentPlayer(int currentPlayer) {
     this.currentPlayer = currentPlayer;
+  }
+
+  public Map<String, Integer> getAvailableLetters() {
+    return availableLetters;
   }
 
 }
