@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package hu.joti.betuparbaj.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Joti
  */
 public class Board implements Serializable {
+
+  public static final int BOARD_SIZE = 6;
 
   // játékos neve
   private String name;
@@ -30,7 +32,13 @@ public class Board implements Serializable {
   private Date quitDate;
 
   public Board() {
-    letters = new String[6][6];
+    letters = new String[BOARD_SIZE][BOARD_SIZE];
+    for (int i = 0; i < BOARD_SIZE; i++) {
+      for (int j = 0; j < BOARD_SIZE; j++) {
+        letters[i][j] = "";
+      }
+    }
+
     words = new ArrayList<>();
     joinDate = new Date();
   }
@@ -38,6 +46,41 @@ public class Board implements Serializable {
   public Board(String name) {
     this();
     this.name = name;
+  }
+
+  public int getLetterCount() {
+    int letterCount = 0;
+    for (int i = 0; i < BOARD_SIZE; i++) {
+      for (int j = 0; j < BOARD_SIZE; j++) {
+        if (!letters[i][j].isEmpty())
+          letterCount++;
+      }
+    }
+    return letterCount;
+  }
+
+  public void setLetter(String letter, int row, int column) {
+    letters[row][column] = letter;
+  }
+
+  public void setLetterRandom(String letter) {
+    Random rnd = new Random();
+    int letterPos;
+    int count = 0;
+
+    letterPos = rnd.nextInt(36 - getLetterCount()) + 1;
+    for (int row = 0; row < BOARD_SIZE; row++) {
+      for (int col = 0; col < BOARD_SIZE; col++) {
+        if (letters[row][col].isEmpty()){
+          count++;
+          if (count == letterPos){
+            letters[row][col] = letter;
+            System.out.println(name + " random -> " + row + "/" + col);
+            break;
+          }
+        }
+      }
+    }
   }
 
   public String getName() {

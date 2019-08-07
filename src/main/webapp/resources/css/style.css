@@ -12,6 +12,7 @@ and open the template in the editor.
 
    lightgreen1: #f9faee; // RGB: 249 250 238
    lightgreen2: #f4f6e9; // RGB: 244 246 233 // háttér négyzetrács kitöltőszíne
+   gridgreen: #b0b2a7 // RGB: 176 178 167
    midgreen1: #dee4b9; // RGB: 222 228 185
    midgreen2: #c6ce92; // RGB: 198 206 146
    midgreen3: #919b55; // RGB: 145 155 85
@@ -26,6 +27,15 @@ and open the template in the editor.
 
 #drawmoderadio label {
   margin-right: 55 px;
+}
+
+.turnsec{
+  float:right;    
+  font-family: "Courier New", Courier, monospace;
+  font-size: 20px;	
+  font-weight: bold;
+  color: red;
+  line-height: 1.2;
 }
 
 .text {
@@ -73,6 +83,24 @@ and open the template in the editor.
   padding: 3px;
   overflow-y:scroll;
   resize: none;
+}
+
+.inputtextplay {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  color: #555C23;
+  line-height: 1;
+  background-color: #f4f6e9;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: #b4b6aa; 
+  border-top-color: #b4b6aa; 
+  border-bottom-color: #b0b2a7;
+  border-right-color: #b0b2a7;
+  padding: 3px;
+  overflow: hidden;
+  resize: none;
+  text-align: center;
 }
 
 .rulestext {
@@ -203,6 +231,29 @@ and open the template in the editor.
   text-align: right;
 }
 
+.gameboard { 
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: normal;
+  color: #b0b2a7;
+}
+
+.gameplayarea { 
+  background: transparent;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  float:left;    
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: normal;
+  color: #808571;
+  line-height: 1.2;
+}
+
 .invisible {
   visibility: hidden;
   padding: 0px;
@@ -266,6 +317,53 @@ and open the template in the editor.
   color: #A0A591;
   border-color: #A0A591;
   background-color: #f9faee;
+}
+
+.boardbuttongrid{
+  table-layout: fixed ;
+  width: 100% ;  
+  border-collapse: collapse;
+  border-width: 0px;
+  border-spacing: 0px;
+  margin: 0px;
+  vertical-align: middle;
+}
+
+.boardbuttongrid td{
+  width: 29px;  
+  border-width: 0px;
+  margin: 0px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.boardbuttongrid tr{
+  height: 29px;  
+  border-width: 0px;
+  margin: 0px;
+  line-height: 1;
+}
+
+.boardbutton {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: bold;
+  border: none;
+  color: #808571;
+  background: transparent;  
+  outline: 0;
+  padding: 0px;
+  width: 26px;
+  height: 26px;
+}
+
+.boardbutton:hover {
+  background-color: #c6ce92;
+}
+
+.boardbutton:disabled {
+  color: #A0A591;
+  background: transparent;
 }
 
 .button2 {
@@ -831,7 +929,7 @@ and open the template in the editor.
   border-radius: 2px;
   border-color: #808571;
 }
-  
+
 .select1 .ui-chkbox-icon.ui-icon-check {
   width: 15px;
   height: 15px;

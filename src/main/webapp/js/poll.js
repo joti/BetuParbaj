@@ -114,6 +114,41 @@ function setMessages(xhr, status, args) {
     }
   }
 
+  console.log("ff-f");
+
+  var ot_newturnsec = document.getElementById("pageform:ot_turnsec2");
+  console.log("turnsec");
+  console.log(ot_newturnsec === null);
+  if (ot_newturnsec !== null) {
+    console.log(ot_newturnsec.innerHTML);
+    var ot_playerstate = document.getElementById("pageform:ot_playerstate");
+    var ot_prevturnsec = document.getElementById("pageform:ot_turnsec");
+
+    if (ot_prevturnsec !== null) {
+      if (ot_prevturnsec.innerHTML !== ot_newturnsec.innerHTML) {
+        ot_prevturnsec.innerHTML = ot_newturnsec.innerHTML;
+        console.log(ot_playerstate.innerHTML);
+        if (ot_playerstate.innerHTML < 1){
+          console.log("display:none");
+          ot_prevturnsec.style.display = "none";
+        } else {
+          ot_prevturnsec.style.display = "block";
+          if (ot_playerstate.innerHTML > 2){
+            console.log("#dee4b9");
+            ot_prevturnsec.style.color = "#dee4b9";
+          } else if (ot_prevturnsec.innerHTML < 10){
+            console.log("red");
+            ot_prevturnsec.style.color = "red";
+          } else {
+            console.log("#555c23");
+            ot_prevturnsec.style.color = "#555c23";
+          }
+        }
+        console.log("f-fff");
+      }  
+    }
+  }  
+
   console.log("d-d");
 
   var ot_newgamehist = document.getElementById("pageform:ot_gamehist2");
