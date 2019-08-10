@@ -387,19 +387,20 @@
                               <h:inputTextarea id="ita_gamemsg" class="inputtextplay" rows="7" cols="20" 
                                                style="position: absolute; top: 24px; left: 24px; width:240px; height:209px;" 
                                                readonly="true" value="#{gameManager.gameMsg}"/>
-                              <h:panelGroup id="pg_letters" style="position: absolute; top: 95px; left: 33px; width: 230px; text-align: center" 
+                              <h:outputLabel class="selectedlettertext" style="position: absolute; top: 111px; left: 24px; width: 240px"
+                                             rendered="#{gameManager.canPlayerPlaceLetter()}">#{gameManager.selectedLetter}</h:outputLabel>
+                              <h:panelGroup id="pg_letters" style="position: absolute; top: 92px; left: 33px; width: 230px; text-align: center" 
                                             rendered="#{gameManager.canPlayerSelectLetter()}">
-                                  <ui:repeat value="#{gameManager.letters}" var="let">
-                                    <h:commandButton id="btn_let0" class="letterbutton" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let)}" rendered="#{gameManager.canSelectLetter(let)}">
-                                      <f:ajax render="pg_gamemsg"/>
-                                    </h:commandButton>
-                                  </ui:repeat>  
+                                <ui:repeat value="#{gameManager.letterIndices}" var="let">
+                                  <h:commandButton id="btn_let0" class="letterbutton" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let)}" rendered="#{gameManager.canSelectLetter(let)}">
+                                    <f:ajax render="pg_gamemsg"/>
+                                  </h:commandButton>
+                                </ui:repeat>  
                               </h:panelGroup>
                             </h:panelGroup>
 
                             <div class="gamesetupframe" style='position: absolute; top: 14px; left: 295px; width: 237px; height: 237px;'>
                             </div>
-
                             <h:panelGroup id="pg_gameboard" class="gameboard">
                               <h:graphicImage style="position: absolute; top: 53px; left: 333px;" url="/images/bp6x6.jpg" />
 
@@ -417,165 +418,45 @@
                               <h:outputLabel style="position: absolute; top: 186px; left: 315px">E</h:outputLabel>
                               <h:outputLabel style="position: absolute; top: 217px; left: 315px">F</h:outputLabel>
 
-                              <h:panelGrid id="gr_boardbuttons" class="boardbuttongrid" style="position: absolute; top: 57px; left: 335px; width: 186px; height: 186px"
-                                           columns="6">
-                                <h:commandButton id="btn_a1" class="boardbutton" value="#{gameManager.getBoardLetter(0, 0)}" 
-                                                 action="#{gameManager.placeLetter(0, 0)}" disabled="#{!gameManager.canPlaceBoardLetter(0, 0)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_a2" class="boardbutton" value="#{gameManager.getBoardLetter(0, 1)}" 
-                                                 action="#{gameManager.placeLetter(0, 1)}" disabled="#{!gameManager.canPlaceBoardLetter(0, 1)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_a3" class="boardbutton" value="#{gameManager.getBoardLetter(0, 2)}" 
-                                                 action="#{gameManager.placeLetter(0, 2)}" disabled="#{!gameManager.canPlaceBoardLetter(0, 2)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_a4" class="boardbutton" value="#{gameManager.getBoardLetter(0, 3)}" 
-                                                 action="#{gameManager.placeLetter(0, 3)}" disabled="#{!gameManager.canPlaceBoardLetter(0, 3)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_a5" class="boardbutton" value="#{gameManager.getBoardLetter(0, 4)}" 
-                                                 action="#{gameManager.placeLetter(0, 4)}" disabled="#{!gameManager.canPlaceBoardLetter(0, 4)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_a6" class="boardbutton" value="#{gameManager.getBoardLetter(0, 5)}" 
-                                                 action="#{gameManager.placeLetter(0, 5)}" disabled="#{!gameManager.canPlaceBoardLetter(0, 5)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-
-                                <h:commandButton id="btn_b1" class="boardbutton" value="#{gameManager.getBoardLetter(1, 0)}" 
-                                                 action="#{gameManager.placeLetter(1, 0)}" disabled="#{!gameManager.canPlaceBoardLetter(1, 0)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_b2" class="boardbutton" value="#{gameManager.getBoardLetter(1, 1)}" 
-                                                 action="#{gameManager.placeLetter(1, 1)}" disabled="#{!gameManager.canPlaceBoardLetter(1, 1)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_b3" class="boardbutton" value="#{gameManager.getBoardLetter(1, 2)}" 
-                                                 action="#{gameManager.placeLetter(1, 2)}" disabled="#{!gameManager.canPlaceBoardLetter(1, 2)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_b4" class="boardbutton" value="#{gameManager.getBoardLetter(1, 3)}" 
-                                                 action="#{gameManager.placeLetter(1, 3)}" disabled="#{!gameManager.canPlaceBoardLetter(1, 3)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_b5" class="boardbutton" value="#{gameManager.getBoardLetter(1, 4)}" 
-                                                 action="#{gameManager.placeLetter(1, 4)}" disabled="#{!gameManager.canPlaceBoardLetter(1, 4)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_b6" class="boardbutton" value="#{gameManager.getBoardLetter(1, 5)}" 
-                                                 action="#{gameManager.placeLetter(1, 5)}" disabled="#{!gameManager.canPlaceBoardLetter(1, 5)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-
-                                <h:commandButton id="btn_c1" class="boardbutton" value="#{gameManager.getBoardLetter(2, 0)}" 
-                                                 action="#{gameManager.placeLetter(2, 0)}" disabled="#{!gameManager.canPlaceBoardLetter(2, 0)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_c2" class="boardbutton" value="#{gameManager.getBoardLetter(2, 1)}" 
-                                                 action="#{gameManager.placeLetter(2, 1)}" disabled="#{!gameManager.canPlaceBoardLetter(2, 1)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_c3" class="boardbutton" value="#{gameManager.getBoardLetter(2, 2)}" 
-                                                 action="#{gameManager.placeLetter(2, 2)}" disabled="#{!gameManager.canPlaceBoardLetter(2, 2)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_c4" class="boardbutton" value="#{gameManager.getBoardLetter(2, 3)}" 
-                                                 action="#{gameManager.placeLetter(2, 3)}" disabled="#{!gameManager.canPlaceBoardLetter(2, 3)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_c5" class="boardbutton" value="#{gameManager.getBoardLetter(2, 4)}" 
-                                                 action="#{gameManager.placeLetter(2, 4)}" disabled="#{!gameManager.canPlaceBoardLetter(2, 4)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_c6" class="boardbutton" value="#{gameManager.getBoardLetter(2, 5)}" 
-                                                 action="#{gameManager.placeLetter(2, 5)}" disabled="#{!gameManager.canPlaceBoardLetter(2, 5)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-
-                                <h:commandButton id="btn_d1" class="boardbutton" value="#{gameManager.getBoardLetter(3, 0)}" 
-                                                 action="#{gameManager.placeLetter(3, 0)}" disabled="#{!gameManager.canPlaceBoardLetter(3, 0)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_d2" class="boardbutton" value="#{gameManager.getBoardLetter(3, 1)}" 
-                                                 action="#{gameManager.placeLetter(3, 1)}" disabled="#{!gameManager.canPlaceBoardLetter(3, 1)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_d3" class="boardbutton" value="#{gameManager.getBoardLetter(3, 2)}" 
-                                                 action="#{gameManager.placeLetter(3, 2)}" disabled="#{!gameManager.canPlaceBoardLetter(3, 2)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_d4" class="boardbutton" value="#{gameManager.getBoardLetter(3, 3)}" 
-                                                 action="#{gameManager.placeLetter(3, 3)}" disabled="#{!gameManager.canPlaceBoardLetter(3, 3)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_d5" class="boardbutton" value="#{gameManager.getBoardLetter(3, 4)}" 
-                                                 action="#{gameManager.placeLetter(3, 4)}" disabled="#{!gameManager.canPlaceBoardLetter(3, 4)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_d6" class="boardbutton" value="#{gameManager.getBoardLetter(3, 5)}" 
-                                                 action="#{gameManager.placeLetter(3, 5)}" disabled="#{!gameManager.canPlaceBoardLetter(3, 5)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-
-                                <h:commandButton id="btn_e1" class="boardbutton" value="#{gameManager.getBoardLetter(4, 0)}" 
-                                                 action="#{gameManager.placeLetter(4, 0)}" disabled="#{!gameManager.canPlaceBoardLetter(4, 0)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_e2" class="boardbutton" value="#{gameManager.getBoardLetter(4, 1)}" 
-                                                 action="#{gameManager.placeLetter(4, 1)}" disabled="#{!gameManager.canPlaceBoardLetter(4, 1)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_e3" class="boardbutton" value="#{gameManager.getBoardLetter(4, 2)}" 
-                                                 action="#{gameManager.placeLetter(4, 2)}" disabled="#{!gameManager.canPlaceBoardLetter(4, 2)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_e4" class="boardbutton" value="#{gameManager.getBoardLetter(4, 3)}" 
-                                                 action="#{gameManager.placeLetter(4, 3)}" disabled="#{!gameManager.canPlaceBoardLetter(4, 3)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_e5" class="boardbutton" value="#{gameManager.getBoardLetter(4, 4)}" 
-                                                 action="#{gameManager.placeLetter(4, 4)}" disabled="#{!gameManager.canPlaceBoardLetter(4, 4)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_e6" class="boardbutton" value="#{gameManager.getBoardLetter(4, 5)}" 
-                                                 action="#{gameManager.placeLetter(4, 5)}" disabled="#{!gameManager.canPlaceBoardLetter(4, 5)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-
-                                <h:commandButton id="btn_f1" class="boardbutton" value="#{gameManager.getBoardLetter(5, 0)}" 
-                                                 action="#{gameManager.placeLetter(5, 0)}" disabled="#{!gameManager.canPlaceBoardLetter(5, 0)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_f2" class="boardbutton" value="#{gameManager.getBoardLetter(5, 1)}" 
-                                                 action="#{gameManager.placeLetter(5, 1)}" disabled="#{!gameManager.canPlaceBoardLetter(5, 1)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_f3" class="boardbutton" value="#{gameManager.getBoardLetter(5, 2)}" 
-                                                 action="#{gameManager.placeLetter(5, 2)}" disabled="#{!gameManager.canPlaceBoardLetter(5, 2)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_f4" class="boardbutton" value="#{gameManager.getBoardLetter(5, 3)}" 
-                                                 action="#{gameManager.placeLetter(5, 3)}" disabled="#{!gameManager.canPlaceBoardLetter(5, 3)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_f5" class="boardbutton" value="#{gameManager.getBoardLetter(5, 4)}" 
-                                                 action="#{gameManager.placeLetter(5, 4)}" disabled="#{!gameManager.canPlaceBoardLetter(5, 4)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                                <h:commandButton id="btn_f6" class="boardbutton" value="#{gameManager.getBoardLetter(5, 5)}" 
-                                                 action="#{gameManager.placeLetter(5, 5)}" disabled="#{!gameManager.canPlaceBoardLetter(5, 5)}">
-                                  <f:ajax render="gr_boardbuttons"/>
-                                </h:commandButton>
-                              </h:panelGrid>
+                              <h:panelGroup id="pg_boardbuttons" class="boardbuttonarea" style="position: absolute; top: 53px; left: 333px; width: 188px; height: 185px; text-align: center">
+                                <ui:repeat value="#{gameManager.cellIndices}" var="cell">
+                                  <h:commandButton class="boardbutton" value="#{gameManager.getBoardLetter(cell)}" 
+                                                   action="#{gameManager.placeLetter(cell)}" disabled="#{!gameManager.canPlaceBoardLetter(cell)}">
+                                    <f:ajax render="pg_boardbuttons"/>
+                                  </h:commandButton>
+                                </ui:repeat>  
+                              </h:panelGroup>
                             </h:panelGroup>
 
                             <div class="gamesetupframe" style='position: absolute; top: 263px; left: 14px; width: 268px; height: 143px;'>
                             </div>
+                            
+<!--                            <h:dataTable id="dt_gameplayers" class="lobbytable" style="width:100%;"
+                                         value="#{lobby.gamesInLobby}" var="game">
+                              <h:column>
+                                <div class="lobbyrowborder">
+                              
+                            </h:dataTable>-->
+                            
+                            <h:panelGroup id="pg_gameplayers" class="gameplayers">
+                              <h:panelGroup id="pg_gameplayer1" style="display:inline-block; position: absolute; top: 279px; left: 32px" 
+                                            rendered="#{gameManager.game.numberOfPlayers > 0}">
+                                <h:graphicImage class="lobbyrowimage" url="/images/player1.png"/>
+                                <h:outputLabel style="margin-left:12px">#{gameManager.game.boards.get(0).name}</h:outputLabel>
+                                <h:graphicImage class="curplayerimage" url="/images/az.png" style="margin-left:8px;" 
+                                                rendered="#{gameManager.canPlayerSelectLetterInTurn(0)}"/>
+                              </h:panelGroup>
+                              <h:panelGroup id="pg_gameplayer2" style="display:inline-block; position: absolute; top: 310px; left: 32px" 
+                                            rendered="#{gameManager.game.numberOfPlayers > 1}">
+                                <h:graphicImage class="lobbyrowimage" url="/images/player2.png"/>
+                                <h:outputLabel style="margin-left:12px">#{gameManager.game.boards.get(1).name}</h:outputLabel>
+                                <h:graphicImage class="curplayerimage" url="/images/az.png" style="margin-left:8px;" 
+                                                rendered="#{gameManager.canPlayerSelectLetterInTurn(1)}"/>
+                              </h:panelGroup>
+                            </h:panelGroup>
+
                             <div class="gamesetupframe" style='position: absolute; top: 263px; left: 295px; width: 237px; height: 143px;'>
                             </div>
-
                             <h:outputLabel style="position: absolute; top: 282px; left: 314px">Gondolkodási idő:</h:outputLabel>
                             <div  style="position: absolute; top: 278px; left: 470px; width: 50px; float: right">
                               <h:outputText id="ot_turnsec" class="turnsec" rendered="#{gameManager.game.endDate eq null}"/>
@@ -583,7 +464,7 @@
                           </h:panelGroup>
 
                           <h:commandButton id="btn_playrefresh" style="display:none" action="#{gameManager.debug('playrefresh')}">
-                            <f:ajax render="pg_gamemsg pg_gameboard pg_gameplaybuttons"/>
+                            <f:ajax render="pg_gamemsg pg_gameboard pg_gameplayers pg_gameplaybuttons"/>
                           </h:commandButton>      
 
                           <h:outputText id="ot_gamehist" style="display:none"/>

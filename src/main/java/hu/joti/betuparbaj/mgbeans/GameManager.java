@@ -38,7 +38,8 @@ public class GameManager implements Serializable {
   private Set<Integer> fadingGames;
   private Set<Integer> fadedGames;
   private int myPosition;
-  private List<Integer> letters;
+  private List<Integer> letterIndices;
+  private List<Integer> cellIndices;
 
   private static final Logger logger = Logger.getLogger(GameManager.class.getName());
 
@@ -47,10 +48,19 @@ public class GameManager implements Serializable {
     fadedGames = new HashSet<>();
     logger.debug("New session");
     myPosition = -1;
-    letters = new ArrayList<>();
-    for (int i = 0; i < game.ALPHABET.length; i++) {
-      letters.add(i);
+    
+    letterIndices = new ArrayList<>();
+    for (int i = 0; i < Game.ALPHABET.length; i++) {
+      letterIndices.add(i);
     }
+    System.out.println("letterIndices.size="+letterIndices.size());
+
+    cellIndices = new ArrayList<>();
+    for (int i = 0; i < Board.BOARD_SIZE * Board.BOARD_SIZE; i++) {
+      cellIndices.add(i);
+    }
+    System.out.println("cellIndices.size="+cellIndices.size());
+    
   }
 
   @PreDestroy
@@ -236,6 +246,10 @@ public class GameManager implements Serializable {
       return true;
     }
 
+    if (lobby.getGamesFinished().contains(game)) {
+      return true;
+    }
+    
     System.out.println("GAME = NULL (GameExists())");
     game = null;
     return false;
@@ -321,8 +335,16 @@ public class GameManager implements Serializable {
     return false;
   }
 
+  public boolean canPlayerSelectLetterInTurn(int player){
+    return (game != null && game.getDrawmode() == Game.PLAYER_DRAW && game.getTurn() < 36 && game.getCurrentPlayer() == player);
+  }
+  
   public boolean canPlayerSelectLetter(){
     return (getPlayerState() == 2);
+  }
+
+  public boolean canPlayerPlaceLetter(){
+    return (getPlayerState() == 1);
   }
   
   public int getPlayerState() {
@@ -391,7 +413,7 @@ public class GameManager implements Serializable {
 
     String msg;
     if (game.getEndDate() != null) {
-      msg = "\n\nA játék véget ért.";
+      msg = "\n\n\n\nA játék véget ért.";
     } else {
       int turn = game.getTurn();
       int playerState = getPlayerState();
@@ -399,18 +421,21 @@ public class GameManager implements Serializable {
 
       if (turn == 0 && playerState == 2) {
         // A 0. körben a játékos választ betűt
-        msg = "\n\nKérlek, válaszd ki az első betűt!";
+        msg = "\n\nKérlek, válaszd ki\naz első betűt!";
       } else if (turn == 0 && playerState == 3) {
         // A 0. körben egy másik játékos választja az első betűt   
-        msg = String.format("\n\n%s kiválasztja az első betűt.", name);
+        msg = String.format("\n\n\n\n\n%s kiválasztja\naz első betűt.", name);
       } else if (playerState == 1) {
         // A kiválasztott betűt el kell helyezni a táblán
         String letter = game.getSelectedLetter();
-        msg = String.format("\n\nHelyezd el a táblán\n a(z) %s betűt!", letter);
+        if (turn < 36 && myPosition == game.getCurrentPlayer())
+          msg = String.format("\n\n\nA %d. betű:\n\n\n\n\n\n Helyezd el a táblán,\nmajd válaszd ki\na következő betűt!", turn);
+        else
+          msg = String.format("\n\n\nA %d. betű:\n\n\n\n\n\n Helyezd el a táblán!", turn);
       } else if (playerState == 2) {
-        msg = "\n\nVálaszd ki a következő betűt!";
+        msg = "\n\nVálaszd ki\na következő betűt!";
       } else {
-        msg = "\n\n\nVárakozás a többi játékosra...";
+        msg = "\n\n\n\n\n\nVárakozás a többi játékosra...";
       }
     }
     return msg;
@@ -499,11 +524,21 @@ public class GameManager implements Serializable {
     return rTurnSec;
   }
 
+  public String getSelectedLetter(){
+    if (game != null)
+      return game.getSelectedLetter();
+    return "";
+  }
+  
   public String getBoardLetter(int row, int column) {
     if (game != null && game.getStartDate() != null) {
       return game.getBoards().get(myPosition).getLetters()[row][column];
     }
     return "";
+  }
+
+  public String getBoardLetter(int index) {
+    return getBoardLetter(index / 6, index % 6);
   }
 
   public boolean hasBoardLetter(int row, int column) {
@@ -521,6 +556,10 @@ public class GameManager implements Serializable {
       return false;
   }
 
+  public boolean canPlaceBoardLetter(int index) {
+    return canPlaceBoardLetter(index / 6, index % 6);
+  }
+  
   public void placeLetter(int row, int column) {
     System.out.println("placeletter:" + row + "/" + column);
     if (game != null && game.getStartDate() != null && getPlayerState() == 1) {
@@ -528,6 +567,10 @@ public class GameManager implements Serializable {
     }
   }
 
+  public void placeLetter(int index) {
+    placeLetter(index / 6, index % 6);
+  }
+  
   public void selectLetter(String letter){
     System.out.println("selectletter: " + letter);
     if (game != null && game.getStartDate() != null && getPlayerState() == 2) {
@@ -590,12 +633,20 @@ public class GameManager implements Serializable {
     this.myPosition = myPosition;
   }
 
-  public List<Integer> getLetters() {
-    return letters;
+  public List<Integer> getLetterIndices() {
+    return letterIndices;
   }
 
-  public void setLetters(List<Integer> letters) {
-    this.letters = letters;
+  public void setLetterIndices(List<Integer> letterIndices) {
+    this.letterIndices = letterIndices;
+  }
+
+  public List<Integer> getCellIndices() {
+    return cellIndices;
+  }
+
+  public void setCellIndices(List<Integer> cellIndices) {
+    this.cellIndices = cellIndices;
   }
   
 }

@@ -474,7 +474,7 @@ public class Game implements Serializable {
 
   public String getSelectedLetter(){
     String letter = "";
-    if (startDate != null && endDate == null){
+    if (startDate != null && endDate == null && turn > 0){
       int index = turn - 1;
       letter = selectedLetters[index];
     } 
