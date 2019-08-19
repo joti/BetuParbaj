@@ -1,4 +1,4 @@
-/*
+/*v
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -335,6 +335,30 @@ public class GameManager implements Serializable {
     return false;
   }
 
+  public boolean isPlayerTurnOn(int player){
+    if (game.getStartDate() == null || game.getEndDate() != null)
+      return false;
+
+    if (game.getTurn() == 0 && game.getCurrentPlayer() != player)
+      return false;
+    else
+      return !isPlayerTurnFinished(player);
+  }
+  
+  public boolean isPlayerTurnFinished(int player){
+    if (game.getStartDate() != null && game.getEndDate() == null){
+      int turn = game.getTurn();
+      if (turn < 36 && game.getCurrentPlayer() == player){
+        if (!game.getSelectedLetters()[turn].isEmpty())
+          return true;
+      } else if (turn > 0) {
+        if (game.getBoards().get(player).getLetterCount() >= turn)
+          return true;
+      }
+    }
+    return false;
+  }
+  
   public boolean canPlayerSelectLetterInTurn(int player){
     return (game != null && game.getDrawmode() == Game.PLAYER_DRAW && game.getTurn() < 36 && game.getCurrentPlayer() == player);
   }
@@ -412,12 +436,25 @@ public class GameManager implements Serializable {
       return "";
 
     String msg;
+    String name = "";
     if (game.getEndDate() != null) {
-      msg = "\n\n\n\nA játék véget ért.";
+      int count = 0;
+      for (Board b : game.getBoards()) {
+        if (b.getPlace() == 1){
+          count++;
+          if (!name.isEmpty())
+            name += " és \n\n";
+          name += b.getName();
+        }
+      }
+      if (count > 1 && count == game.getBoards().size())
+        msg = "A játék véget ért.\n\nAz eredmény döntetlen."; 
+      else          
+        msg = String.format("\n\n\n\nA játék véget ért.\n\nA győztes:\n\n%s", name);
     } else {
       int turn = game.getTurn();
       int playerState = getPlayerState();
-      String name = game.getBoards().get(game.getCurrentPlayer()).getName();
+      name = game.getBoards().get(game.getCurrentPlayer()).getName();
 
       if (turn == 0 && playerState == 2) {
         // A 0. körben a játékos választ betűt

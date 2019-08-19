@@ -201,6 +201,10 @@ public class Game implements Serializable {
       }
     }
 
+    for (int i = 0; i < boards.size(); i++) {
+      boards.get(i).setPosition(i);
+    }
+    
     startDate = new Date();
     numberOfActivePlayers = numberOfPlayers;
     currentPlayer = 0;
@@ -297,7 +301,7 @@ public class Game implements Serializable {
       if (!gameHist.isEmpty()) {
         gameHist += "/";
       }
-      gameHist += (board.getQuitDate() == null ? "+" : "-");
+      gameHist += (board.getQuitDate() == null ? board.getLetterCount() : "-");
     }
     gameHist += ":";
     System.out.println("turn=" + turn);
@@ -307,6 +311,9 @@ public class Game implements Serializable {
       if (selectedLetters[i] != null) {
         gameHist += selectedLetters[i];
       }
+    }
+    if (turn < 36 && selectedLetters[turn] != null && !selectedLetters[turn].isEmpty()){
+      gameHist += "*";
     }
     if (endDate != null)
       gameHist += ".";
@@ -365,6 +372,13 @@ public class Game implements Serializable {
     if (turn == 36) {
       System.out.println("Játék vége.");
       endDate = new Date();
+      
+      // TODO Számítsuk ki az eredményt
+      for (Board board : boards) {
+        board.setScore((4 - board.getPosition()) * 26);
+        board.setPlace(board.getPosition() + 1);
+      }
+      
     } else {
       // Ha még nem lett kiválasztva a következő betű, akkor most kisorsoljuk
       if (selectedLetters[turn].equals("")) {

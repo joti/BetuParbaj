@@ -101,7 +101,7 @@
                                     </h:panelGrid>
 
                                     <h:panelGrid id="gr_lobbyrowrules" class="lobbyrowrules" columns="2" columnClasses="lobbyrowrulescol1,lobbyrowrulescol2">
-                                      <h:panelGroup id="pg_rowtimelimit" style="margin-left: 15px">
+                                      <h:panelGroup id="pg_rowtimelimit" style="margin-left: 5px">
                                         <div class="lobbyrowrule">
                                           <h:graphicImage class="lobbyrowimage" url="/images/clock.png"/>
                                           <h:outputLabel style="margin-left: 5px" value="#{game.timeLimit} mp"/>       
@@ -381,7 +381,7 @@
 
                           <h:panelGroup id="pg_gameplayarea" class="gameplayarea" style='position: absolute; top: 37px; width: 547px; height: 422px'>
 
-                            <div class="gamesetupframe" style='position: absolute; top: 14px; left: 14px; width: 268px; height: 237px;'>
+                            <div class="gamesetupframe" style="position: absolute; top: 14px; left: 14px; width: 268px; height: 237px;">
                             </div>
                             <h:panelGroup id="pg_gamemsg">
                               <h:inputTextarea id="ita_gamemsg" class="inputtextplay" rows="7" cols="20" 
@@ -430,59 +430,70 @@
 
                             <div class="gamesetupframe" style='position: absolute; top: 263px; left: 14px; width: 268px; height: 143px;'>
                             </div>
-                            
-<!--                            <h:dataTable id="dt_gameplayers" class="lobbytable" style="width:100%;"
-                                         value="#{lobby.gamesInLobby}" var="game">
+
+                            <h:dataTable id="dt_gameplayers" class="gameplayerstable" style="position: absolute; top: 271px; left: 23px; width: 251px;"
+                                         value="#{gameManager.game.boards}" var="boa" columnClasses="gameplayerstablecol">
                               <h:column>
-                                <div class="lobbyrowborder">
-                              
-                            </h:dataTable>-->
-                            
-                            <h:panelGroup id="pg_gameplayers" class="gameplayers">
-                              <h:panelGroup id="pg_gameplayer1" style="display:inline-block; position: absolute; top: 279px; left: 32px" 
-                                            rendered="#{gameManager.game.numberOfPlayers > 0}">
-                                <h:graphicImage class="lobbyrowimage" url="/images/player1.png"/>
-                                <h:outputLabel style="margin-left:12px">#{gameManager.game.boards.get(0).name}</h:outputLabel>
-                                <h:graphicImage class="curplayerimage" url="/images/az.png" style="margin-left:8px;" 
-                                                rendered="#{gameManager.canPlayerSelectLetterInTurn(0)}"/>
-                              </h:panelGroup>
-                              <h:panelGroup id="pg_gameplayer2" style="display:inline-block; position: absolute; top: 310px; left: 32px" 
-                                            rendered="#{gameManager.game.numberOfPlayers > 1}">
-                                <h:graphicImage class="lobbyrowimage" url="/images/player2.png"/>
-                                <h:outputLabel style="margin-left:12px">#{gameManager.game.boards.get(1).name}</h:outputLabel>
-                                <h:graphicImage class="curplayerimage" url="/images/az.png" style="margin-left:8px;" 
-                                                rendered="#{gameManager.canPlayerSelectLetterInTurn(1)}"/>
-                              </h:panelGroup>
-                            </h:panelGroup>
+                                <h:panelGrid class="gameplayersrow" columns="3" columnClasses="gameplayersrowcol1,gameplayersrowcol2,gameplayersrowcol3">
+                                  <h:panelGroup>
+                                    <h:graphicImage class="curplayerimage" url="/images/curplayer.png" 
+                                                    rendered="#{gameManager.canPlayerSelectLetterInTurn(boa.position)}"/>
+                                    <h:graphicImage class="curplayerimage" url="/images/medal-1.png" 
+                                                    rendered="#{boa.place eq 1}"/>
+                                    <h:graphicImage class="curplayerimage" url="/images/medal-2.png" 
+                                                    rendered="#{boa.place eq 2}"/>
+                                    <h:graphicImage class="curplayerimage" url="/images/medal-3.png" 
+                                                    rendered="#{boa.place eq 3}"/>
+                                  </h:panelGroup>
+                                  <h:outputLabel style="margin-left: 5px">#{boa.name}</h:outputLabel>
+                                  <h:panelGroup>
+                                    <h:panelGroup style="margin-right: 3px;" rendered="#{boa.place gt 0}">
+                                      #{boa.score} pt
+                                    </h:panelGroup>
+                                    <h:graphicImage class="curplayerimage" url="/images/disconn.png" style="margin-right: 5px;"
+                                                    rendered="#{boa.quitDate != null}"/>
+                                    <h:graphicImage class="curplayerimage" url="/images/thinking.gif" style="margin-right: 5px;"
+                                                    rendered="#{boa.quitDate == null and gameManager.isPlayerTurnOn(boa.position)}"/>
+                                    <h:graphicImage class="curplayerimage" url="/images/check.png" style="margin-right: 5px;"
+                                                    rendered="#{boa.quitDate == null and gameManager.isPlayerTurnFinished(boa.position)}"/>
+                                  </h:panelGroup>
+                                </h:panelGrid>
+
+                              </h:column>
+                            </h:dataTable>
 
                             <div class="gamesetupframe" style='position: absolute; top: 263px; left: 295px; width: 237px; height: 143px;'>
                             </div>
-                            <h:outputLabel style="position: absolute; top: 282px; left: 314px">Gondolkodási idő:</h:outputLabel>
+                            <h:outputLabel style="position: absolute; top: 282px; left: 314px" rendered="#{gameManager.game.endDate eq null}">
+                              Gondolkodási idő:
+                            </h:outputLabel>
                             <div  style="position: absolute; top: 278px; left: 470px; width: 50px; float: right">
                               <h:outputText id="ot_turnsec" class="turnsec" rendered="#{gameManager.game.endDate eq null}"/>
                             </div>
                           </h:panelGroup>
 
                           <h:commandButton id="btn_playrefresh" style="display:none" action="#{gameManager.debug('playrefresh')}">
-                            <f:ajax render="pg_gamemsg pg_gameboard pg_gameplayers pg_gameplaybuttons"/>
+                            <f:ajax render="pg_gamemsg pg_gameboard dt_gameplayers pg_gameplaybuttons"/>
                           </h:commandButton>      
 
                           <h:outputText id="ot_gamehist" style="display:none"/>
 
                           <h:panelGroup id="pg_gameplaybuttons" style="position: absolute; top: 468px;">
-                            <h:commandButton class="gamebutton" style="width: 208px" value="Játék megszakítása" action="#{gameManager.dropGame()}"
+                            <p:commandButton id="btn_dropgame" class="gamebutton" style="width: 208px" value="Játék megszakítása" action="#{gameManager.dropGame()}"
                                              rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers eq 1}">
+                              <p:confirm header="Megerősítés" message="Biztosan megszakítod a játékot?"/>
                               <f:ajax execute="" render="pg_main"/>
-                            </h:commandButton>
-                            <h:commandButton class="gamebutton" style="width: 208px" value="Asztal elhagyása" action="#{gameManager.quitGame()}"
+                            </p:commandButton>
+                            <p:commandButton id="btn_quitgame" class="gamebutton" style="width: 208px" value="Asztal elhagyása" action="#{gameManager.quitGame()}"
                                              rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers gt 1}">
+                              <p:confirm header="Megerősítés" message="Biztosan elhagyod az asztalt?"/>
                               <f:ajax execute="" render="pg_main"/>
-                            </h:commandButton>
+                            </p:commandButton>
 
-                            <h:commandButton class="gamebutton" style="width: 208px" value="Asztal bezárása" action="#{gameManager.dropGame()}"
+                            <p:commandButton id="btn_closegame" class="gamebutton" style="width: 208px" value="Asztal bezárása" action="#{gameManager.dropGame()}"
                                              rendered="#{gameManager.game.endDate != null}">
                               <f:ajax execute="" render="pg_main"/>
-                            </h:commandButton>
+                            </p:commandButton>
                           </h:panelGroup>
                         </h:panelGroup> <!-- pg_gameplay -->
                       </h:panelGroup> <!-- pg_gamemain -->

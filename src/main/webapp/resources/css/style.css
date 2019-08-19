@@ -21,6 +21,10 @@ and open the template in the editor.
    gray1: #d9d8bf // RGB: 217 216 191 // Keretek alsó és jobboldala
 */
 
+input{
+  outline: none;
+}
+
 #table_game {
   opacity: 0.8;
 }
@@ -93,10 +97,10 @@ and open the template in the editor.
   background-color: #f4f6e9;
   border-width: 2px;
   border-style: solid;
-  border-left-color: #b4b6aa; 
-  border-top-color: #b4b6aa; 
-  border-bottom-color: #b0b2a7;
-  border-right-color: #b0b2a7;
+  border-left-color: rgba(182,181,170,0.5); 
+  border-top-color: rgba(182,181,170,0.5); 
+  border-bottom-color: rgba(176,178,167,0.5);
+  border-right-color: rgba(176,178,167,0.5);
   padding: 3px;
   overflow: hidden;
   resize: none;
@@ -346,7 +350,7 @@ and open the template in the editor.
 
 .boardbutton {
   font-family: "Courier New", Courier, monospace;
-  font-size: 16px;	
+  font-size: 18px;	
   font-weight: bold;
   border: 1px solid;
   border-color: transparent;
@@ -699,7 +703,7 @@ and open the template in the editor.
   padding: 2px;
   padding-left: 5px;
   padding-right: 5px;
-  margin-left: 8px;
+  margin-left: 3px;
   margin-bottom: 2px;
   height: 20px;
   font-size: 12px;
@@ -726,11 +730,77 @@ and open the template in the editor.
 }
 
 .curplayerimage{
-  max-width:15px;
-  max-height:15px;
+  max-width:18px;
+  max-height:18px;
   width: auto;
   height: auto;  
   vertical-align: text-bottom;
+  padding: 0px;
+}
+
+.gameplayerstable{
+  border: none;
+  border-spacing: 3px;
+  background: transparent;
+}
+
+.gameplayerstable tr{
+  border: 1px dashed purple;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.gameplayerstable td{
+  border: 1px dashed rgba(188,196,166,0.2);
+}
+
+.gameplayerstablecol{
+  border: none;
+  background: rgba(188,196,166,0.2);
+}
+
+.gameplayersrow{
+  width: 100%;
+  border-collapse: collapse;
+  border: transparent;
+  padding: 0px;
+  margin: 0px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: bold;
+  color: #808571;
+  line-height: 1;
+  border-spacing: 0px;
+}
+
+.gameplayersrow td{
+  border: 1px solid rgba(188,196,166,0.0);
+  /*border: none;*/
+}
+
+.gameplayersrowcol1{
+  width: 11%;
+  height: 21px;
+  max-height: 21px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.gameplayersrowcol2{
+  width: 63%;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  padding-top: 3px;
+}
+
+.gameplayersrowcol3{
+  width: 26%;
+  text-align: right;
+  vertical-align: middle;
+  padding-top: 3px;
 }
 
 .dialogtable{

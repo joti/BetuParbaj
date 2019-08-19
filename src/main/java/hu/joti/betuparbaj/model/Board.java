@@ -18,6 +18,8 @@ public class Board implements Serializable {
 
   public static final int BOARD_SIZE = 6;
 
+  // játékos helye az asztalon
+  private int position;
   // játékos neve
   private String name;
   //elhelyezett betűk
@@ -26,6 +28,8 @@ public class Board implements Serializable {
   private List<Word> words;
   // összpontszám
   private int score;
+  // helyezés
+  private int place;
   // csatlakozás időpontja
   private Date joinDate;
   // kilépés időpontja
@@ -129,6 +133,22 @@ public class Board implements Serializable {
 
   public void setQuitDate(Date quitDate) {
     this.quitDate = quitDate;
+  }
+
+  public int getPlace() {
+    return place;
+  }
+
+  public void setPlace(int place) {
+    this.place = place;
+  }
+
+  public int getPosition() {
+    return position;
+  }
+
+  public void setPosition(int position) {
+    this.position = position;
   }
 
 }
