@@ -25,6 +25,10 @@ input{
   outline: none;
 }
 
+textarea{
+  outline: none;
+}
+
 #table_game {
   opacity: 0.8;
 }
@@ -757,6 +761,14 @@ input{
 .gameplayerstablecol{
   border: none;
   background: rgba(188,196,166,0.2);
+}
+
+.myplayerrow{
+  border-top: 2px solid rgba(188,196,166,0.6);
+  border-bottom: 2px solid rgba(170,180,150,0.7);
+  border-left: 2px solid rgba(188,196,166,0.6);
+  border-right: 2px solid rgba(170,180,150,0.7);
+  background: transparent;  
 }
 
 .gameplayersrow{

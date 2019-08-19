@@ -205,7 +205,7 @@
                                 <h:panelGroup style="position: absolute; top: 62px; left: 404px; display: inline-block" 
                                               rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
                                   <h:commandButton id="btn_p1down" value="" class="buttonsmall5" 
-                                                   action="#{gameManager.switchPlayers(0,1)}" rendered="#{gameManager.game.numberOfPlayers gt 1}">
+                                                   action="#{gameManager.swapPlayers(0,1)}" rendered="#{gameManager.game.numberOfPlayers gt 1}">
                                     <f:ajax execute="" render="pg_player1 pg_player2"/>
                                   </h:commandButton>
                                 </h:panelGroup>
@@ -219,11 +219,11 @@
                                 <h:panelGroup style="position: absolute; top: 93px; left: 404px; display: inline-block; margin-right: 15px" 
                                               rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
                                   <h:commandButton id="btn_p2down" value="" class="buttonsmall5"
-                                                   action="#{gameManager.switchPlayers(1,2)}" rendered="#{gameManager.game.numberOfPlayers gt 2}">
+                                                   action="#{gameManager.swapPlayers(1,2)}" rendered="#{gameManager.game.numberOfPlayers gt 2}">
                                     <f:ajax execute="" render="pg_player2 pg_player3"/>
                                   </h:commandButton>
                                   <h:commandButton id="btn_p2up" value="" class="buttonsmall6" 
-                                                   action="#{gameManager.switchPlayers(0,1)}" rendered="#{gameManager.game.numberOfPlayers gt 1}">
+                                                   action="#{gameManager.swapPlayers(0,1)}" rendered="#{gameManager.game.numberOfPlayers gt 1}">
                                     <f:ajax execute="" render="pg_player1 pg_player2"/>
                                   </h:commandButton>
                                 </h:panelGroup>
@@ -237,11 +237,11 @@
                                 <h:panelGroup style="position: absolute; top: 124px; left: 404px; display: inline-block" 
                                               rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
                                   <h:commandButton id="btn_p3down" value="" class="buttonsmall5"
-                                                   action="#{gameManager.switchPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
+                                                   action="#{gameManager.swapPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
                                     <f:ajax execute="" render="pg_player3 pg_player4"/>
                                   </h:commandButton>
                                   <h:commandButton id="btn_p3up" value="" class="buttonsmall6"
-                                                   action="#{gameManager.switchPlayers(1,2)}" rendered="#{gameManager.game.numberOfPlayers gt 2}">
+                                                   action="#{gameManager.swapPlayers(1,2)}" rendered="#{gameManager.game.numberOfPlayers gt 2}">
                                     <f:ajax execute="" render="pg_player2 pg_player3"/>
                                   </h:commandButton>
                                 </h:panelGroup>
@@ -255,7 +255,7 @@
                                 <h:panelGroup style="position: absolute; top: 155px; left: 404px; display: inline-block" 
                                               rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
                                   <h:commandButton id="btn_p4up" value="" class="buttonsmall6" 
-                                                   action="#{gameManager.switchPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
+                                                   action="#{gameManager.swapPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
                                     <f:ajax execute="" render="pg_player3 pg_player4"/>
                                   </h:commandButton>
                                 </h:panelGroup>
@@ -434,31 +434,34 @@
                             <h:dataTable id="dt_gameplayers" class="gameplayerstable" style="position: absolute; top: 271px; left: 23px; width: 251px;"
                                          value="#{gameManager.game.boards}" var="boa" columnClasses="gameplayerstablecol">
                               <h:column>
-                                <h:panelGrid class="gameplayersrow" columns="3" columnClasses="gameplayersrowcol1,gameplayersrowcol2,gameplayersrowcol3">
-                                  <h:panelGroup>
-                                    <h:graphicImage class="curplayerimage" url="/images/curplayer.png" 
-                                                    rendered="#{gameManager.canPlayerSelectLetterInTurn(boa.position)}"/>
-                                    <h:graphicImage class="curplayerimage" url="/images/medal-1.png" 
-                                                    rendered="#{boa.place eq 1}"/>
-                                    <h:graphicImage class="curplayerimage" url="/images/medal-2.png" 
-                                                    rendered="#{boa.place eq 2}"/>
-                                    <h:graphicImage class="curplayerimage" url="/images/medal-3.png" 
-                                                    rendered="#{boa.place eq 3}"/>
-                                  </h:panelGroup>
-                                  <h:outputLabel style="margin-left: 5px">#{boa.name}</h:outputLabel>
-                                  <h:panelGroup>
-                                    <h:panelGroup style="margin-right: 3px;" rendered="#{boa.place gt 0}">
-                                      #{boa.score} pt
+                                <h:panelGroup id="pg_gameplayerscell">
+                                  <h:panelGrid class="gameplayersrow" columns="3" columnClasses="gameplayersrowcol1,gameplayersrowcol2,gameplayersrowcol3">
+                                    <h:panelGroup>
+                                      <h:graphicImage class="curplayerimage" url="/images/curplayer.png" 
+                                                      rendered="#{gameManager.canPlayerSelectLetterInTurn(boa.position)}"/>
+                                      <h:graphicImage class="curplayerimage" url="/images/medal-1.png" 
+                                                      rendered="#{boa.place eq 1}"/>
+                                      <h:graphicImage class="curplayerimage" url="/images/medal-2.png" 
+                                                      rendered="#{boa.place eq 2}"/>
+                                      <h:graphicImage class="curplayerimage" url="/images/medal-3.png" 
+                                                      rendered="#{boa.place eq 3}"/>
                                     </h:panelGroup>
-                                    <h:graphicImage class="curplayerimage" url="/images/disconn.png" style="margin-right: 5px;"
-                                                    rendered="#{boa.quitDate != null}"/>
-                                    <h:graphicImage class="curplayerimage" url="/images/thinking.gif" style="margin-right: 5px;"
-                                                    rendered="#{boa.quitDate == null and gameManager.isPlayerTurnOn(boa.position)}"/>
-                                    <h:graphicImage class="curplayerimage" url="/images/check.png" style="margin-right: 5px;"
-                                                    rendered="#{boa.quitDate == null and gameManager.isPlayerTurnFinished(boa.position)}"/>
-                                  </h:panelGroup>
-                                </h:panelGrid>
-
+                                    <h:outputLabel style="margin-left: 5px">#{boa.name}</h:outputLabel>
+                                    <h:panelGroup>
+                                      <h:panelGroup style="margin-right: 3px;" rendered="#{boa.place gt 0}">
+                                        #{boa.score} pt
+                                      </h:panelGroup>
+                                      <h:graphicImage class="curplayerimage" url="/images/disconn.png" style="margin-right: 3px;"
+                                                      rendered="#{boa.quitDate != null and gameManager.isPlayerTurnOn(boa.position)}"/>
+                                      <h:graphicImage class="curplayerimage" url="/images/thinking.gif" style="margin-right: 3px;"
+                                                      rendered="#{boa.quitDate == null and gameManager.isPlayerTurnOn(boa.position)}"/>
+                                      <h:graphicImage class="curplayerimage" url="/images/check.png" style="margin-right: 3px;"
+                                                      rendered="#{boa.quitDate == null and gameManager.isPlayerTurnFinished(boa.position)}"/>
+                                    </h:panelGroup>
+                                  </h:panelGrid>
+                                  <h:panelGroup class="myplayerrow" style="position: absolute;left:3px;top:#{boa.position*31+3}px;width:242px;height:24px;" 
+                                                rendered="#{gameManager.myPosition eq boa.position}"/>
+                                </h:panelGroup>
                               </h:column>
                             </h:dataTable>
 

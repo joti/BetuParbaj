@@ -47,12 +47,12 @@ public class LoginData implements Serializable {
 
   @PostConstruct
   public void constr() {
-    System.out.println("PostConstruct method at " + (new Date()));
+    System.out.println("LoginData.PostConstruct method at " + (new Date()));
   }
 
   @PreDestroy
   public void destroy() {
-    System.out.println("PreDestroy method at " + (new Date()));
+    System.out.println("LoginData.PreDestroy method at " + (new Date()));
     doLogout();
   }
 

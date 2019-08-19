@@ -137,7 +137,7 @@ public class Game implements Serializable {
       setAdminPlayer();
   }
 
-  public void switchPlayers(int pos1, int pos2) {
+  public void swapPlayers(int pos1, int pos2) {
     Board board1 = boards.get(pos1);
     boards.set(pos1, boards.get(pos2));
     boards.set(pos2, board1);
@@ -201,6 +201,16 @@ public class Game implements Serializable {
       }
     }
 
+    // Ha véletlenszerű a játékosok sorrendje, akkor most beállítjuk
+    if (randomOrder){
+      Random rnd = new Random();
+      for (int i = numberOfPlayers - 1; i > 0; i--) {
+        int number = rnd.nextInt(i + 1);
+        if (i != number)
+          swapPlayers(i, number);
+      }
+    }
+    
     for (int i = 0; i < boards.size(); i++) {
       boards.get(i).setPosition(i);
     }
@@ -355,7 +365,7 @@ public class Game implements Serializable {
   }
 
   public void nextTurn() {
-    if (turn > 36) {
+    if (endDate != null) {
       return;
     }
 
@@ -387,10 +397,7 @@ public class Game implements Serializable {
       int count = availableLetters.get(selectedLetters[turn]);
       availableLetters.put(selectedLetters[turn], count - 1);
 
-      System.out.println("currentPlayer = " + currentPlayer);
       currentPlayer = (currentPlayer + 1) % numberOfPlayers;
-      System.out.println("currentPlayer (új) = " + currentPlayer);
-      System.out.println((turn + 1) + ". betű: " + selectedLetters[turn]);
       turn++;
       turnStart = new Date();
     }

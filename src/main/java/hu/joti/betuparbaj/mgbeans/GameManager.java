@@ -65,7 +65,8 @@ public class GameManager implements Serializable {
 
   @PreDestroy
   public void destroy() {
-    System.out.println("PreDestroy method at " + (new Date()));
+    logger.info("GameManager session ends for " + loginData.getName());
+    System.out.println("GameManager.PreDestroy method at " + (new Date()));
     if (game != null) {
       quitGame();
     }
@@ -125,13 +126,15 @@ public class GameManager implements Serializable {
         int turn = game.getTurn();
         if (turn > 0){
           for (Board board : game.getBoards()) {
-            if (board.getLetterCount() < game.getTurn()){
+            // Kilépett játékosra nem várakozunk
+            if (board.getLetterCount() < game.getTurn() && board.getQuitDate() == null){
               needWait = true;
               break;
             }  
           }
-        }  
-        if (!needWait && game.getTurn() < 36){
+        }
+        if (!needWait && game.getTurn() < 36 && game.getDrawmode() == Game.PLAYER_DRAW 
+                      && game.getBoards().get(game.getCurrentPlayer()).getQuitDate() == null){
           if (game.getSelectedLetters()[turn].isEmpty())
             needWait = true;
         }
@@ -182,16 +185,15 @@ public class GameManager implements Serializable {
 
   public void createGame() {
     int gameId = lobby.getGameId();
+    logger.info(loginData.getName() + " creates game #" + gameId);
     game = new Game(gameId, true, true, true, 1, 2, 4, 30);
     game.addPlayer(loginData.getName());
     myPosition = -1;
-    System.out.println(game.getId());
     logger.info("Game #" + game.getId() + " created");
   }
 
   public void joinGame(Game g) {
-    System.out.println("JOINGAME");
-    System.out.println(g.getId());
+    logger.info(loginData.getName() + " joins game #" + g.getId());
     if (game == null && g.getOpenDate() != null && g.getMaxPlayers() > g.getBoards().size()) {
       game = g;
       game.addPlayer(loginData.getName());
@@ -200,14 +202,10 @@ public class GameManager implements Serializable {
   }
 
   public void quitGame() {
-    System.out.println("QUITGAME - " + loginData.getName());
+    logger.info(loginData.getName() + " quits game #" + game.getId());
     if (game != null) {
-      System.out.println("activePlayers: " + game.getNumberOfActivePlayers());
-      for (int i = 0; i < game.getBoards().size(); i++) {
-        System.out.println(i + 1 + ". játékos kilépése: " + game.getBoards().get(i).getQuitDate());
-      }
       game.removePlayer(loginData.getName());
-      System.out.println(loginData.getName() + " removed from game " + game.getId());
+      logger.info(loginData.getName() + " removed from game #" + game.getId());
       game = null;
     }
   }
@@ -478,12 +476,12 @@ public class GameManager implements Serializable {
     return msg;
   }
 
-  public void switchPlayers(int pos1, int pos2) {
-    logger.debug("SWITCH " + pos1 + "-" + pos2);
+  public void swapPlayers(int pos1, int pos2) {
+    logger.debug("SWAP " + pos1 + "-" + pos2);
     if (game != null && game.getNumberOfPlayers() > pos1 && game.getNumberOfPlayers() > pos2) {
       logger.debug("POS(" + pos1 + "): " + game.getBoards().get(pos1).getName());
       logger.debug("POS(" + pos2 + "): " + game.getBoards().get(pos2).getName());
-      game.switchPlayers(pos1, pos2);
+      game.swapPlayers(pos1, pos2);
       logger.debug("POS(" + pos1 + "): " + game.getBoards().get(pos1).getName());
       logger.debug("POS(" + pos2 + "): " + game.getBoards().get(pos2).getName());
     }
