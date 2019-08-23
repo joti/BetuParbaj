@@ -42,16 +42,25 @@ public class LoginData implements Serializable {
    * Creates a new instance of Login
    */
   public LoginData() {
+    logger.debug("New LD session");
     name = "";
   }
 
   @PostConstruct
   public void constr() {
     System.out.println("LoginData.PostConstruct method at " + (new Date()));
+    if (!name.isEmpty())
+      logger.info("LoginData session starts for " + name);
+    else
+      logger.info("LoginData session starts");
   }
 
   @PreDestroy
   public void destroy() {
+    if (!name.isEmpty())
+      logger.info("LoginData session ends for " + name);
+    else 
+      logger.info("LoginData session ends");
     System.out.println("LoginData.PreDestroy method at " + (new Date()));
     doLogout();
   }

@@ -763,14 +763,6 @@ textarea{
   background: rgba(188,196,166,0.2);
 }
 
-.myplayerrow{
-  border-top: 2px solid rgba(188,196,166,0.6);
-  border-bottom: 2px solid rgba(170,180,150,0.7);
-  border-left: 2px solid rgba(188,196,166,0.6);
-  border-right: 2px solid rgba(170,180,150,0.7);
-  background: transparent;  
-}
-
 .gameplayersrow{
   width: 100%;
   border-collapse: collapse;
@@ -785,7 +777,27 @@ textarea{
   border-spacing: 0px;
 }
 
+.gameplayersrow2{
+  width: 100%;
+  border-collapse: collapse;
+  border: transparent;
+  padding: 0px;
+  margin: 0px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: bold;
+  color: #808571;
+  line-height: 1;
+  border-spacing: 0px;
+  background: rgba(158,166,136,0.2);
+}
+
 .gameplayersrow td{
+  border: 1px solid rgba(188,196,166,0.0);
+  /*border: none;*/
+}
+
+.gameplayersrow2 td{
   border: 1px solid rgba(188,196,166,0.0);
   /*border: none;*/
 }

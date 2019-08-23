@@ -18,6 +18,7 @@ public class Message implements Comparable<Message>, Serializable {
   private Date time;
   private String name;
   private String text;
+  private int gameId;
 
   public Message() {
   }
@@ -71,5 +72,13 @@ public class Message implements Comparable<Message>, Serializable {
   public void setText(String text) {
     this.text = text;
   }
-  
+
+  public int getGameId() {
+    return gameId;
+  }
+
+  public void setGameId(int gameId) {
+    this.gameId = gameId;
+  }
+
 }

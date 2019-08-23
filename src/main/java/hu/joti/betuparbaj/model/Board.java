@@ -17,6 +17,7 @@ import java.util.Random;
 public class Board implements Serializable {
 
   public static final int BOARD_SIZE = 6;
+  public static final int INACTIVITY_SEC = 5;
 
   // játékos helye az asztalon
   private int position;
@@ -34,6 +35,8 @@ public class Board implements Serializable {
   private Date joinDate;
   // kilépés időpontja
   private Date quitDate;
+  // utolsó aktivitás időpontja
+  private Date lastAccess;
 
   public Board() {
     letters = new String[BOARD_SIZE][BOARD_SIZE];
@@ -56,8 +59,9 @@ public class Board implements Serializable {
     int letterCount = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
       for (int j = 0; j < BOARD_SIZE; j++) {
-        if (!letters[i][j].isEmpty())
+        if (!letters[i][j].isEmpty()) {
           letterCount++;
+        }
       }
     }
     return letterCount;
@@ -75,9 +79,9 @@ public class Board implements Serializable {
     letterPos = rnd.nextInt(36 - getLetterCount()) + 1;
     for (int row = 0; row < BOARD_SIZE; row++) {
       for (int col = 0; col < BOARD_SIZE; col++) {
-        if (letters[row][col].isEmpty()){
+        if (letters[row][col].isEmpty()) {
           count++;
-          if (count == letterPos){
+          if (count == letterPos) {
             letters[row][col] = letter;
             System.out.println(name + " random -> " + row + "/" + col);
             break;
@@ -85,6 +89,20 @@ public class Board implements Serializable {
         }
       }
     }
+  }
+
+  public boolean isActive() {
+    if (quitDate != null) {
+      return false;
+    }
+
+    if (lastAccess != null) {
+      Date now = new Date();
+      int elapsedSec = (int) ((now.getTime() - lastAccess.getTime()) / 1000);
+      return (elapsedSec <= INACTIVITY_SEC);
+    }
+
+    return true;
   }
 
   public String getName() {
@@ -149,6 +167,14 @@ public class Board implements Serializable {
 
   public void setPosition(int position) {
     this.position = position;
+  }
+
+  public Date getLastAccess() {
+    return lastAccess;
+  }
+
+  public void setLastAccess(Date lastAccess) {
+    this.lastAccess = lastAccess;
   }
 
 }

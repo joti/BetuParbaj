@@ -18,6 +18,8 @@ import hu.joti.betuparbaj.model.Game;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.PostConstruct;
+import javax.faces.event.ActionEvent;
 import org.apache.log4j.Logger;
 
 /**
@@ -46,21 +48,28 @@ public class GameManager implements Serializable {
   public GameManager() {
     fadingGames = new HashSet<>();
     fadedGames = new HashSet<>();
-    logger.debug("New session");
+    logger.debug("New GM session");
     myPosition = -1;
-    
+
     letterIndices = new ArrayList<>();
     for (int i = 0; i < Game.ALPHABET.length; i++) {
       letterIndices.add(i);
     }
-    System.out.println("letterIndices.size="+letterIndices.size());
 
     cellIndices = new ArrayList<>();
     for (int i = 0; i < Board.BOARD_SIZE * Board.BOARD_SIZE; i++) {
       cellIndices.add(i);
     }
-    System.out.println("cellIndices.size="+cellIndices.size());
-    
+  }
+
+  @PostConstruct
+  public void constr() {
+    System.out.println("GameManager.PostConstruct method at " + (new Date()));
+    if (game == null) {
+      logger.info("GameManager session starts, game is null");
+    } else {
+      logger.info("GameManager session starts, game id = " + game.getId());
+    }
   }
 
   @PreDestroy
@@ -73,7 +82,7 @@ public class GameManager implements Serializable {
   }
 
   public void refresh() {
-    System.out.println(loginData.getName() + " refresh");
+//    System.out.println(loginData.getName() + " refresh");
     loginData.refresh();
 
     if (lobby != null) {
@@ -111,38 +120,42 @@ public class GameManager implements Serializable {
       }
     }
 
+    if (game != null) {
+      game.accessBoard(loginData.getName());
+    }
+
     if (game != null && game.getStartDate() != null && game.getEndDate() == null) {
       if (myPosition < 0) {
         fillMyPosition();
       }
-      System.out.println(game.getNextActivePlayerPos() + " - " + myPosition + ". " + loginData.getName() + " refresh: " + getTurnSec() + "/" + game.getTurnTimeLimit());
 
-      // Ha mi vagyunk épp soron, vagy mi vagyunk a legközelebbi még aktív játékos (a soron lévő játékos már kilépett),
+      // Ha mi vagyunk épp soron, vagy mi vagyunk a legközelebbi még aktív játékos (a soron lévő játékos már kilépett vagy nem tud kapcsolódni),
       // akkor szükség esetén elindítjuk a következő kört
       if (game.getNextActivePlayerPos() == myPosition) {
-      
+
         // Rakott-e már mindenki betűt és a soron következő játékos kiválasztotta-e már a következő betűt?
         boolean needWait = false;
         int turn = game.getTurn();
-        if (turn > 0){
+        if (turn > 0) {
           for (Board board : game.getBoards()) {
             // Kilépett játékosra nem várakozunk
-            if (board.getLetterCount() < game.getTurn() && board.getQuitDate() == null){
+            if (board.getLetterCount() < game.getTurn() && board.getQuitDate() == null) {
               needWait = true;
               break;
-            }  
+            }
           }
         }
-        if (!needWait && game.getTurn() < 36 && game.getDrawmode() == Game.PLAYER_DRAW 
-                      && game.getBoards().get(game.getCurrentPlayer()).getQuitDate() == null){
-          if (game.getSelectedLetters()[turn].isEmpty())
+        if (!needWait && game.getTurn() < 36 && game.getDrawmode() == Game.PLAYER_DRAW
+                && game.getBoards().get(game.getCurrentPlayer()).getQuitDate() == null) {
+          if (game.getSelectedLetters()[turn].isEmpty()) {
             needWait = true;
+          }
         }
 
         if (getTurnSec() > game.getTurnTimeLimit() || !needWait) {
           System.out.println(loginData.getName() + ": NEXTTURN");
           game.nextTurn();
-          if (game.getEndDate() != null){
+          if (game.getEndDate() != null) {
             lobby.getGamesInProgress().remove(game);
             lobby.getGamesFinished().add(game);
           }
@@ -165,10 +178,11 @@ public class GameManager implements Serializable {
   }
 
   public void debug(String text) {
-    if (loginData != null)
+    if (loginData != null) {
       logger.debug(text + " (" + loginData.getName() + ")");
-    else
+    } else {
       logger.debug(text);
+    }
   }
 
   public void login() {
@@ -247,7 +261,7 @@ public class GameManager implements Serializable {
     if (lobby.getGamesFinished().contains(game)) {
       return true;
     }
-    
+
     System.out.println("GAME = NULL (GameExists())");
     game = null;
     return false;
@@ -270,7 +284,7 @@ public class GameManager implements Serializable {
       fillMyPosition();
     }
   }
-  
+
   public void refresh(int source) {
     System.out.println(source);
     if (game == null) {
@@ -333,7 +347,10 @@ public class GameManager implements Serializable {
     return false;
   }
 
-  public boolean isPlayerTurnOn(int player){
+  public boolean isPlayerTurnOn(int player) {
+    if (game == null)
+      return false;
+
     if (game.getStartDate() == null || game.getEndDate() != null)
       return false;
 
@@ -342,33 +359,51 @@ public class GameManager implements Serializable {
     else
       return !isPlayerTurnFinished(player);
   }
-  
-  public boolean isPlayerTurnFinished(int player){
-    if (game.getStartDate() != null && game.getEndDate() == null){
+
+  public boolean isPlayerActive(String player) {
+    if (game == null || game.getOpenDate() == null) {
+      return false;
+    }
+
+    return game.isPlayerActive(player);
+  }
+
+  public boolean isPlayerTurnFinished(int player) {
+    if (game.getStartDate() != null && game.getEndDate() == null) {
       int turn = game.getTurn();
-      if (turn < 36 && game.getCurrentPlayer() == player){
-        if (!game.getSelectedLetters()[turn].isEmpty())
+      if (turn < 36 && game.getCurrentPlayer() == player) {
+        if (!game.getSelectedLetters()[turn].isEmpty()) {
           return true;
+        }
       } else if (turn > 0) {
-        if (game.getBoards().get(player).getLetterCount() >= turn)
+        if (game.getBoards().get(player).getLetterCount() >= turn) {
           return true;
+        }
       }
     }
     return false;
   }
-  
-  public boolean canPlayerSelectLetterInTurn(int player){
+
+  public boolean canPlayerSelectLetterInTurn(int player) {
     return (game != null && game.getDrawmode() == Game.PLAYER_DRAW && game.getTurn() < 36 && game.getCurrentPlayer() == player);
   }
-  
-  public boolean canPlayerSelectLetter(){
+
+  public boolean canPlayerSelectLetter() {
     return (getPlayerState() == 2);
   }
 
-  public boolean canPlayerPlaceLetter(){
+  public boolean canPlayerPlaceLetter() {
     return (getPlayerState() == 1);
   }
-  
+
+  public String getGamePlayersRowClass(int position) {
+    if (position == myPosition) {
+      return "gameplayersrow2";
+    } else {
+      return "gameplayersrow";
+    }
+  }
+
   public int getPlayerState() {
     /* Állapotkódok:
        0 - a játék még nem indult el, vagy már véget ért
@@ -380,17 +415,19 @@ public class GameManager implements Serializable {
       return 0;
     }
 
-    if (myPosition < 0){
+    if (myPosition < 0) {
       fillMyPosition();
     }
-    
-    int turn = game.getTurn();
-    if (game.getBoards().get(myPosition).getLetterCount() < turn)
-      // A játékos még nem rakta le az aktuális betűt
-      return 1;
 
-    if (turn < 36 && myPosition == game.getCurrentPlayer() && game.getSelectedLetters()[turn].isEmpty())
+    int turn = game.getTurn();
+    if (game.getBoards().get(myPosition).getLetterCount() < turn) // A játékos még nem rakta le az aktuális betűt
+    {
+      return 1;
+    }
+
+    if (turn < 36 && myPosition == game.getCurrentPlayer() && game.getSelectedLetters()[turn].isEmpty()) {
       return 2;
+    }
 
     return 3;
   }
@@ -422,33 +459,32 @@ public class GameManager implements Serializable {
     if (game != null && game.getStartDate() != null) {
       gameHistString = game.getGameHistString() + "->" + getPlayerState();
     }
-    if (game != null) {
-      logger.debug(game.getStartDate());
-      logger.debug(loginData.getName() + " GAMEHISTSTRING=" + gameHistString);
-    }
     return gameHistString;
   }
 
   public String getGameMsg() {
-    if (game == null || game.getStartDate() == null)
+    if (game == null || game.getStartDate() == null) {
       return "";
+    }
 
     String msg;
     String name = "";
     if (game.getEndDate() != null) {
       int count = 0;
       for (Board b : game.getBoards()) {
-        if (b.getPlace() == 1){
+        if (b.getPlace() == 1) {
           count++;
-          if (!name.isEmpty())
+          if (!name.isEmpty()) {
             name += " és \n\n";
+          }
           name += b.getName();
         }
       }
-      if (count > 1 && count == game.getBoards().size())
-        msg = "A játék véget ért.\n\nAz eredmény döntetlen."; 
-      else          
+      if (count > 1 && count == game.getBoards().size()) {
+        msg = "A játék véget ért.\n\nAz eredmény döntetlen.";
+      } else {
         msg = String.format("\n\n\n\nA játék véget ért.\n\nA győztes:\n\n%s", name);
+      }
     } else {
       int turn = game.getTurn();
       int playerState = getPlayerState();
@@ -463,10 +499,11 @@ public class GameManager implements Serializable {
       } else if (playerState == 1) {
         // A kiválasztott betűt el kell helyezni a táblán
         String letter = game.getSelectedLetter();
-        if (turn < 36 && myPosition == game.getCurrentPlayer())
+        if (turn < 36 && myPosition == game.getCurrentPlayer()) {
           msg = String.format("\n\n\nA %d. betű:\n\n\n\n\n\n Helyezd el a táblán,\nmajd válaszd ki\na következő betűt!", turn);
-        else
+        } else {
           msg = String.format("\n\n\nA %d. betű:\n\n\n\n\n\n Helyezd el a táblán!", turn);
+        }
       } else if (playerState == 2) {
         msg = "\n\nVálaszd ki\na következő betűt!";
       } else {
@@ -479,21 +516,13 @@ public class GameManager implements Serializable {
   public void swapPlayers(int pos1, int pos2) {
     logger.debug("SWAP " + pos1 + "-" + pos2);
     if (game != null && game.getNumberOfPlayers() > pos1 && game.getNumberOfPlayers() > pos2) {
-      logger.debug("POS(" + pos1 + "): " + game.getBoards().get(pos1).getName());
-      logger.debug("POS(" + pos2 + "): " + game.getBoards().get(pos2).getName());
       game.swapPlayers(pos1, pos2);
-      logger.debug("POS(" + pos1 + "): " + game.getBoards().get(pos1).getName());
-      logger.debug("POS(" + pos2 + "): " + game.getBoards().get(pos2).getName());
     }
   }
 
   public int getMyGamePos() {
     if (game != null) {
-      for (int i = 0; i < game.getBoards().size(); i++) {
-        if (game.getBoards().get(i).getName().equals(loginData.getName())) {
-          return i;
-        }
-      }
+      return game.getPlayerPos(loginData.getName());
     }
     return -1;
   }
@@ -522,20 +551,6 @@ public class GameManager implements Serializable {
     }
   }
 
-  public int getTurn() {
-    int turn = 0;
-    if (game != null && game.getStartDate() != null) {
-      if (game.getEndDate() != null) {
-        turn = 37;
-      } else {
-        Date now = new Date();
-        turn = (int) ((now.getTime() - game.getStartDate().getTime()) / 1000) / game.getTimeLimit() + 1;
-        logger.debug("TURN=" + turn);
-      }
-    }
-    return turn;
-  }
-
   public int getTurnSec() {
     int turnSec = 0;
     if (game != null && game.getStartDate() != null) {
@@ -553,18 +568,20 @@ public class GameManager implements Serializable {
     int rTurnSec = 1000;
     if (game != null && game.getStartDate() != null && game.getEndDate() == null) {
       rTurnSec = game.getTurnTimeLimit() - getTurnSec();
-      if (rTurnSec < 0)
+      if (rTurnSec < 0) {
         rTurnSec = 0;
+      }
     }
     return rTurnSec;
   }
 
-  public String getSelectedLetter(){
-    if (game != null)
+  public String getSelectedLetter() {
+    if (game != null) {
       return game.getSelectedLetter();
+    }
     return "";
   }
-  
+
   public String getBoardLetter(int row, int column) {
     if (game != null && game.getStartDate() != null) {
       return game.getBoards().get(myPosition).getLetters()[row][column];
@@ -585,16 +602,17 @@ public class GameManager implements Serializable {
       fillMyPosition();
     }
     int pls = getPlayerState();
-    if (getPlayerState() == 1)
+    if (getPlayerState() == 1) {
       return !hasBoardLetter(row, column);
-    else
+    } else {
       return false;
+    }
   }
 
   public boolean canPlaceBoardLetter(int index) {
     return canPlaceBoardLetter(index / 6, index % 6);
   }
-  
+
   public void placeLetter(int row, int column) {
     System.out.println("placeletter:" + row + "/" + column);
     if (game != null && game.getStartDate() != null && getPlayerState() == 1) {
@@ -605,37 +623,39 @@ public class GameManager implements Serializable {
   public void placeLetter(int index) {
     placeLetter(index / 6, index % 6);
   }
-  
-  public void selectLetter(String letter){
+
+  public void selectLetter(String letter) {
     System.out.println("selectletter: " + letter);
     if (game != null && game.getStartDate() != null && getPlayerState() == 2) {
       game.selectLetter(letter);
     }
   }
-  
-  public boolean canSelectLetter(String letter){
-    if (game != null && game.getStartDate() != null)
+
+  public boolean canSelectLetter(String letter) {
+    if (game != null && game.getStartDate() != null) {
       return game.isLetterAvailable(letter);
+    }
     return false;
   }
 
-  public void selectLetter(int letter){
+  public void selectLetter(int letter) {
     System.out.println("selectletter: " + letter);
     if (game != null && game.getStartDate() != null && getPlayerState() == 2) {
       game.selectLetter(letter);
     }
   }
-  
-  public boolean canSelectLetter(int letter){
-    if (game != null && game.getStartDate() != null)
+
+  public boolean canSelectLetter(int letter) {
+    if (game != null && game.getStartDate() != null) {
       return game.isLetterAvailable(letter);
+    }
     return false;
   }
-  
-  public String getLetterByIndex(int index){
+
+  public String getLetterByIndex(int index) {
     return game.ALPHABET[index];
   }
-  
+
   public List<Integer> getAllNumOfPlayers() {
     return Arrays.asList(Game.NUM_OF_PLAYERS);
   }
@@ -683,5 +703,5 @@ public class GameManager implements Serializable {
   public void setCellIndices(List<Integer> cellIndices) {
     this.cellIndices = cellIndices;
   }
-  
+
 }

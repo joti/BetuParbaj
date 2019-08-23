@@ -366,8 +366,9 @@
                                              rendered="#{gameManager.game.openDate == null}">
                               <f:ajax execute="" render="pg_main"/>
                             </h:commandButton>
-                            <h:commandButton class="gamebutton" style="width: 178px; margin-left: 8px;" value="Asztal indítása" action="#{gameManager.startGame()}" 
-                                             rendered="#{gameManager.game.openDate != null}" disabled="#{gameManager.game.numberOfPlayers lt gameManager.game.minPlayers}">
+                            <h:commandButton class="gamebutton" style="width: 178px; margin-left: 8px;" value="Játék indítása" action="#{gameManager.startGame()}" 
+                                             rendered="#{gameManager.game.openDate != null}" 
+                                             disabled="#{gameManager.game.numberOfPlayers lt gameManager.game.minPlayers or gameManager.myGamePos ne gameManager.game.adminPlayerPos}">
                               <f:ajax execute="" render="pg_main"/>
                             </h:commandButton>
                           </h:panelGroup>
@@ -435,7 +436,7 @@
                                          value="#{gameManager.game.boards}" var="boa" columnClasses="gameplayerstablecol">
                               <h:column>
                                 <h:panelGroup id="pg_gameplayerscell">
-                                  <h:panelGrid class="gameplayersrow" columns="3" columnClasses="gameplayersrowcol1,gameplayersrowcol2,gameplayersrowcol3">
+                                  <h:panelGrid class="#{gameManager.getGamePlayersRowClass(boa.position)}" columns="3" columnClasses="gameplayersrowcol1,gameplayersrowcol2,gameplayersrowcol3">
                                     <h:panelGroup>
                                       <h:graphicImage class="curplayerimage" url="/images/curplayer.png" 
                                                       rendered="#{gameManager.canPlayerSelectLetterInTurn(boa.position)}"/>
@@ -453,14 +454,14 @@
                                       </h:panelGroup>
                                       <h:graphicImage class="curplayerimage" url="/images/disconn.png" style="margin-right: 3px;"
                                                       rendered="#{boa.quitDate != null and gameManager.isPlayerTurnOn(boa.position)}"/>
+                                      <h:graphicImage class="curplayerimage" url="/images/inactive.png" style="margin-right: 3px;"
+                                                      rendered="#{boa.quitDate == null and !boa.isActive() and !gameManager.isPlayerTurnFinished(boa.position)}"/>
                                       <h:graphicImage class="curplayerimage" url="/images/thinking.gif" style="margin-right: 3px;"
-                                                      rendered="#{boa.quitDate == null and gameManager.isPlayerTurnOn(boa.position)}"/>
+                                                      rendered="#{boa.quitDate == null and boa.isActive() and gameManager.isPlayerTurnOn(boa.position)}"/>
                                       <h:graphicImage class="curplayerimage" url="/images/check.png" style="margin-right: 3px;"
                                                       rendered="#{boa.quitDate == null and gameManager.isPlayerTurnFinished(boa.position)}"/>
                                     </h:panelGroup>
                                   </h:panelGrid>
-                                  <h:panelGroup class="myplayerrow" style="position: absolute;left:3px;top:#{boa.position*31+3}px;width:242px;height:24px;" 
-                                                rendered="#{gameManager.myPosition eq boa.position}"/>
                                 </h:panelGroup>
                               </h:column>
                             </h:dataTable>
@@ -620,7 +621,9 @@
           </p:confirmDialog>       
 
         </h:panelGroup> <!-- pg_mainpage -->
+
       </h:form>
+      
     </h:body>
   </f:view>         
 </html>

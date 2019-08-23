@@ -227,6 +227,21 @@ public class Game implements Serializable {
     }
   }
 
+	public void accessBoard(String name){
+		int pos = getPlayerPos(name);
+		if (pos >= 0){
+      boards.get(pos).setLastAccess(new Date());
+		}	
+	}	
+	
+	public boolean isPlayerActive(String name){
+		int pos = getPlayerPos(name);
+		if (pos >= 0){
+      return boards.get(pos).isActive();
+		}	
+		return false;
+	}	
+	
   public String getSettingsString() {
     String settings = "mgh: ";
     if (easyVowelRule) {
@@ -312,9 +327,9 @@ public class Game implements Serializable {
         gameHist += "/";
       }
       gameHist += (board.getQuitDate() == null ? board.getLetterCount() : "-");
+      gameHist += (board.isActive() ? "." : "?");
     }
     gameHist += ":";
-    System.out.println("turn=" + turn);
     for (int i = 0; i < turn; i++) {
       if (i > 0)
         gameHist += ",";
@@ -342,18 +357,18 @@ public class Game implements Serializable {
         pos = i;
       }
     }
-    System.out.println("Adminplayerpos: " + pos);
     adminPlayerPos = pos;
   }
 
   public int getNextActivePlayerPos() {
     int pos = currentPlayer - 1;
+		int count = 0;
     do {
       pos++;
+			count++;
       if (pos >= numberOfPlayers)
         pos = 0;
-    } while (boards.get(pos).getQuitDate() != null);
-    System.out.println("NEXTACTIVEPLAYERPOS=" + pos);
+    } while ( (boards.get(pos).getQuitDate() != null || !boards.get(pos).isActive()) && count <= numberOfPlayers );
     return pos;
   }
 
