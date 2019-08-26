@@ -9,12 +9,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
 import hu.joti.betuparbaj.model.Game;
-import java.util.HashSet;
-import java.util.Set;
+import hu.joti.betuparbaj.model.Player;
+import java.util.Iterator;
 
 /**
  *
@@ -39,47 +38,6 @@ public class Lobby implements Serializable {
     Date startDate = new Date(119, 3, 21);
     lastId = (int) ((curTime.getTime() - startDate.getTime()) / 1000);
     System.out.println("lastId: " + lastId);
-
-    // teszthez dummy asztalok létrehozása
-    addTestGamesToLobby(3,1);
-  }
-
-  private void addTestGamesToLobby(int count, int full) {
-    int gameId;
-    Game game;
-    Random rnd = new Random();
-    String playerName;
-    int maxPlayers;
-    int numOfPlayers;
-    int timeLimit;
-    int fullcount = 0;
-    Set<String> players = new HashSet<>();
-
-    for (int i = 0; i < count; i++) {
-      gameId = getGameId();
-      maxPlayers = Game.NUM_OF_PLAYERS[rnd.nextInt(Game.NUM_OF_PLAYERS.length)];
-      if (fullcount < full){
-        numOfPlayers = maxPlayers;
-        fullcount++;
-      } else {
-        numOfPlayers = rnd.nextInt(maxPlayers) + 1;
-      }  
-      timeLimit = Game.TIMELIMITS[rnd.nextInt(Game.TIMELIMITS.length)];
-
-      game = new Game(gameId, rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), 1, 2, maxPlayers, timeLimit);
-
-      players.clear();
-      for (int j = 0; j < numOfPlayers; j++) {
-        do {
-          playerName = Game.TESTPLAYERS[rnd.nextInt(Game.TESTPLAYERS.length)];
-        } while (players.contains(playerName));
-        game.addPlayer(playerName);
-        players.add(playerName);
-      }
-      
-      gamesInLobby.add(game);
-      game.setOpenDate(new Date());
-    }
   }
 
   public String getGamesInLobbyString(){
@@ -88,6 +46,26 @@ public class Lobby implements Serializable {
       gamesString += game.getGameSetupString() + ";";
     }
     return gamesString;
+  }
+
+  public void removePlayer(Player player){
+    Iterator iter = gamesInLobby.iterator();
+    while (iter.hasNext()){
+      Game game = (Game)iter.next();
+      game.removePlayer(player);
+      if (game.getNumberOfPlayers() == 0){
+        iter.remove();
+      }
+    }
+
+    iter = gamesInProgress.iterator();
+    while (iter.hasNext()){
+      Game game = (Game)iter.next();
+      game.removePlayer(player);
+      if (game.getNumberOfActivePlayers() == 0){
+        iter.remove();
+      }
+    }
   }
   
   public int getGameId() {

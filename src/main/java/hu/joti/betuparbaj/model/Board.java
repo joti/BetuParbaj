@@ -17,12 +17,11 @@ import java.util.Random;
 public class Board implements Serializable {
 
   public static final int BOARD_SIZE = 6;
-  public static final int INACTIVITY_SEC = 5;
 
   // játékos helye az asztalon
   private int position;
   // játékos neve
-  private String name;
+  private Player player;
   //elhelyezett betűk
   private String[][] letters;
   // pontot érő szavak a táblán
@@ -33,11 +32,9 @@ public class Board implements Serializable {
   private int place;
   // csatlakozás időpontja
   private Date joinDate;
-  // kilépés időpontja
+  // folyamatban lévő játékból való kilépés időpontja
   private Date quitDate;
-  // utolsó aktivitás időpontja
-  private Date lastAccess;
-
+  
   public Board() {
     letters = new String[BOARD_SIZE][BOARD_SIZE];
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -50,9 +47,9 @@ public class Board implements Serializable {
     joinDate = new Date();
   }
 
-  public Board(String name) {
+  public Board(Player player) {
     this();
-    this.name = name;
+    this.player = player;
   }
 
   public int getLetterCount() {
@@ -83,7 +80,7 @@ public class Board implements Serializable {
           count++;
           if (count == letterPos) {
             letters[row][col] = letter;
-            System.out.println(name + " random -> " + row + "/" + col);
+            System.out.println(player.getName() + " random -> " + row + "/" + col);
             break;
           }
         }
@@ -91,26 +88,12 @@ public class Board implements Serializable {
     }
   }
 
-  public boolean isActive() {
-    if (quitDate != null) {
-      return false;
-    }
-
-    if (lastAccess != null) {
-      Date now = new Date();
-      int elapsedSec = (int) ((now.getTime() - lastAccess.getTime()) / 1000);
-      return (elapsedSec <= INACTIVITY_SEC);
-    }
-
-    return true;
+  public Player getPlayer() {
+    return player;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
+  public void setPlayer(Player player) {
+    this.player = player;
   }
 
   public String[][] getLetters() {
@@ -167,14 +150,6 @@ public class Board implements Serializable {
 
   public void setPosition(int position) {
     this.position = position;
-  }
-
-  public Date getLastAccess() {
-    return lastAccess;
-  }
-
-  public void setLastAccess(Date lastAccess) {
-    this.lastAccess = lastAccess;
   }
 
 }

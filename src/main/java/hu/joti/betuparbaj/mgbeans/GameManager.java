@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.PostConstruct;
-import javax.faces.event.ActionEvent;
 import org.apache.log4j.Logger;
 
 /**
@@ -63,7 +62,7 @@ public class GameManager implements Serializable {
   }
 
   @PostConstruct
-  public void constr() {
+  public void init() {
     System.out.println("GameManager.PostConstruct method at " + (new Date()));
     if (game == null) {
       logger.info("GameManager session starts, game is null");
@@ -120,9 +119,9 @@ public class GameManager implements Serializable {
       }
     }
 
-    if (game != null) {
-      game.accessBoard(loginData.getName());
-    }
+//    if (game != null) {
+//      game.accessBoard(loginData.getName());
+//    }
 
     if (game != null && game.getStartDate() != null && game.getEndDate() == null) {
       if (myPosition < 0) {
@@ -201,7 +200,7 @@ public class GameManager implements Serializable {
     int gameId = lobby.getGameId();
     logger.info(loginData.getName() + " creates game #" + gameId);
     game = new Game(gameId, true, true, true, 1, 2, 4, 30);
-    game.addPlayer(loginData.getName());
+    game.addPlayer(loginData.getPlayer());
     myPosition = -1;
     logger.info("Game #" + game.getId() + " created");
   }
@@ -210,7 +209,7 @@ public class GameManager implements Serializable {
     logger.info(loginData.getName() + " joins game #" + g.getId());
     if (game == null && g.getOpenDate() != null && g.getMaxPlayers() > g.getBoards().size()) {
       game = g;
-      game.addPlayer(loginData.getName());
+      game.addPlayer(loginData.getPlayer());
       myPosition = -1;
     }
   }
@@ -477,7 +476,7 @@ public class GameManager implements Serializable {
           if (!name.isEmpty()) {
             name += " és \n\n";
           }
-          name += b.getName();
+          name += b.getPlayer().getName();
         }
       }
       if (count > 1 && count == game.getBoards().size()) {
@@ -488,7 +487,7 @@ public class GameManager implements Serializable {
     } else {
       int turn = game.getTurn();
       int playerState = getPlayerState();
-      name = game.getBoards().get(game.getCurrentPlayer()).getName();
+      name = game.getBoards().get(game.getCurrentPlayer()).getPlayer().getName();
 
       if (turn == 0 && playerState == 2) {
         // A 0. körben a játékos választ betűt

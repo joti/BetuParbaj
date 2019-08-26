@@ -26,7 +26,6 @@ public class Game implements Serializable {
   public static final int PLAYER_DRAW = 1;
   public static final int RANDOM_DRAW = 2;
 
-  public final static String[] TESTPLAYERS = {"Pali", "Sanyiarettenthetetlensanyi", "Fecó", "Bruckner Szigfrid", "Szilveszter", "Juliska", "Mariska", "Ákóisz Igor", "LevenGyula", "Ősember", "Maci Laci", "Róbert Gida", "Mekk Elek", "szigfrid"};
   private final static int ALPHABETSETTINGSSTRING_MODE = 2;
 
   // Betűkészlet
@@ -109,23 +108,30 @@ public class Game implements Serializable {
     turn = 0;
   }
 
-  public void addPlayer(String name) {
-    Board board = new Board(name);
+  public void addPlayer(Player player) {
+    Board board = new Board(player);
     boards.add(board);
     numberOfPlayers++;
     if (boards.size() == 1)
       setAdminPlayer();
   }
 
+  public void removePlayer(Player player){
+    removePlayer(player.getName());
+  }
+  
   public void removePlayer(String name) {
     Iterator iter = boards.iterator();
+    boolean needSetAdminPlayer = false;
 
     while (iter.hasNext()) {
       Board board = (Board) iter.next();
-      if (board.getName().equals(name)) {
+      if (board.getPlayer().getName().equals(name)) {
         if (startDate == null) {
           iter.remove();
           numberOfPlayers--;
+          if (numberOfPlayers > 0)
+            needSetAdminPlayer = true;
         } else {
           board.setQuitDate(new Date());
           numberOfActivePlayers--;
@@ -133,7 +139,7 @@ public class Game implements Serializable {
         break;
       }
     }
-    if (startDate == null)
+    if (needSetAdminPlayer)
       setAdminPlayer();
   }
 
@@ -147,17 +153,17 @@ public class Game implements Serializable {
   public String getPlayerName(Long pos) {
     int playerpos = (int) (long) pos;
     if (boards.size() > pos) {
-      return boards.get(playerpos).getName();
+      return boards.get(playerpos).getPlayer().getName();
     }
     if (playerpos >= minPlayers)
-      return "..........?";
+      return "...........";
     else
       return "..........!";
   }
 
   public int getPlayerPos(String name) {
     for (int i = 0; i < boards.size(); i++) {
-      if (boards.get(i).getName().equals(name))
+      if (boards.get(i).getPlayer().getName().equals(name))
         return i;
     }
     return -1;
@@ -202,7 +208,7 @@ public class Game implements Serializable {
     }
 
     // Ha véletlenszerű a játékosok sorrendje, akkor most beállítjuk
-    if (randomOrder){
+    if (randomOrder) {
       Random rnd = new Random();
       for (int i = numberOfPlayers - 1; i > 0; i--) {
         int number = rnd.nextInt(i + 1);
@@ -210,11 +216,11 @@ public class Game implements Serializable {
           swapPlayers(i, number);
       }
     }
-    
+
     for (int i = 0; i < boards.size(); i++) {
       boards.get(i).setPosition(i);
     }
-    
+
     startDate = new Date();
     numberOfActivePlayers = numberOfPlayers;
     currentPlayer = 0;
@@ -227,21 +233,21 @@ public class Game implements Serializable {
     }
   }
 
-	public void accessBoard(String name){
-		int pos = getPlayerPos(name);
-		if (pos >= 0){
-      boards.get(pos).setLastAccess(new Date());
-		}	
-	}	
-	
-	public boolean isPlayerActive(String name){
-		int pos = getPlayerPos(name);
-		if (pos >= 0){
-      return boards.get(pos).isActive();
-		}	
-		return false;
-	}	
-	
+//  public void accessBoard(String name) {
+//    int pos = getPlayerPos(name);
+//    if (pos >= 0) {
+//      boards.get(pos).setLastAccess(new Date());
+//    }
+//  }
+
+  public boolean isPlayerActive(String name) {
+    int pos = getPlayerPos(name);
+    if (pos >= 0) {
+      return boards.get(pos).getPlayer().isActive();
+    }
+    return false;
+  }
+
   public String getSettingsString() {
     String settings = "mgh: ";
     if (easyVowelRule) {
@@ -293,7 +299,7 @@ public class Game implements Serializable {
 
   public String getCreator() {
     if (boards.size() > 0) {
-      return boards.get(0).getName();
+      return boards.get(0).getPlayer().getName();
     } else {
       return "";
     }
@@ -306,7 +312,7 @@ public class Game implements Serializable {
         players += " / ";
       }
       if (boards.size() > i) {
-        players += boards.get(i).getName();
+        players += boards.get(i).getPlayer().getName();
       } else {
         players += "(?)";
       }
@@ -327,7 +333,7 @@ public class Game implements Serializable {
         gameHist += "/";
       }
       gameHist += (board.getQuitDate() == null ? board.getLetterCount() : "-");
-      gameHist += (board.isActive() ? "." : "?");
+      gameHist += (board.getPlayer().isActive() ? "." : "?");
     }
     gameHist += ":";
     for (int i = 0; i < turn; i++) {
@@ -337,7 +343,7 @@ public class Game implements Serializable {
         gameHist += selectedLetters[i];
       }
     }
-    if (turn < 36 && selectedLetters[turn] != null && !selectedLetters[turn].isEmpty()){
+    if (turn < 36 && selectedLetters[turn] != null && !selectedLetters[turn].isEmpty()) {
       gameHist += "*";
     }
     if (endDate != null)
@@ -362,13 +368,13 @@ public class Game implements Serializable {
 
   public int getNextActivePlayerPos() {
     int pos = currentPlayer - 1;
-		int count = 0;
+    int count = 0;
     do {
       pos++;
-			count++;
+      count++;
       if (pos >= numberOfPlayers)
         pos = 0;
-    } while ( (boards.get(pos).getQuitDate() != null || !boards.get(pos).isActive()) && count <= numberOfPlayers );
+    } while ((boards.get(pos).getQuitDate() != null || !boards.get(pos).getPlayer().isActive()) && count <= numberOfPlayers);
     return pos;
   }
 
@@ -384,11 +390,11 @@ public class Game implements Serializable {
       return;
     }
 
-    if (turn > 0){
+    if (turn > 0) {
       // Ha valamelyik játékos még nem helyezte le a betűt a táblájára, akkor most lerakjuk valahová
       for (Board board : boards) {
-        int letterCount = board.getLetterCount(); 
-        if (letterCount < turn){
+        int letterCount = board.getLetterCount();
+        if (letterCount < turn) {
           board.setLetterRandom(selectedLetters[turn - 1]);
         }
       }
@@ -397,13 +403,13 @@ public class Game implements Serializable {
     if (turn == 36) {
       System.out.println("Játék vége.");
       endDate = new Date();
-      
+
       // TODO Számítsuk ki az eredményt
       for (Board board : boards) {
         board.setScore((4 - board.getPosition()) * 26);
         board.setPlace(board.getPosition() + 1);
       }
-      
+
     } else {
       // Ha még nem lett kiválasztva a következő betű, akkor most kisorsoljuk
       if (selectedLetters[turn].equals("")) {
@@ -416,14 +422,14 @@ public class Game implements Serializable {
       turn++;
       turnStart = new Date();
     }
-  }  
+  }
 
-  public void selectLetter(String letter){
+  public void selectLetter(String letter) {
     selectedVowelTypes[turn] = getLetterVowelType(letter);
     selectedLetters[turn] = letter;
   }
 
-  public void selectLetter(int letterIndex){
+  public void selectLetter(int letterIndex) {
     if (letterIndex > ALPHABET.length)
       letterIndex = 0;
     String letter = ALPHABET[letterIndex];
@@ -431,17 +437,17 @@ public class Game implements Serializable {
     selectedLetters[turn] = letter;
   }
 
-  public boolean isLetterAvailable(String letter){
+  public boolean isLetterAvailable(String letter) {
     return availableLetters.containsKey(letter);
   }
-  
-  public boolean isLetterAvailable(int letterIndex){
+
+  public boolean isLetterAvailable(int letterIndex) {
     if (letterIndex > ALPHABET.length)
       letterIndex = 0;
     String letter = ALPHABET[letterIndex];
     return availableLetters.containsKey(letter);
   }
-  
+
   public String drawLetter() {
     int count = 0;
     String selectedLetter = "";
@@ -474,7 +480,7 @@ public class Game implements Serializable {
     do {
       draw = rnd.nextInt(count) + 1;
       System.out.println("sorsolt szám: " + draw);
- 
+
       count = 0;
       for (String letter : availableLetters.keySet()) {
         count += availableLetters.get(letter);
@@ -483,40 +489,40 @@ public class Game implements Serializable {
           break;
         }
       }
- 
+
       vowelType = getLetterVowelType(selectedLetter);
     } while ((vowelCount >= 5 && vowelType > 0) || (consCount >= 5 && vowelType == 0));
 
-    System.out.println("Sorsolt betű: " + draw + ". = " + selectedLetter + ", " + (vowelType == 0?"msh":"mgh"));
+    System.out.println("Sorsolt betű: " + draw + ". = " + selectedLetter + ", " + (vowelType == 0 ? "msh" : "mgh"));
     selectedVowelTypes[turn] = vowelType;
     return selectedLetter;
   }
 
-  public int getLetterVowelType(String letter){
+  public int getLetterVowelType(String letter) {
     for (int i = 0; i < ALPHABET.length; i++) {
-      if (ALPHABET[i].equals(letter)){
+      if (ALPHABET[i].equals(letter)) {
         return VOWELTYPES[i];
       }
     }
     return -1;
   }
 
-  public void placeLetter(int playerPos, int row, int column){
-    if (startDate != null && endDate == null){
+  public void placeLetter(int playerPos, int row, int column) {
+    if (startDate != null && endDate == null) {
       String letter = getSelectedLetter();
       boards.get(playerPos).setLetter(letter, row, column);
     }
-  } 
+  }
 
-  public String getSelectedLetter(){
+  public String getSelectedLetter() {
     String letter = "";
-    if (startDate != null && endDate == null && turn > 0){
+    if (startDate != null && endDate == null && turn > 0) {
       int index = turn - 1;
       letter = selectedLetters[index];
-    } 
-    return letter;      
+    }
+    return letter;
   }
-  
+
   public List<Board> getBoards() {
     return boards;
   }
@@ -661,7 +667,7 @@ public class Game implements Serializable {
   public void setSelectedVowelTypes(int[] selectedVowelTypes) {
     this.selectedVowelTypes = selectedVowelTypes;
   }
-  
+
   public int getTurn() {
     return turn;
   }

@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import hu.joti.betuparbaj.model.Message;
+import hu.joti.betuparbaj.model.Player;
 import java.io.Serializable;
 import org.apache.log4j.Logger;
 
@@ -37,7 +38,7 @@ public class LoginData implements Serializable {
   private int seconds;
 
   private static final Logger logger = Logger.getLogger(GameManager.class.getName());
-  
+
   /**
    * Creates a new instance of Login
    */
@@ -47,7 +48,7 @@ public class LoginData implements Serializable {
   }
 
   @PostConstruct
-  public void constr() {
+  public void init() {
     System.out.println("LoginData.PostConstruct method at " + (new Date()));
     if (!name.isEmpty())
       logger.info("LoginData session starts for " + name);
@@ -59,7 +60,7 @@ public class LoginData implements Serializable {
   public void destroy() {
     if (!name.isEmpty())
       logger.info("LoginData session ends for " + name);
-    else 
+    else
       logger.info("LoginData session ends");
     System.out.println("LoginData.PreDestroy method at " + (new Date()));
     doLogout();
@@ -70,35 +71,30 @@ public class LoginData implements Serializable {
 
     if (name.isEmpty()) {
       error = "Adj meg egy nevet!";
-    } else if (chatroom.getNames().contains(name)) {
+    } else if (chatroom.getPlayerNames().contains(name)) {
       error = "Ez a név már foglalt.";
     } else {
       error = "";
       entered = true;
       rulemode = false;
       time = new Date();
-      chatroom.getNames().add(name);
-
-      Message m = new Message(name, "$ENTER");
-      m.setTime(time);
-      chatroom.getMessages().add(m);
-      Collections.sort(chatroom.getMessages());
-
       seconds = 0;
+      chatroom.addPlayer(name, time);
     }
   }
 
   public void doLogout() {
-    chatroom.getNames().remove(name);
-
-    Message m = new Message(name, "$EXIT");
-    m.setTime(new Date());
-    chatroom.getMessages().add(m);
-    Collections.sort(chatroom.getMessages());
-
-    System.out.println(name + " removed");
+    chatroom.removePlayer(name);
+    
     entered = false;
     name = "";
+  }
+
+  public Player getPlayer() {
+    if (!name.isEmpty()) {
+      return chatroom.getPlayer(name);
+    }
+    return null;
   }
 
   public void sendMessage() {
@@ -112,25 +108,26 @@ public class LoginData implements Serializable {
     }
   }
 
-  public String getChatMessageList(){
+  public String getChatMessageList() {
     return chatroom.getMessageList(time);
   }
-  
-  public void showRules(){
+
+  public void showRules() {
     rulemode = true;
     System.out.println(rulemode);
   }
 
-  public void showChat(){
+  public void showChat() {
     rulemode = false;
     System.out.println(rulemode);
   }
 
   public void refresh() {
+    chatroom.playerAccess(name);
     seconds++;
   }
 
-  public String getNameList(){
+  public String getNameList() {
     return chatroom.getNameList(name);
   }
 
@@ -193,5 +190,5 @@ public class LoginData implements Serializable {
   public void setTime(Date time) {
     this.time = time;
   }
-  
+
 }
