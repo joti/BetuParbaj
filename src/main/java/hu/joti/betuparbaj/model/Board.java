@@ -25,7 +25,7 @@ public class Board implements Serializable {
   //elhelyezett betűk
   private String[][] letters;
   // pontot érő szavak a táblán
-  private List<Word> words;
+  private List<Hit> hits;
   // összpontszám
   private int score;
   // helyezés
@@ -43,7 +43,7 @@ public class Board implements Serializable {
       }
     }
 
-    words = new ArrayList<>();
+    hits = new ArrayList<>();
     joinDate = new Date();
   }
 
@@ -104,12 +104,12 @@ public class Board implements Serializable {
     this.letters = letters;
   }
 
-  public List<Word> getWords() {
-    return words;
+  public List<Hit> getHits() {
+    return hits;
   }
 
-  public void setWords(List<Word> words) {
-    this.words = words;
+  public void setHits(List<Hit> hits) {
+    this.hits = hits;
   }
 
   public int getScore() {

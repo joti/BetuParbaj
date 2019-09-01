@@ -334,6 +334,7 @@ textarea{
   padding-right: 7px;
   display: inline-block;
   text-shadow: 0px 1px 0px white;
+  margin-right: 8px;
 }
 
 .gamebutton:hover {

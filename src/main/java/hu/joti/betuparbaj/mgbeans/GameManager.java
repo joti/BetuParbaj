@@ -32,13 +32,17 @@ public class GameManager implements Serializable {
   @ManagedProperty("#{lobby}")
   Lobby lobby;
 
+  @ManagedProperty("#{glossary}")
+  Glossary glossary;
+
   @ManagedProperty("#{loginData}")
   LoginData loginData;
-
+  
   private Game game;
   private Set<Integer> fadingGames;
   private Set<Integer> fadedGames;
   private int myPosition;
+  private int lobbyMode;
   private List<Integer> letterIndices;
   private List<Integer> cellIndices;
 
@@ -49,6 +53,7 @@ public class GameManager implements Serializable {
     fadedGames = new HashSet<>();
     logger.debug("New GM session");
     myPosition = -1;
+		lobbyMode = 1;
 
     letterIndices = new ArrayList<>();
     for (int i = 0; i < Game.ALPHABET.length; i++) {
@@ -64,6 +69,14 @@ public class GameManager implements Serializable {
   @PostConstruct
   public void init() {
     System.out.println("GameManager.PostConstruct method at " + (new Date()));
+    logger.info("Lobby null: " + (lobby == null));
+    logger.info("LoginData null: " + (lobby == null));
+    logger.info("Glossary null: " + (glossary == null));
+    if (glossary != null){
+      logger.info(glossary.getWords() == null);
+      logger.info("Szótárméret: " + glossary.getWords().size() + " db szó");
+    }  
+    
     if (game == null) {
       logger.info("GameManager session starts, game is null");
     } else {
@@ -91,7 +104,7 @@ public class GameManager implements Serializable {
       for (Game g : lobby.getGamesInLobby()) {
         gamesInLobby.add(g.getId());
 
-        if (g.getMaxPlayers() <= g.getNumberOfPlayers()) {
+        if (g.getMaxPlayers() <= g.getNumberOfPlayers() && g.getPlayerPos(loginData.getName()) < 0) {
           if (!fadedGames.contains(g.getId())) {
             if (!fadingGames.contains(g.getId())) {
               fadingGames.add(g.getId());
@@ -165,15 +178,23 @@ public class GameManager implements Serializable {
   }
 
   public boolean isGameFading(Game g) {
-    if (fadingGames.contains(g.getId()) && !fadedGames.contains(g.getId())) {
-      return true;
-    } else {
-      return false;
-    }
+    return fadingGames.contains(g.getId()) && !fadedGames.contains(g.getId());
   }
 
+  public List<Game> getGamesFromLobby(){
+    switch (lobbyMode){
+        case 1 : return lobby.getGamesInLobby();
+        case 2 : return lobby.getGamesInProgress();
+        case 3 : return lobby.getGamesFinished();
+    }	
+    return null;
+  }	
+	
   public void fillMyPosition() {
-    myPosition = game.getPlayerPos(loginData.getName());
+    if (game == null || game.getStartDate() == null)
+      myPosition = -1;
+    else
+      myPosition = game.getPlayerPos(loginData.getName());
   }
 
   public void debug(String text) {
@@ -205,15 +226,45 @@ public class GameManager implements Serializable {
     logger.info("Game #" + game.getId() + " created");
   }
 
+	public boolean canJoinGame(Game g){
+	  if (game != null || g == null || g.getOpenDate() == null || g.getEndDate() != null)
+		return false;
+		
+	  if (g.getStartDate() == null)
+  		return (g.getNumberOfPlayers() < g.getMaxPlayers());
+		
+	  return (g.getPlayerPos(loginData.getName()) >= 0);
+	}	
+	
   public void joinGame(Game g) {
-    logger.info(loginData.getName() + " joins game #" + g.getId());
-    if (game == null && g.getOpenDate() != null && g.getMaxPlayers() > g.getBoards().size()) {
+    if (game == null && g != null && g.getOpenDate() != null && g.getEndDate() == null) {
+      logger.info(loginData.getName() + " joins game #" + g.getId());
       game = g;
       game.addPlayer(loginData.getPlayer());
-      myPosition = -1;
+      fillMyPosition();
     }
   }
 
+  public boolean canViewGame(Game g){
+	return (game == null && g.getEndDate() != null);
+  }	
+	
+  public void viewGame(Game g) {
+    logger.info(loginData.getName() + " views game #" + g.getId());
+    if (game == null && g.getEndDate() != null) {
+      game = g;
+      myPosition = 0;
+			
+      // A győztes játékos tábláját mutatjuk elsőre
+      for (Board board : game.getBoards()){
+        if (board.getPlace() == 1){
+            myPosition = board.getPosition();
+            break;
+        }	
+      }	
+    }
+  }
+	
   public void quitGame() {
     logger.info(loginData.getName() + " quits game #" + game.getId());
     if (game != null) {
@@ -667,9 +718,21 @@ public class GameManager implements Serializable {
     this.lobby = lobby;
   }
 
+  public void setglossary(Glossary glossary) {
+    this.glossary = glossary;
+  }
+  
   public void setLoginData(LoginData loginData) {
     this.loginData = loginData;
   }
+
+  public int getLobbyMode(){
+	return lobbyMode;
+  }	
+	
+  public void setLobbyMode(int lobbyMode){
+	this.lobbyMode = lobbyMode;
+  }	
 
   public Game getGame() {
     return game;

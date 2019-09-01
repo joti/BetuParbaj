@@ -60,7 +60,9 @@
                   <div style="position: relative; top:85px; left: 30px">
                     <h:panelGroup id="pg_main" class="mainpg">
                       <h:panelGroup id="pg_lobby" class="text" rendered="#{gameManager.isInGameState(0)}">
-                        <div id="lobbytitle" class="gameareatitle">> Indításra váró asztalok:</div>
+                        <h:panelGroup id="lobbytitle1" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 1}">> Indításra váró asztalok:</h:panelGroup>
+                        <h:panelGroup id="lobbytitle2" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 2}">>> Folyamatban lévő játékok:</h:panelGroup>
+                        <h:panelGroup id="lobbytitle3" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 3}">>>> Befejeződött játékok:</h:panelGroup>
 
                         <div id="gamesetupbg" class="gamebg" style='position: absolute; top: 37px; width: 547px; height: 422px'>
                         </div>
@@ -68,7 +70,7 @@
                         <div id="lobby" class="gamearea" style='position: absolute; top: 37px; width: 547px'>
                           <div id="lobbycontent" class="lobbyscroll" style='height:422px;overflow-y:auto;width:547px;'>
                             <h:dataTable id="dt_lobby" class="lobbytable" style="width:100%;"
-                                         value="#{lobby.gamesInLobby}" var="game">
+                                         value="#{gameManager.getGamesFromLobby()}" var="game">
                               <h:column>
                                 <div class="lobbyrowborder">
 
@@ -113,7 +115,7 @@
                                       </h:panelGroup>
 
                                       <h:commandButton value="Csatlakozás" class="buttonsmall2" action="#{gameManager.joinGame(game)}" 
-                                                       rendered="#{game.numberOfPlayers lt game.maxPlayers}">
+                                                       rendered="#{gameManager.canJoinGame(game)}">
                                         <f:ajax execute="" render="@form"/>
                                       </h:commandButton>
                                       <p:commandButton value="Csatlakozás" class="buttonsmall2" rendered="#{gameManager.isGameFading(game)}">
@@ -121,6 +123,10 @@
                                           <f:param name="mode" value="'hide'"/>
                                         </p:effect>                          
                                       </p:commandButton>
+                                      <h:commandButton value="Eredmény" class="buttonsmall2" action="#{gameManager.viewGame(game)}" 
+                                                       rendered="#{gameManager.canViewGame(game)}">
+                                        <f:ajax execute="" render="@form"/>
+                                      </h:commandButton>
                                     </h:panelGrid>
                                   </h:panelGrid>
                                 </div>  
@@ -133,7 +139,16 @@
                         </div>
 
                         <div id="lobbybuttons" style="position: absolute; top: 468px;">
-                          <h:commandButton class="gamebutton" style="margin:auto;" value="Új asztal indítása" action="#{gameManager.createGame()}">
+                          <h:commandButton class="gamebutton" value="Új asztal indítása" action="#{gameManager.createGame()}" rendered="#{gameManager.lobbyMode eq 1}">
+                            <f:ajax execute="" render="pg_main"/>
+                          </h:commandButton>
+                          <h:commandButton class="gamebutton" value="Induló asztalok" action="#{gameManager.setLobbyMode(1)}" rendered="#{gameManager.lobbyMode ne 1}">
+                            <f:ajax execute="" render="pg_main"/>
+                          </h:commandButton>
+                          <h:commandButton class="gamebutton" value="Küzdőtér" action="#{gameManager.setLobbyMode(2)}" rendered="#{gameManager.lobbyMode ne 2}">
+                            <f:ajax execute="" render="pg_main"/>
+                          </h:commandButton>
+                          <h:commandButton class="gamebutton" value="Eredmények" action="#{gameManager.setLobbyMode(3)}" rendered="#{gameManager.lobbyMode ne 3}">
                             <f:ajax execute="" render="pg_main"/>
                           </h:commandButton>
                           <h:commandButton id="btn_lobbyrefresh" style="display:none" action="#{gameManager.debug('lobbyrefresh')}">
@@ -362,11 +377,11 @@
                                              rendered="#{gameManager.game.boards.size() gt 1}">
                               <f:ajax execute="" render="pg_main"/>
                             </h:commandButton>
-                            <h:commandButton class="gamebutton" style="width: 178px; margin-left: 8px;" value="Asztal megnyitása" action="#{gameManager.openGame()}"
+                            <h:commandButton class="gamebutton" style="width: 178px;" value="Asztal megnyitása" action="#{gameManager.openGame()}"
                                              rendered="#{gameManager.game.openDate == null}">
                               <f:ajax execute="" render="pg_main"/>
                             </h:commandButton>
-                            <h:commandButton class="gamebutton" style="width: 178px; margin-left: 8px;" value="Játék indítása" action="#{gameManager.startGame()}" 
+                            <h:commandButton class="gamebutton" style="width: 178px;" value="Játék indítása" action="#{gameManager.startGame()}" 
                                              rendered="#{gameManager.game.openDate != null}" 
                                              disabled="#{gameManager.game.numberOfPlayers lt gameManager.game.minPlayers or gameManager.myGamePos ne gameManager.game.adminPlayerPos}">
                               <f:ajax execute="" render="pg_main"/>
@@ -584,7 +599,8 @@
                   <h:panelGroup style="display:block">
                     <h:outputText id="ot_gamestate2" value="#{gameManager.gameState}"/>/
                     <h:outputText id="ot_gamestate" />/
-                    <h:outputText id="ot_playerstate" value="#{gameManager.playerState}"/>
+                    <h:outputText id="ot_playerstate" value="#{gameManager.playerState}"/>/
+                    <h:outputText id="ot_glossarysize" value="#{glossary.words.size()}"/>
                   </h:panelGroup>
                   <h:outputText id="ot_gamesetup2" style="display:block; color:blue" value="#{gameManager.getGameSetupString()}"/>
                   <h:outputText id="ot_gamehist2" style="display:block; color:brown" value="#{gameManager.getGameHistString()}"/>
@@ -621,7 +637,7 @@
           </p:confirmDialog>       
 
         </h:panelGroup> <!-- pg_mainpage -->
-
+        
       </h:form>
       
     </h:body>

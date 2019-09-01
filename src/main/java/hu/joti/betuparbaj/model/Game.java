@@ -109,11 +109,17 @@ public class Game implements Serializable {
   }
 
   public void addPlayer(Player player) {
-    Board board = new Board(player);
-    boards.add(board);
-    numberOfPlayers++;
-    if (boards.size() == 1)
-      setAdminPlayer();
+    int pos = getPlayerPos(player.getName());
+    if (pos < 0){
+      Board board = new Board(player);
+      boards.add(board);
+      numberOfPlayers++;
+      if (boards.size() == 1)
+        setAdminPlayer();
+    } else {
+      boards.get(pos).setQuitDate(null);
+      numberOfActivePlayers++;
+    }
   }
 
   public void removePlayer(Player player){
