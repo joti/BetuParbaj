@@ -12,7 +12,6 @@ import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import hu.joti.betuparbaj.model.Message;
 import hu.joti.betuparbaj.model.Player;
 import java.io.Serializable;
@@ -123,7 +122,12 @@ public class LoginData implements Serializable {
   }
 
   public void refresh() {
-    chatroom.playerAccess(name);
+    if (chatroom.getPlayer(name) != null)
+      chatroom.playerAccess(name);
+    else {
+      entered = false;
+      name = "";
+    }
     seconds++;
   }
 
@@ -190,5 +194,5 @@ public class LoginData implements Serializable {
   public void setTime(Date time) {
     this.time = time;
   }
-
+  
 }

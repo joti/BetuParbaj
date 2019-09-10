@@ -7,9 +7,11 @@
 package hu.joti.betuparbaj.model;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +40,9 @@ public class WordDaoTxt implements WordDao, Serializable {
     List<Word> words = new ArrayList<>();
 
 //    try {
-      FileReader fr = new FileReader(absolutePath);
-      BufferedReader br = new BufferedReader(fr);
+//      FileReader fr = new FileReader(absolutePath);
+      BufferedReader br = new BufferedReader(new InputStreamReader(
+                      new FileInputStream(absolutePath), "UTF8"));
       String row;
 
       while ((row = br.readLine()) != null){

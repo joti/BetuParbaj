@@ -15,6 +15,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import hu.joti.betuparbaj.model.Game;
+import hu.joti.betuparbaj.model.Hit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +38,7 @@ public class GameManager implements Serializable {
 
   @ManagedProperty("#{loginData}")
   LoginData loginData;
-  
+
   private Game game;
   private Set<Integer> fadingGames;
   private Set<Integer> fadedGames;
@@ -45,6 +46,8 @@ public class GameManager implements Serializable {
   private int lobbyMode;
   private List<Integer> letterIndices;
   private List<Integer> cellIndices;
+  private String testWord;
+  private int testResult;
 
   private static final Logger logger = Logger.getLogger(GameManager.class.getName());
 
@@ -53,7 +56,7 @@ public class GameManager implements Serializable {
     fadedGames = new HashSet<>();
     logger.debug("New GM session");
     myPosition = -1;
-		lobbyMode = 1;
+    lobbyMode = 1;
 
     letterIndices = new ArrayList<>();
     for (int i = 0; i < Game.ALPHABET.length; i++) {
@@ -72,11 +75,11 @@ public class GameManager implements Serializable {
     logger.info("Lobby null: " + (lobby == null));
     logger.info("LoginData null: " + (lobby == null));
     logger.info("Glossary null: " + (glossary == null));
-    if (glossary != null){
+    if (glossary != null) {
       logger.info(glossary.getWords() == null);
       logger.info("Szótárméret: " + glossary.getWords().size() + " db szó");
-    }  
-    
+    }
+
     if (game == null) {
       logger.info("GameManager session starts, game is null");
     } else {
@@ -94,8 +97,12 @@ public class GameManager implements Serializable {
   }
 
   public void refresh() {
-//    System.out.println(loginData.getName() + " refresh");
     loginData.refresh();
+
+    if (!loginData.isEntered()) {
+      quitGame();
+      return;
+    }
 
     if (lobby != null) {
       Set<Integer> gamesInLobby = new HashSet<>();
@@ -132,10 +139,6 @@ public class GameManager implements Serializable {
       }
     }
 
-//    if (game != null) {
-//      game.accessBoard(loginData.getName());
-//    }
-
     if (game != null && game.getStartDate() != null && game.getEndDate() == null) {
       if (myPosition < 0) {
         fillMyPosition();
@@ -168,8 +171,10 @@ public class GameManager implements Serializable {
           System.out.println(loginData.getName() + ": NEXTTURN");
           game.nextTurn();
           if (game.getEndDate() != null) {
-            lobby.getGamesInProgress().remove(game);
-            lobby.getGamesFinished().add(game);
+            evaluateGame();
+            testResult = 0;
+            testWord = "";
+            lobby.addToFinished(game);
           }
         }
       }
@@ -177,19 +182,75 @@ public class GameManager implements Serializable {
 
   }
 
+  public void evaluateGame() {
+    System.out.println("EvaluateGame: " + game.getTurn());
+    if (game != null && game.getTurn() == 36) {
+      for (Board board : game.getBoards()) {
+        System.out.println("Board: " + board.getPlayer().getName());
+        String[][] letters = board.getLetters();
+        String[] streak = new String[6];
+
+        /* Végighaladunk a tábla sorain */
+        for (int row = 0; row < Board.BOARD_SIZE; row++) {
+          for (int col = 0; col < Board.BOARD_SIZE; col++) {
+            streak[col] = letters[row][col];
+          }
+          Hit hit = glossary.findHit(streak, game.isEasyVowelRule());
+          if (hit != null) {
+            logger.info(board.getPlayer().getName() + " szava: " + hit.getWord());
+            hit.setHorizontal(true);
+            hit.setLine(row);
+            board.getHits().add(hit);
+          }
+        }
+
+        /* ...és az oszlopain */
+        for (int col = 0; col < Board.BOARD_SIZE; col++) {
+          for (int row = 0; row < Board.BOARD_SIZE; row++) {
+            streak[row] = letters[row][col];
+          }
+          Hit hit = glossary.findHit(streak, game.isEasyVowelRule());
+          if (hit != null) {
+            logger.info(board.getPlayer().getName() + " szava: " + hit.getWord());
+            hit.setHorizontal(false);
+            hit.setLine(col);
+            board.getHits().add(hit);
+          }
+        }
+
+        logger.info(board.getPlayer().getName() + " szavainak száma: " + board.getHits().size());
+        board.evaluate();
+        logger.info(board.getPlayer().getName() + " pontszáma: " + board.getScore());
+      }
+
+      // Helyezések kiszámítása
+      for (Board board : game.getBoards()) {
+        int place = 1;
+        for (int pos = 0; pos < game.getBoards().size(); pos++) {
+          if (pos != board.getPosition() && game.getBoards().get(pos).getScore() > board.getScore())
+            place++;
+        }
+        board.setPlace(place);
+      }
+    }
+  }
+
   public boolean isGameFading(Game g) {
     return fadingGames.contains(g.getId()) && !fadedGames.contains(g.getId());
   }
 
-  public List<Game> getGamesFromLobby(){
-    switch (lobbyMode){
-        case 1 : return lobby.getGamesInLobby();
-        case 2 : return lobby.getGamesInProgress();
-        case 3 : return lobby.getGamesFinished();
-    }	
+  public List<Game> getGamesFromLobby() {
+    switch (lobbyMode) {
+      case 1:
+        return lobby.getGamesInLobby();
+      case 2:
+        return lobby.getGamesInProgress();
+      case 3:
+        return lobby.getGamesFinished();
+    }
     return null;
-  }	
-	
+  }
+
   public void fillMyPosition() {
     if (game == null || game.getStartDate() == null)
       myPosition = -1;
@@ -197,7 +258,12 @@ public class GameManager implements Serializable {
       myPosition = game.getPlayerPos(loginData.getName());
   }
 
-  public void debug(String text) {
+  public void changeMyPosition(int position) {
+    if (game != null && game.getEndDate() != null)
+      myPosition = position;
+  }
+
+  public void debugGame(String text) {
     if (loginData != null) {
       logger.debug(text + " (" + loginData.getName() + ")");
     } else {
@@ -226,49 +292,51 @@ public class GameManager implements Serializable {
     logger.info("Game #" + game.getId() + " created");
   }
 
-	public boolean canJoinGame(Game g){
-	  if (game != null || g == null || g.getOpenDate() == null || g.getEndDate() != null)
-		return false;
-		
-	  if (g.getStartDate() == null)
-  		return (g.getNumberOfPlayers() < g.getMaxPlayers());
-		
-	  return (g.getPlayerPos(loginData.getName()) >= 0);
-	}	
-	
+  public boolean canJoinGame(Game g) {
+    if (game != null || g == null || g.getOpenDate() == null || g.getEndDate() != null)
+      return false;
+
+    if (g.getStartDate() == null)
+      return (g.getNumberOfPlayers() < g.getMaxPlayers());
+
+    return (g.getPlayerPos(loginData.getName()) >= 0);
+  }
+
   public void joinGame(Game g) {
     if (game == null && g != null && g.getOpenDate() != null && g.getEndDate() == null) {
       logger.info(loginData.getName() + " joins game #" + g.getId());
       game = g;
       game.addPlayer(loginData.getPlayer());
       fillMyPosition();
+      clearWord();
     }
   }
 
-  public boolean canViewGame(Game g){
-	return (game == null && g.getEndDate() != null);
-  }	
-	
+  public boolean canViewGame(Game g) {
+    return (game == null && g.getEndDate() != null);
+  }
+
   public void viewGame(Game g) {
     logger.info(loginData.getName() + " views game #" + g.getId());
     if (game == null && g.getEndDate() != null) {
       game = g;
       myPosition = 0;
-			
+
       // A győztes játékos tábláját mutatjuk elsőre
-      for (Board board : game.getBoards()){
-        if (board.getPlace() == 1){
-            myPosition = board.getPosition();
-            break;
-        }	
-      }	
+      for (Board board : game.getBoards()) {
+        if (board.getPlace() == 1) {
+          myPosition = board.getPosition();
+          break;
+        }
+      }
     }
   }
-	
+
   public void quitGame() {
     logger.info(loginData.getName() + " quits game #" + game.getId());
     if (game != null) {
       game.removePlayer(loginData.getName());
+      clearWord();
       logger.info(loginData.getName() + " removed from game #" + game.getId());
       game = null;
     }
@@ -278,11 +346,13 @@ public class GameManager implements Serializable {
     if (game != null) {
       game.setOpenDate(new Date());
       lobby.getGamesInLobby().add(game);
+      clearWord();
     }
   }
 
   public void dropGame() {
     if (game != null) {
+      clearWord();
       lobby.getGamesInLobby().remove(game);
       lobby.getGamesInProgress().remove(game);
       game = null;
@@ -625,6 +695,57 @@ public class GameManager implements Serializable {
     return rTurnSec;
   }
 
+  public String getPlayerName() {
+    if (game != null && game.getEndDate() != null) {
+      return game.getBoards().get(myPosition).getPlayer().getName();
+    }
+    return "";
+  }
+
+  public List<Hit> getHits(boolean horizontal, boolean vertical) {
+    List<Hit> hits = new ArrayList<>();
+    if (game != null && game.getEndDate() != null) {
+      List<Hit> boardHits = game.getBoards().get(myPosition).getHits();
+
+      if (horizontal) {
+        /*  Vízszintes szavak*/
+        for (int row = 0; row < 6; row++) {
+          Hit hit = null;
+
+          for (Hit boardHit : boardHits) {
+            if (boardHit.isHorizontal() && boardHit.getLine() == row) {
+              hit = boardHit;
+              break;
+            }
+          }
+          if (hit == null) {
+            hit = new Hit(true, row, -1, -1, 0, "");
+          }
+          hits.add(hit);
+        }
+      }
+
+      if (vertical) {
+        /* Függőleges szavak*/
+        for (int col = 0; col < 6; col++) {
+          Hit hit = null;
+
+          for (Hit boardHit : boardHits) {
+            if (!boardHit.isHorizontal() && boardHit.getLine() == col) {
+              hit = boardHit;
+              break;
+            }
+          }
+          if (hit == null) {
+            hit = new Hit(false, col, -1, -1, 0, "");
+          }
+          hits.add(hit);
+        }
+      }
+    }
+    return hits;
+  }
+
   public String getSelectedLetter() {
     if (game != null) {
       return game.getSelectedLetter();
@@ -706,6 +827,24 @@ public class GameManager implements Serializable {
     return game.ALPHABET[index];
   }
 
+  public void checkWord() {
+//    testResult = (testResult + 1) % 3;
+
+    if (game != null && game.getStartDate() != null && !testWord.isEmpty()) {
+      if (glossary.includes(testWord, game.isEasyVowelRule()))
+        testResult = 1;
+      else
+        testResult = 2;
+    } else
+      testResult = 0;
+    System.out.println("CheckWord: " + testWord + " -> " + testResult);
+  }
+
+  public void clearWord() {
+    testWord = "";
+    testResult = 0;
+  }
+
   public List<Integer> getAllNumOfPlayers() {
     return Arrays.asList(Game.NUM_OF_PLAYERS);
   }
@@ -718,21 +857,21 @@ public class GameManager implements Serializable {
     this.lobby = lobby;
   }
 
-  public void setglossary(Glossary glossary) {
+  public void setGlossary(Glossary glossary) {
     this.glossary = glossary;
   }
-  
+
   public void setLoginData(LoginData loginData) {
     this.loginData = loginData;
   }
 
-  public int getLobbyMode(){
-	return lobbyMode;
-  }	
-	
-  public void setLobbyMode(int lobbyMode){
-	this.lobbyMode = lobbyMode;
-  }	
+  public int getLobbyMode() {
+    return lobbyMode;
+  }
+
+  public void setLobbyMode(int lobbyMode) {
+    this.lobbyMode = lobbyMode;
+  }
 
   public Game getGame() {
     return game;
@@ -764,6 +903,38 @@ public class GameManager implements Serializable {
 
   public void setCellIndices(List<Integer> cellIndices) {
     this.cellIndices = cellIndices;
+  }
+
+  public String getTestWord() {
+    return testWord;
+  }
+
+  public void setTestWord(String testWord) {
+    this.testWord = testWord;
+  }
+
+  public int getTestResult() {
+    return testResult;
+  }
+
+  public void setTestResult(int testResult) {
+    this.testResult = testResult;
+  }
+
+  public Set<Integer> getFadingGames() {
+    return fadingGames;
+  }
+
+  public void setFadingGames(Set<Integer> fadingGames) {
+    this.fadingGames = fadingGames;
+  }
+
+  public Set<Integer> getFadedGames() {
+    return fadedGames;
+  }
+
+  public void setFadedGames(Set<Integer> fadedGames) {
+    this.fadedGames = fadedGames;
   }
 
 }

@@ -17,17 +17,45 @@ public class Hit implements Serializable {
   private int line;
   private int start;
   private int end;
+  private int score;
+  private String word;
 
   public Hit() {
   }
 
-  public Hit(boolean horizontal, int row, int start, int end) {
-    this.horizontal = horizontal;
-    this.line = row;
+  public Hit(int start, int end, int score, String word) {
     this.start = start;
     this.end = end;
+    this.score = score;
+    this.word = word;
   }
 
+  public Hit(boolean horizontal, int line, int start, int end, int score, String word) {
+    this.horizontal = horizontal;
+    this.line = line;
+    this.start = start;
+    this.end = end;
+    this.score = score;
+    this.word = word;
+  }
+
+  public String getPosString(){
+    String posString;
+    if (horizontal){
+      posString = Board.ROW_CODES[line] /*+ Board.COLUMN_CODES[start]*/;
+    } else {
+      posString = /*Board.ROW_CODES[start]+*/ Board.COLUMN_CODES[line];
+    }
+    return posString;  
+  }
+  
+  public String getScoreString(){
+    if (score == 0)
+      return "";
+    else
+      return "(" + score + ")";
+  }
+  
   public int getEnd() {
     return end;
   }
@@ -58,6 +86,22 @@ public class Hit implements Serializable {
 
   public void setStart(int start) {
     this.start = start;
+  }
+
+  public String getWord() {
+    return word;
+  }
+
+  public void setWord(String word) {
+    this.word = word;
+  }
+
+  public int getScore() {
+    return score;
+  }
+
+  public void setScore(int score) {
+    this.score = score;
   }
 
 }

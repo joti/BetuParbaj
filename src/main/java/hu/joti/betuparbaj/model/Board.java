@@ -17,6 +17,8 @@ import java.util.Random;
 public class Board implements Serializable {
 
   public static final int BOARD_SIZE = 6;
+  public static final String[] ROW_CODES = {"A","B","C","D","E","F"};
+  public static final String[] COLUMN_CODES = {"1","2","3","4","5","6"};
 
   // játékos helye az asztalon
   private int position;
@@ -88,6 +90,15 @@ public class Board implements Serializable {
     }
   }
 
+  public void evaluate(){
+    score = 0;
+    for (Hit hit : hits) {
+      score += hit.getScore();
+      System.out.println(hit.getWord() + " szó értéke: " + hit.getScore() + " pt");
+    }
+    System.out.println("Összpontsám: " + score);
+  }
+  
   public Player getPlayer() {
     return player;
   }

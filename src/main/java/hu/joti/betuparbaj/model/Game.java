@@ -20,7 +20,8 @@ import java.util.Random;
 public class Game implements Serializable {
 
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};
-  public static final Integer[] TIMELIMITS = {20, 30, 45, 60, 90, 120};
+  public static final int[] VALUE_OF_WORDS = {0, 4, 9, 16, 25, 36};
+  public static final Integer[] TIMELIMITS = {2, 5, 10, 20, 30, 45, 60, 90, 120};
   public static final int TURN0_TIMELIMIT = 15;
 
   public static final int PLAYER_DRAW = 1;
@@ -353,7 +354,7 @@ public class Game implements Serializable {
       gameHist += "*";
     }
     if (endDate != null)
-      gameHist += ".";
+      gameHist = "[" + gameHist + "]";
     return gameHist;
   }
 
@@ -411,10 +412,10 @@ public class Game implements Serializable {
       endDate = new Date();
 
       // TODO Számítsuk ki az eredményt
-      for (Board board : boards) {
-        board.setScore((4 - board.getPosition()) * 26);
-        board.setPlace(board.getPosition() + 1);
-      }
+//      for (Board board : boards) {
+//        board.setScore((4 - board.getPosition()) * 26);
+//        board.setPlace(board.getPosition() + 1);
+//      }
 
     } else {
       // Ha még nem lett kiválasztva a következő betű, akkor most kisorsoljuk

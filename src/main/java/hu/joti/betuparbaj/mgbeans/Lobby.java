@@ -23,6 +23,8 @@ import java.util.Iterator;
 @ApplicationScoped
 public class Lobby implements Serializable {
 
+  public static final int FINISHEDGAMES_MAXNUM = 10;
+
   private List<Game> gamesInLobby;
   private List<Game> gamesInProgress;
   private List<Game> gamesFinished;
@@ -40,7 +42,7 @@ public class Lobby implements Serializable {
     System.out.println("lastId: " + lastId);
   }
 
-  public String getGamesInLobbyString(){
+  public String getGamesInLobbyString() {
     String gamesString = ":";
     for (Game game : gamesInLobby) {
       gamesString += game.getGameSetupString() + ";";
@@ -48,26 +50,34 @@ public class Lobby implements Serializable {
     return gamesString;
   }
 
-  public void removePlayer(Player player){
+  public void removePlayer(Player player) {
     Iterator iter = gamesInLobby.iterator();
-    while (iter.hasNext()){
-      Game game = (Game)iter.next();
+    while (iter.hasNext()) {
+      Game game = (Game) iter.next();
       game.removePlayer(player);
-      if (game.getNumberOfPlayers() == 0){
+      if (game.getNumberOfPlayers() == 0) {
         iter.remove();
       }
     }
 
     iter = gamesInProgress.iterator();
-    while (iter.hasNext()){
-      Game game = (Game)iter.next();
+    while (iter.hasNext()) {
+      Game game = (Game) iter.next();
       game.removePlayer(player);
-      if (game.getNumberOfActivePlayers() == 0){
+      if (game.getNumberOfActivePlayers() == 0) {
         iter.remove();
       }
     }
   }
-  
+
+  public void addToFinished(Game game) {
+    gamesInProgress.remove(game);
+    gamesFinished.add(game);
+    if (gamesFinished.size() > FINISHEDGAMES_MAXNUM) {
+      gamesFinished.remove(0);
+    }
+  }
+
   public int getGameId() {
     lastId++;
     return lastId;

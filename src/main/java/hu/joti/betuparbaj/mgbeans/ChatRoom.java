@@ -47,7 +47,7 @@ public class ChatRoom implements Serializable {
   private Set<Player> players;
   private List<Message> messages;
 
-  private ScheduledExecutorService scheduler;
+  private transient ScheduledExecutorService scheduler;
   private int schedCount;
 
   public ChatRoom() {

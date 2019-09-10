@@ -23,18 +23,28 @@ and open the template in the editor.
 
 input{
   outline: none;
+  box-shadow: none;
+}
+
+.ui-inputfield.ui-state-focus{
+  outline: none;
+  box-shadow: none;
+}
+
+.ui-state-hover{
+  box-shadow: none;
+}
+
+.ui-state-focus{
+  box-shadow: none;
 }
 
 textarea{
   outline: none;
 }
 
-#table_game {
-  opacity: 0.8;
-}
-
 #drawmoderadio label {
-  margin-right: 55 px;
+  margin-right: 155px;
 }
 
 .turnsec{
@@ -94,9 +104,9 @@ textarea{
 }
 
 .inputtextplay {
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Courier New", Courier, cursive, monospace;
   font-size: 14px;	
-  color: #555C23;
+  color: #808571;
   line-height: 1.2;
   background-color: #f4f6e9;
   border-width: 2px;
@@ -111,11 +121,31 @@ textarea{
   text-align: center;
 }
 
+.inputtextcheckword {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  color: #555C23;
+  line-height: 1.0;
+  background-color: #f4f6e9;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: rgba(182,181,170,0.5); 
+  border-top-color: rgba(182,181,170,0.5); 
+  border-bottom-color: rgba(176,178,167,0.5);
+  border-right-color: rgba(176,178,167,0.5);
+  padding: 1px;
+  padding-left: 3px;
+  overflow: hidden;
+  resize: none;
+  text-align: left;
+  text-transform: uppercase;
+}
+
 .selectedlettertext {
   font-family: "Courier New", Courier, monospace;
   font-size: 22px;
   font-weight: bold;
-  color: #555C23;
+  color: #808571;
   line-height: 1;
   text-align: center;
 }
@@ -180,6 +210,40 @@ textarea{
   line-height: 1.2;
 }
 
+.hitdataarea{
+  background: transparent;
+  display: inline-block;
+  border: 1px solid transparent;
+  padding-bottom: 2px;
+}
+
+.hitsnametext {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: bold;
+  color: #808571;
+}
+
+.hitpostext {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;	
+  font-weight: normal;
+  color: #808571;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.hitwordtext {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: bold;
+  color: #808571;
+  line-height: 1;
+  margin-left: 4px;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+
 .gridheader {
   font-family: "Courier New", Courier, monospace;
   font-size: 18px;	
@@ -241,12 +305,12 @@ textarea{
 
 .gamesetupframe { 
   background: transparent;
-  border-width: 1px;
+  border-width: 2px;
   border-style: dotted;
   border-left-color: #d9d8bf; 
   border-top-color: #d9d8bf; 
-  border-bottom-color: #808571;
-  border-right-color: #808571;
+  border-bottom-color: #b0b5a1;
+  border-right-color: #b0b5a1;
   /*opacity: 0.8;*/
 }
 
@@ -330,11 +394,15 @@ textarea{
   outline: 0;
   padding-top: 1px;
   padding-bottom: 1px;
-  padding-left: 7px;
-  padding-right: 7px;
+  padding-left: 4px;
+  padding-right: 4px;
   display: inline-block;
   text-shadow: 0px 1px 0px white;
-  margin-right: 8px;
+  box-shadow: 0 0 0 0;
+  margin-right: 3px;
+  height: 24px;
+  transform:scale(0.95,1.0);
+  transform-origin: left center;
 }
 
 .gamebutton:hover {
@@ -363,10 +431,13 @@ textarea{
   background: transparent;  
   outline: 0;
   padding: 0px;
-  margin: 2px;
-  width: 27px;
-  height: 27px;
+  margin: 3px;
+  width: 28px;
+  height: 25px;
   vertical-align: top;
+  margin-right: 2px;
+  margin-left: 1px;
+  box-shadow: none;
 }
 
 .boardbutton:hover {
@@ -405,6 +476,40 @@ textarea{
   background-color: #c6ce92;
 }
 
+.gameplayerbutton {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: bold;
+  border: none;
+  border-bottom:1px;
+  border-top:1px;
+  border-color: transparent;
+  color: #808571;
+  background: transparent;  
+  outline: 0;
+  padding: 0px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 0px;
+  height: 19px;
+  vertical-align: top;
+  margin-right: 0px;
+  margin-left: 0px;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: 0px 1px 0px white;
+}
+
+.gameplayerbutton:hover {
+  border-bottom:1px solid #808571;
+  border-top:1px solid #808571;
+} 
+
+.gameplayerbutton:disabled {
+  border-color: transparent;
+  opacity: 1.0;
+}
+
 .button2 {
   height: 30px;
   font-family: "Courier New", Courier, monospace;
@@ -431,6 +536,7 @@ textarea{
   background-color: #c6ce92;
 }
 
+/* OK gomb */
 .buttonsmall {
   font-family: "Courier New", Courier, monospace;
   font-size: 15px;	
@@ -448,12 +554,14 @@ textarea{
   height: 24px;
   text-align: center;
   text-shadow: 0px 1px 0px white;
+  box-shadow: 0 0 0 0;
 }
 
 .buttonsmall:hover {
   background-color: #c6ce92;
 }
 
+/* Csatlakozás gomb */
 .buttonsmall2 {
   font-family: "Courier New", Courier, monospace;
   font-size: 15px;	
@@ -487,22 +595,24 @@ textarea{
   background-color: #f9faee;
 }
 
+/* Szótesztelés gombjai */
 .buttonsmall3 {
   font-family: "Courier New", Courier, monospace;
-  font-size: 15px;	
+  font-size: 13px;	
   font-weight: bold;
-  width: 25px;
-  height: 25px;
+  width: 26px;
+  height: 26px;
   border: 2px solid;
-  border-radius: 2px;
+  border-radius: 3px;
   border-left-color: #b9b89f; 
   border-top-color: #b9b89f; 
   border-bottom-color: #808571;
   border-right-color: #808571;
   color: #808571;
-  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 90%);  
+  background-image: url("/betuparbaj/images/search.png");  
   outline: 0;
-  padding: 1px;
+  padding: 0px;
   text-align: center;
   text-shadow: 0px 1px 0px white;
 }
@@ -511,6 +621,7 @@ textarea{
   background-color: #c6ce92;
 }
 
+/* +/- gombok */
 .buttonsmall4 {
   font-family: "Courier New", Courier, monospace;
   font-size: 15px;	
@@ -535,6 +646,7 @@ textarea{
   background-color: #c6ce92;
 }
 
+/* Le gomb */
 .buttonsmall5 {
   font-family: "Courier New", Courier, monospace;
   font-size: 13px;	
@@ -563,6 +675,7 @@ textarea{
   background-color: #c6ce92;
 }
 
+/* Fel gomb */
 .buttonsmall6 {
   font-family: "Courier New", Courier, monospace;
   font-size: 13px;	
@@ -743,9 +856,18 @@ textarea{
   padding: 0px;
 }
 
+.wordtestimage{
+  max-width:20px;
+  max-height:20px;
+  width: auto;
+  height: auto;  
+  vertical-align: text-bottom;
+  padding: 0px;
+}
+
 .gameplayerstable{
   border: none;
-  border-spacing: 3px;
+  border-spacing: 2px;
   background: transparent;
 }
 
@@ -804,7 +926,7 @@ textarea{
 }
 
 .gameplayersrowcol1{
-  width: 11%;
+  width: 10%;
   height: 21px;
   max-height: 21px;
   vertical-align: middle;
@@ -812,7 +934,7 @@ textarea{
 }
 
 .gameplayersrowcol2{
-  width: 63%;
+  width: 64%;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -850,6 +972,20 @@ textarea{
 
 .mainpg {
 
+}
+
+.turntimepg {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: bold;
+  color: #808571;
+}
+
+.glossarypg {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: bold;
+  color: #808571;
 }
 
 .ui-tooltip {
@@ -1195,3 +1331,4 @@ span.ui-confirm-dialog-message {
   line-height: 1.0;
   padding: 1px 1px 1px 1px;
 }
+
