@@ -6,6 +6,8 @@
 package hu.joti.betuparbaj.model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,14 +22,18 @@ import java.util.Random;
 public class Game implements Serializable {
 
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};
-  public static final int[] VALUE_OF_WORDS = {0, 4, 9, 16, 25, 36};
   public static final Integer[] TIMELIMITS = {2, 5, 10, 20, 30, 45, 60, 90, 120};
   public static final int TURN0_TIMELIMIT = 15;
+
+  public static final String[] SCORING_MODES = {"Lineáris (2-3-4-5-6)","Fibonacci (2-3-5-8-13)","Négyzetes (4-9-16-25-36)"};
+  public static final int[][] VALUE_OF_WORDS = {{0, 2, 3, 4, 5, 6},{0, 2, 3, 5, 8, 13},{0, 4, 9, 16, 25, 36}};
 
   public static final int PLAYER_DRAW = 1;
   public static final int RANDOM_DRAW = 2;
 
   private final static int ALPHABETSETTINGSSTRING_MODE = 2;
+
+  private static final DateFormat SDF = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
   // Betűkészlet
   public static final String[] ALPHABET = {"A", "Á", "B", "C", "CS", "D", "E", "É", "F", "G", "GY", "H", "I", "Í", "J", "K", "L", "LY", "M", "N", "NY",
@@ -40,9 +46,21 @@ public class Game implements Serializable {
   public static final int[] VOWELTYPES = {1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0,
     1, 2, 1, 2, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 0, 0, 0, 0};
 
+  // Alapértelmezett beállítások
+  public static final int DEF_SCORING_MODE = 2;
+  public static final int DEF_TIMELIMIT = 30;
+  public static final boolean DEF_EASYVOWELRULE = true;
+  public static final boolean DEF_NODIGRAPH = true;
+  public static final boolean DEF_INCLUDEY = true;
+  public static final int DEF_DRAWMODE = 1;
+  public static final int DEF_MINPLAYERS = 2;
+  public static final int DEF_MAXPLAYERS = 4;
+  
   private int id;
   private List<Board> boards;
 
+  private String name;
+  private String password;
   private boolean easyVowelRule;
   private boolean noDigraph;
   private boolean includeY;
@@ -54,6 +72,7 @@ public class Game implements Serializable {
   private int numberOfActivePlayers;
   private boolean randomOrder;
   private int timeLimit;
+  private int scoringMode;
   private Date openDate; // A játék elérhetővé válik a lobbyban, játékosok csatlakozására vár
   private Date startDate; // A játék elindul
   private Date endDate; // A játék véget ér
@@ -74,8 +93,9 @@ public class Game implements Serializable {
     init();
   }
 
-  public Game(int id, boolean easyVowelRule, boolean noDigraph, boolean includeY, int drawmode, int minPlayers, int maxPlayers, int timeLimit) {
+  public Game(int id, String name, boolean easyVowelRule, boolean noDigraph, boolean includeY, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
     this.id = id;
+    this.name = name;
     this.easyVowelRule = easyVowelRule;
     this.noDigraph = noDigraph;
     this.includeY = includeY;
@@ -83,10 +103,12 @@ public class Game implements Serializable {
     this.minPlayers = minPlayers;
     this.maxPlayers = maxPlayers;
     this.timeLimit = timeLimit;
+    this.scoringMode = scoringMode;
     init();
   }
 
-  public Game(boolean easyVowelRule, boolean noDigraph, boolean includeY, int drawmode, int minPlayers, int maxPlayers, int timeLimit) {
+  public Game(String name, boolean easyVowelRule, boolean noDigraph, boolean includeY, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
+    this.name = name;
     this.easyVowelRule = easyVowelRule;
     this.noDigraph = noDigraph;
     this.includeY = includeY;
@@ -94,10 +116,12 @@ public class Game implements Serializable {
     this.minPlayers = minPlayers;
     this.maxPlayers = maxPlayers;
     this.timeLimit = timeLimit;
+    this.scoringMode = scoringMode;
     init();
   }
 
   private void init() {
+    this.password = "";
     boards = new ArrayList<>();
     availableLetters = new HashMap<>();
     numberOfPlayers = 0;
@@ -158,16 +182,45 @@ public class Game implements Serializable {
   }
 
   public String getPlayerName(Long pos) {
-    int playerpos = (int) (long) pos;
+    int playerPos = (int) (long) pos;
     if (boards.size() > pos) {
-      return boards.get(playerpos).getPlayer().getName();
+      return boards.get(playerPos).getPlayer().getName();
     }
-    if (playerpos >= minPlayers)
-      return "...........";
-    else
-      return "..........!";
+    if (startDate == null){
+      if (playerPos >= maxPlayers)
+        return "";
+      else if (playerPos >= minPlayers)
+        return "...........";
+      else
+        return "...........";
+    } else
+      return "";
   }
 
+  public int getPlayerPosState(Long pos){
+    /* Lehetséges visszatérési értékek:
+       - 0: a maximális játékosszámnál nagyobb pozíció
+       - 1-4: van játékos a pozícióban, a helye fix
+       - 5: van játékos a pozícióban, a végső helye sorsolással dől el
+       - 6: a pozíció még betöltetlen, szükséges a játék indításához
+       - 7: a pozíció még betöltetlen, a minimum játékosszámon túli
+    */
+    if (openDate != null) {
+      int playerPos = (int) (long) pos;
+      if (numberOfPlayers > playerPos){
+        if (randomOrder)
+          return 5;
+        else
+          return playerPos + 1;
+      } 
+      if (playerPos < minPlayers)
+        return 6;
+      else
+        return 7;
+    }          
+    return 0;
+  }
+  
   public int getPlayerPos(String name) {
     for (int i = 0; i < boards.size(); i++) {
       if (boards.get(i).getPlayer().getName().equals(name))
@@ -410,13 +463,6 @@ public class Game implements Serializable {
     if (turn == 36) {
       System.out.println("Játék vége.");
       endDate = new Date();
-
-      // TODO Számítsuk ki az eredményt
-//      for (Board board : boards) {
-//        board.setScore((4 - board.getPosition()) * 26);
-//        board.setPlace(board.getPosition() + 1);
-//      }
-
     } else {
       // Ha még nem lett kiválasztva a következő betű, akkor most kisorsoljuk
       if (selectedLetters[turn].equals("")) {
@@ -456,7 +502,7 @@ public class Game implements Serializable {
   }
 
   public String drawLetter() {
-    int count = 0;
+    int letterCount = 0;
     String selectedLetter = "";
     int vowelCount = 0;
     int consCount = 0;
@@ -475,8 +521,8 @@ public class Game implements Serializable {
     }
 
     for (String letter : availableLetters.keySet()) {
-      count += availableLetters.get(letter);
-      System.out.println("betű: " + letter + ", összdb: " + count + ", mgh. db: " + vowelCount + ", msh. db: " + consCount);
+      letterCount += availableLetters.get(letter);
+      System.out.println("betű: " + letter + ", összdb: " + letterCount + ", mgh. db: " + vowelCount + ", msh. db: " + consCount);
     }
 
     Random rnd = new Random();
@@ -485,10 +531,10 @@ public class Game implements Serializable {
     boolean nok = false;
 
     do {
-      draw = rnd.nextInt(count) + 1;
+      draw = rnd.nextInt(letterCount) + 1;
       System.out.println("sorsolt szám: " + draw);
 
-      count = 0;
+      int count = 0;
       for (String letter : availableLetters.keySet()) {
         count += availableLetters.get(letter);
         if (count >= draw) {
@@ -530,6 +576,46 @@ public class Game implements Serializable {
     return letter;
   }
 
+  public String getDateInfo(){
+    Date now = new Date();
+    Date compareDate;
+    String dateInfo;
+    String pre = "";
+    
+    if (endDate != null){
+      compareDate = endDate;
+//      pre = "Véget ért: ";
+    } else if (startDate != null){
+      compareDate = startDate;
+//      pre = "Elindítva: ";
+    } else if (openDate != null) {
+      compareDate = openDate;
+//      pre = "Készítve: ";
+    } else
+      return "";
+    
+    long timeDiff = now.getTime() - compareDate.getTime();
+    int mins = (int)(timeDiff / 60000);
+    if (mins == 0)
+      dateInfo = pre + "most";
+    else if (mins < 60)
+      dateInfo = pre + mins + " perce";
+    else{
+      int hours = mins / 60;
+      if (hours < 24)
+        dateInfo = pre + hours + " órája";
+      else {
+        int days = hours / 24;
+        dateInfo = pre + days + " napja";
+      }
+    }
+    return dateInfo;
+  }
+  
+  public String getScoringModeLabel(){
+    return SCORING_MODES[scoringMode];
+  }
+  
   public List<Board> getBoards() {
     return boards;
   }
@@ -701,6 +787,30 @@ public class Game implements Serializable {
 
   public Map<String, Integer> getAvailableLetters() {
     return availableLetters;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public int getScoringMode() {
+    return scoringMode;
+  }
+
+  public void setScoringMode(int scoringMode) {
+    this.scoringMode = scoringMode;
   }
 
 }

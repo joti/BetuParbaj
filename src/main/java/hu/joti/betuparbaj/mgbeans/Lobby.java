@@ -14,6 +14,8 @@ import javax.faces.bean.ApplicationScoped;
 import hu.joti.betuparbaj.model.Game;
 import hu.joti.betuparbaj.model.Player;
 import java.util.Iterator;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -25,13 +27,17 @@ public class Lobby implements Serializable {
 
   public static final int FINISHEDGAMES_MAXNUM = 10;
 
+  private List<Game> gamesInPrep;
   private List<Game> gamesInLobby;
   private List<Game> gamesInProgress;
   private List<Game> gamesFinished;
 
   private int lastId;
+  private LocalDate lastGameDate;
+  private int dailyCounter;
 
   public Lobby() {
+    gamesInPrep = new ArrayList<>();
     gamesInLobby = new ArrayList<>();
     gamesInProgress = new ArrayList<>();
     gamesFinished = new ArrayList<>();
@@ -39,15 +45,9 @@ public class Lobby implements Serializable {
     Date curTime = new Date();
     Date startDate = new Date(119, 3, 21);
     lastId = (int) ((curTime.getTime() - startDate.getTime()) / 1000);
+    lastGameDate = LocalDate.now();
+    dailyCounter = 0;
     System.out.println("lastId: " + lastId);
-  }
-
-  public String getGamesInLobbyString() {
-    String gamesString = ":";
-    for (Game game : gamesInLobby) {
-      gamesString += game.getGameSetupString() + ";";
-    }
-    return gamesString;
   }
 
   public void removePlayer(Player player) {
@@ -83,6 +83,26 @@ public class Lobby implements Serializable {
     return lastId;
   }
 
+  public synchronized String getDefGameName() {
+    LocalDate today = LocalDate.now();
+    if (today != lastGameDate){
+      lastGameDate = today;
+      dailyCounter = 0;
+    }
+    dailyCounter++;
+    
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYMMdd");
+    return dtf.format(lastGameDate) + "/" + dailyCounter;
+  }
+
+  public List<Game> getGamesInPrep() {
+    return gamesInPrep;
+  }
+
+  public void setGamesInPrep(List<Game> gamesInPrep) {
+    this.gamesInPrep = gamesInPrep;
+  }
+
   public List<Game> getGamesInLobby() {
     return gamesInLobby;
   }
@@ -115,4 +135,20 @@ public class Lobby implements Serializable {
     this.lastId = lastId;
   }
 
+  public LocalDate getLastGameDate() {
+    return lastGameDate;
+  }
+
+  public void setLastGameDate(LocalDate lastGameDate) {
+    this.lastGameDate = lastGameDate;
+  }
+
+  public int getDailyCounter() {
+    return dailyCounter;
+  }
+
+  public void setDailyCounter(int dailyCounter) {
+    this.dailyCounter = dailyCounter;
+  }
+  
 }

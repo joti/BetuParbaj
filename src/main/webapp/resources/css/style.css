@@ -39,6 +39,10 @@ input{
   box-shadow: none;
 }
 
+.ui-inputfield{
+  box-shadow: none;
+}
+
 textarea{
   outline: none;
 }
@@ -87,6 +91,37 @@ textarea{
 }
 
 .inputtextsmall {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;	
+  color: #555C23;
+  line-height: 1;
+  background-color: #f4f6e9;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #707561;
+  border-right-color: #707561;
+  padding: 3px;
+}
+
+.inputtextsmalluc {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;	
+  color: #555C23;
+  line-height: 1;
+  background-color: #f4f6e9;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #707561;
+  border-right-color: #707561;
+  padding: 3px;
+  text-transform: uppercase;
+}
+
+.inputtextareasmall {
   font-family: "Courier New", Courier, monospace;
   font-size: 12px;	
   color: #555C23;
@@ -258,6 +293,7 @@ textarea{
   font-weight: bold;
   color: #808571;
   line-height: 1.7;
+  overflow: hidden;
 }
 
 .gamearea { 
@@ -564,7 +600,7 @@ textarea{
 /* Csatlakozás gomb */
 .buttonsmall2 {
   font-family: "Courier New", Courier, monospace;
-  font-size: 15px;	
+  font-size: 14px;	
   font-weight: bold;
   border: 2px solid;
   border-radius: 3px;
@@ -576,12 +612,14 @@ textarea{
   background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
   outline: 0;
   height: 24px;
+  margin-top: 2px;
   margin-bottom: 4px;
+  margin-right: 4px;
   padding: 1px;
   padding-left: 4px;
   padding-right: 4px;
-  transform:scale(0.85,1.0);
-  transform-origin: left center;
+  transform:scale(0.94,1.0);
+  transform-origin: right center;
   text-shadow: 0px 1px 0px white;
 }
 
@@ -763,11 +801,56 @@ textarea{
   margin: 0px;
 }
 
+.lobbyrowheader{
+  table-layout: fixed ;
+  width: 100% ;  
+  border-collapse: collapse;
+  vertical-align: middle;
+  border-bottom: 1px dashed #b9b89f;
+  background-color: rgba(249,250,238,0.5);
+  line-height: 1.0;
+}
+
+.lobbyrowheadercol1{
+  height: 25px;
+  max-height: 25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  text-align: left;
+  display: inline-block;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;	
+  font-weight: bold;
+  color: #555C23;
+  border: none;
+  padding: 2px;
+}
+
+.lobbyrowgamename{
+  font-size: 14px;
+  font-weight: bolder;
+  text-overflow: ellipsis;
+}
+
+.lobbyrowdateinfo{
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.lobbyrowheadercol2{
+  width: 40%;
+  text-align: right;
+  border: none;
+  background-color: rgba(249,250,238,0.5);
+}
+
 .lobbyrowplayers{
   table-layout: fixed ;
   width: 100% ;  
   border-collapse: collapse;
-  border: 0px;
+  border: none;
   background: transparent;
 }
 
@@ -779,10 +862,11 @@ textarea{
 .lobbyrowplayer{
   display: inline-block;
   padding: 2px;
+  padding-left:5px;
   white-space: nowrap;
   overflow: hidden;
   height: 20px;
-  width: 90%;
+  width: 87%;
   font-weight: bold;
   color: #656E28;
   text-overflow: ellipsis;
@@ -794,6 +878,13 @@ textarea{
   background-color: rgba(198,206,146,0.4);
 }
 
+.lobbyplayernametext{
+  /*margin-left: 2px;*/ 
+  text-overflow: ellipsis;
+  position: relative;
+  top: 2px;
+}
+
 .lobbyrowrules{
   table-layout: fixed ;
   width: 100% ;  
@@ -802,18 +893,20 @@ textarea{
 }
 
 .lobbyrowrulescol1{
-  width: 80%;
+  width: 100%;
   height: 25px;
   max-height: 25px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: middle;
+  text-align: left;
 }
 
 .lobbyrowrulescol2{
-  width: 20%;
+  width: 22%;
   text-align: right;
+  border: none;
 }
 
 .lobbyrowrule{
@@ -821,7 +914,8 @@ textarea{
   padding: 2px;
   padding-left: 5px;
   padding-right: 5px;
-  margin-left: 3px;
+  margin-left: 0px;
+  margin-right: 0px;
   margin-bottom: 2px;
   height: 20px;
   font-size: 12px;

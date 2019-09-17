@@ -45,29 +45,16 @@ public class Glossary implements Serializable{
     words = new TreeSet<>();
     easyVowelWords = new TreeMap<>();
 
-//    Word w1 = new Word("csiga");
-//    words.add(w1);
-//    Word w2 = new Word("zsiráf");
-//    words.add(w2);
-
     List<Word> wordList = wordDao.findAllWords();
     String entry;
     String modEntry;
-    int count = 0;
     
     for (Word word : wordList) {
       entry = word.getWord();
       entry = entry.replaceAll("1", "CS").replaceAll("2", "GY").replaceAll("3", "LY").replaceAll("4", "NY").replaceAll("5", "SZ").replaceAll("6", "TY").replaceAll("7", "ZS");       
-      if (count < 200){
-        System.out.println("Szó módosítva: " + entry);
-      }
       words.add(entry);
-      count++;
       
       if (entry.contains("Í") || entry.contains("Ó") || entry.contains("Ő") || entry.contains("Ú") || entry.contains("Ű")){
-        if (count < 200){
-          System.out.println("Hosszú mgh.: " + entry);
-        }  
         modEntry = entry.replaceAll("Í", "I").replaceAll("Ó", "O").replaceAll("Ő", "Ö").replaceAll("Ú", "U").replaceAll("Ű", "Ü");
         easyVowelWords.put(modEntry, entry);
       }
@@ -92,7 +79,7 @@ public class Glossary implements Serializable{
     return "";
   }
   
-  public Hit findHit(String[] letters, boolean easyVowelRule){
+  public Hit findHit(String[] letters, boolean easyVowelRule, int scoringMode){
     String word;
     
     /* Az alábbi sorrendben ellenőrizzük a betűsorokat: 6 betűs: 1-6; 5 b.: 1-5, 2-6; 4 b.: 1-4, 2-5, 3-6; 3 b.: 1-3, 2-4, 3-5, 4-6; 2 b.: 1-2, 2-3, 3-4, 4-5, 5-6 */
@@ -100,7 +87,7 @@ public class Glossary implements Serializable{
       System.out.println("vizsgált szóhossz: " + len);
       for (int start = 0; start + len <= letters.length; start++) {
         word = "";
-        for (int pos = start; word.length() < len ; pos++) {
+        for (int pos = start; pos - start < len ; pos++) {
           word += letters[pos];
         }
         System.out.println("Vizsgált szó: " + word);
@@ -108,7 +95,7 @@ public class Glossary implements Serializable{
         String gWord = findGlossaryWord(word, easyVowelRule);
         if (!gWord.isEmpty()){
           System.out.println("Találat: " + gWord);
-          Hit hit = new Hit(start, start + len - 1, Game.VALUE_OF_WORDS[len - 1] , gWord);
+          Hit hit = new Hit(start, start + len - 1, Game.VALUE_OF_WORDS[scoringMode][len - 1] , gWord);
           System.out.println(hit.getWord() + " hossza: " + hit.getEnd() + " - " + hit.getStart() + " = " + (hit.getEnd() - hit.getStart()) + ", " + hit.getScore() + " pt");
           return hit;
         }

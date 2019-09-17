@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import hu.joti.betuparbaj.model.Game;
 import hu.joti.betuparbaj.model.Hit;
+import hu.joti.betuparbaj.model.ScoringMode;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,10 +41,17 @@ public class GameManager implements Serializable {
   LoginData loginData;
 
   private Game game;
+  private Game prevGame;
   private Set<Integer> fadingGames;
   private Set<Integer> fadedGames;
+  private String password;
   private int myPosition;
+
+  // játékok listázásának módjai: 1 - megnyitott játékok, 2 - folyamatban lévő játékok, 3 - befejeződött játékok
   private int lobbyMode;
+  // befejeződött játék lekérdezésének módja: 1 - eredmény, 2 - setup
+  private int gameViewMode;
+  
   private List<Integer> letterIndices;
   private List<Integer> cellIndices;
   private String testWord;
@@ -57,6 +65,8 @@ public class GameManager implements Serializable {
     logger.debug("New GM session");
     myPosition = -1;
     lobbyMode = 1;
+    gameViewMode = 0;
+    password = "";
 
     letterIndices = new ArrayList<>();
     for (int i = 0; i < Game.ALPHABET.length; i++) {
@@ -195,7 +205,7 @@ public class GameManager implements Serializable {
           for (int col = 0; col < Board.BOARD_SIZE; col++) {
             streak[col] = letters[row][col];
           }
-          Hit hit = glossary.findHit(streak, game.isEasyVowelRule());
+          Hit hit = glossary.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
           if (hit != null) {
             logger.info(board.getPlayer().getName() + " szava: " + hit.getWord());
             hit.setHorizontal(true);
@@ -209,7 +219,7 @@ public class GameManager implements Serializable {
           for (int row = 0; row < Board.BOARD_SIZE; row++) {
             streak[row] = letters[row][col];
           }
-          Hit hit = glossary.findHit(streak, game.isEasyVowelRule());
+          Hit hit = glossary.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
           if (hit != null) {
             logger.info(board.getPlayer().getName() + " szava: " + hit.getWord());
             hit.setHorizontal(false);
@@ -251,6 +261,16 @@ public class GameManager implements Serializable {
     return null;
   }
 
+  public String getGamesInLobbyString() {
+    String gamesString = ":";
+    List<Game> games = getGamesFromLobby();
+    for (Game g : games) {
+      gamesString += g.getGameSetupString() + ";";
+    }
+    gamesString += (loginData.getSeconds() / 60) + "";
+    return gamesString;
+  }
+  
   public void fillMyPosition() {
     if (game == null || game.getStartDate() == null)
       myPosition = -1;
@@ -285,10 +305,24 @@ public class GameManager implements Serializable {
 
   public void createGame() {
     int gameId = lobby.getGameId();
-    logger.info(loginData.getName() + " creates game #" + gameId);
-    game = new Game(gameId, true, true, true, 1, 2, 4, 30);
+    
+    String name = lobby.getDefGameName();
+    logger.info(loginData.getName() + " creates game #" + gameId + " with name " + name);
+    
+    /* A játékos legutóbbi asztalának beállításaival indítunk */
+    if (prevGame != null){
+      game = new Game(gameId, name, prevGame.isEasyVowelRule(), prevGame.isNoDigraph(), prevGame.isIncludeY(), prevGame.getDrawmode(), 
+                      prevGame.getMinPlayers(), prevGame.getMaxPlayers(), prevGame.getTimeLimit(), prevGame.getScoringMode());
+    } else {
+      game = new Game(gameId, name, Game.DEF_EASYVOWELRULE, Game.DEF_NODIGRAPH, Game.DEF_INCLUDEY, Game.DEF_DRAWMODE, 
+                      Game.DEF_MINPLAYERS, Game.DEF_MAXPLAYERS, Game.DEF_TIMELIMIT, Game.DEF_SCORING_MODE);
+    }  
+    
     game.addPlayer(loginData.getPlayer());
     myPosition = -1;
+    gameViewMode = 0;
+    password = "";
+    lobby.getGamesInPrep().add(game);
     logger.info("Game #" + game.getId() + " created");
   }
 
@@ -302,13 +336,34 @@ public class GameManager implements Serializable {
     return (g.getPlayerPos(loginData.getName()) >= 0);
   }
 
+  public boolean canJoinGameWithPassword(Game g) {
+    if (game != null || g == null || g.getOpenDate() == null || g.getEndDate() != null)
+      return false;
+
+    if (g.getPassword().isEmpty())
+      return false;
+    else
+      return canJoinGame(g);
+  }
+
   public void joinGame(Game g) {
     if (game == null && g != null && g.getOpenDate() != null && g.getEndDate() == null) {
+      if (!g.getPassword().isEmpty()){
+        System.out.println(g.getPassword());
+        System.out.println(password);
+        if (!g.getPassword().equalsIgnoreCase(password)){
+          password = "";
+          return;        
+        }  
+      }  
+      
       logger.info(loginData.getName() + " joins game #" + g.getId());
       game = g;
       game.addPlayer(loginData.getPlayer());
       fillMyPosition();
       clearWord();
+      gameViewMode = 0;
+      password = "";
     }
   }
 
@@ -321,6 +376,7 @@ public class GameManager implements Serializable {
     if (game == null && g.getEndDate() != null) {
       game = g;
       myPosition = 0;
+      gameViewMode = 1;
 
       // A győztes játékos tábláját mutatjuk elsőre
       for (Board board : game.getBoards()) {
@@ -332,12 +388,20 @@ public class GameManager implements Serializable {
     }
   }
 
+  public void switchGameViewMode(){
+    if (gameViewMode == 1)
+      gameViewMode = 2;
+    else if (gameViewMode == 2)
+      gameViewMode = 1;
+  }
+  
   public void quitGame() {
     logger.info(loginData.getName() + " quits game #" + game.getId());
     if (game != null) {
       game.removePlayer(loginData.getName());
       clearWord();
       logger.info(loginData.getName() + " removed from game #" + game.getId());
+      prevGame = game;
       game = null;
     }
   }
@@ -345,16 +409,20 @@ public class GameManager implements Serializable {
   public void openGame() {
     if (game != null) {
       game.setOpenDate(new Date());
+      lobby.getGamesInPrep().remove(game);
       lobby.getGamesInLobby().add(game);
       clearWord();
+      password = password.trim();
     }
   }
 
   public void dropGame() {
     if (game != null) {
       clearWord();
+      lobby.getGamesInPrep().remove(game);
       lobby.getGamesInLobby().remove(game);
       lobby.getGamesInProgress().remove(game);
+      prevGame = game;
       game = null;
     }
   }
@@ -382,7 +450,7 @@ public class GameManager implements Serializable {
       return true;
     }
 
-    System.out.println("GAME = NULL (GameExists())");
+    prevGame = game;
     game = null;
     return false;
   }
@@ -425,6 +493,7 @@ public class GameManager implements Serializable {
       return;
     }
 
+    prevGame = game;
     game = null;
   }
 
@@ -582,6 +651,14 @@ public class GameManager implements Serializable {
     return gameHistString;
   }
 
+  public String getBoardHitsString(){
+    if (game != null && game.getEndDate() != null && myPosition >= 0){
+      Board board = game.getBoards().get(myPosition);
+      return board.getHitsString();
+    }
+    return "";
+  }
+  
   public String getGameMsg() {
     if (game == null || game.getStartDate() == null) {
       return "";
@@ -853,6 +930,14 @@ public class GameManager implements Serializable {
     return Arrays.asList(Game.TIMELIMITS);
   }
 
+  public List<ScoringMode> getAllScoringModes() {
+    List<ScoringMode> modes = new ArrayList<>();
+    for (int i = 0; i < Game.SCORING_MODES.length; i++) {
+      modes.add(new ScoringMode(i, Game.SCORING_MODES[i]));
+    }
+    return modes;
+  }
+
   public void setLobby(Lobby lobby) {
     this.lobby = lobby;
   }
@@ -935,6 +1020,30 @@ public class GameManager implements Serializable {
 
   public void setFadedGames(Set<Integer> fadedGames) {
     this.fadedGames = fadedGames;
+  }
+
+  public Game getPrevGame() {
+    return prevGame;
+  }
+
+  public void setPrevGame(Game prevGame) {
+    this.prevGame = prevGame;
+  }
+
+  public int getGameViewMode() {
+    return gameViewMode;
+  }
+
+  public void setGameViewMode(int gameViewMode) {
+    this.gameViewMode = gameViewMode;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
 }

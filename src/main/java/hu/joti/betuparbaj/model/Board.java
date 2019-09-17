@@ -99,6 +99,15 @@ public class Board implements Serializable {
     System.out.println("Összpontsám: " + score);
   }
   
+  public String getHitsString(){
+    String hitsString = "";
+    
+    for (Hit hit : hits) {
+      hitsString += (hit.isHorizontal()?"H":"V") + hit.getLine() + hit.getStart() + (hit.getEnd() - hit.getStart() + 1) + "";
+    }
+    return hitsString;
+  }
+  
   public Player getPlayer() {
     return player;
   }

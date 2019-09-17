@@ -49,7 +49,7 @@ public class ChatRoom implements Serializable {
 
   private transient ScheduledExecutorService scheduler;
   private int schedCount;
-
+ 
   public ChatRoom() {
     players = new TreeSet<>();
     messages = new ArrayList<>();
@@ -84,7 +84,7 @@ public class ChatRoom implements Serializable {
   @PreDestroy
   public void destroy() {
     scheduler.shutdownNow();
-  }  
+  }   
   
   private void addTestPlayers() {
     for (String name : TESTPLAYERS) {
@@ -95,17 +95,20 @@ public class ChatRoom implements Serializable {
 
   private void addTestGamesToLobby(int count, int full) {
     int gameId;
+    String gameName;
     Game game;
     Random rnd = new Random();
     String playerName;
     int maxPlayers;
     int numOfPlayers;
     int timeLimit;
+    int scoringMode;
     int fullcount = 0;
     Set<String> gamePlayers = new HashSet<>();
 
     for (int i = 0; i < count; i++) {
       gameId = lobby.getGameId();
+      gameName = "#" + gameId;
       maxPlayers = Game.NUM_OF_PLAYERS[rnd.nextInt(Game.NUM_OF_PLAYERS.length)];
       if (fullcount < full){
         numOfPlayers = maxPlayers;
@@ -114,8 +117,9 @@ public class ChatRoom implements Serializable {
         numOfPlayers = rnd.nextInt(maxPlayers) + 1;
       }  
       timeLimit = Game.TIMELIMITS[rnd.nextInt(Game.TIMELIMITS.length)];
+      scoringMode = rnd.nextInt(Game.SCORING_MODES.length);
 
-      game = new Game(gameId, rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), 1, 2, maxPlayers, timeLimit);
+      game = new Game(gameId, gameName, rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), 1, 2, maxPlayers, timeLimit, scoringMode);
 
       gamePlayers.clear();
       for (int j = 0; j < numOfPlayers; j++) {

@@ -39,7 +39,7 @@ function setMessages(xhr, status, args) {
       }
     }
   }
-  
+
   var ita_prevgames = document.getElementById("pageform:ita_gamesinlobby");
   if (ita_prevgames !== null) {
     var ita_newgames = document.getElementById("pageform:ita_gamesinlobby2");
@@ -50,7 +50,7 @@ function setMessages(xhr, status, args) {
       btn = document.getElementById("pageform:btn_lobbyrefresh");
       if (btn !== null) {
         btn.dispatchEvent(new Event("click"));
-      }  
+      }
 
     }
   }
@@ -65,14 +65,14 @@ function setMessages(xhr, status, args) {
       ot_prevgamestate.innerHTML = newVal;
 
       if ((newVal === "0" && prevVal !== newVal && prevVal !== "") // vissza a lobbiba
-      || (newVal === "3" && prevVal !== newVal)) // indul a játék
+              || (newVal === "3" && prevVal !== newVal)) // indul a játék
       {
         btn = document.getElementById("pageform:btn_mainrefresh");
         if (btn !== null) {
           btn.dispatchEvent(new Event("click"));
         }
-      }  
-    }    
+      }
+    }
   }
 
   var ot_newgamesetup = document.getElementById("pageform:ot_gamesetup2");
@@ -84,10 +84,10 @@ function setMessages(xhr, status, args) {
       if (ot_prevgamesetup.innerHTML !== ot_newgamesetup.innerHTML) {
         ot_prevgamesetup.innerHTML = ot_newgamesetup.innerHTML;
         needsetuprefresh = true;
-      }  
+      }
     }
-    
-    if (needsetuprefresh){
+
+    if (needsetuprefresh) {
       btn = document.getElementById("pageform:btn_setuprefresh");
       if (btn !== null) {
         btn.dispatchEvent(new Event("click"));
@@ -97,60 +97,55 @@ function setMessages(xhr, status, args) {
 
   var ot_newturnsec = document.getElementById("pageform:ot_turnsec2");
   if (ot_newturnsec !== null) {
-    console.log(ot_newturnsec.innerHTML);
     var ot_playerstate = document.getElementById("pageform:ot_playerstate");
     var ot_prevturnsec = document.getElementById("pageform:ot_turnsec");
 
     if (ot_prevturnsec !== null) {
       if (ot_prevturnsec.innerHTML !== ot_newturnsec.innerHTML) {
         ot_prevturnsec.innerHTML = ot_newturnsec.innerHTML;
-        if (ot_playerstate.innerHTML < 1){
+        if (ot_playerstate.innerHTML < 1) {
           ot_prevturnsec.style.display = "none";
         } else {
           ot_prevturnsec.style.display = "block";
-          if (ot_playerstate.innerHTML > 2){
+          if (ot_playerstate.innerHTML > 2) {
             ot_prevturnsec.style.color = "#dee4b9";
-          } else if (ot_prevturnsec.innerHTML < 10){
+          } else if (ot_prevturnsec.innerHTML < 10) {
             ot_prevturnsec.style.color = "red";
           } else {
             ot_prevturnsec.style.color = "#555c23";
           }
         }
-      }  
+      }
     }
-  }  
+  }
 
   btn = document.getElementById("pageform:btn_playrefresh");
+  var needplayrefresh = false;
+  var needplayendrefresh = false;
   if (btn !== null) {
     var ot_newgamehist = document.getElementById("pageform:ot_gamehist2");
-    console.log(ot_newgamehist.innerHTML);
-    var needplayrefresh = false;
-    var needplayendrefresh = false;
     var ot_prevgamehist = document.getElementById("pageform:ot_gamehist");
 
     if (ot_prevgamehist !== null) {
-      console.log(ot_prevgamehist.innerHTML);
       if (ot_prevgamehist.innerHTML !== ot_newgamehist.innerHTML) {
         ot_prevgamehist.innerHTML = ot_newgamehist.innerHTML;
         needplayrefresh = true;
 
         if ((ot_newgamehist.innerHTML).charAt(0) === "[")
           needplayendrefresh = true;
-          
-        console.log("eee-eee");
-        console.log(ot_prevgamehist.innerHTML.charAt(0));
-      }  
+
+      }
     }
-    
-    if (needplayrefresh){
-      if (needplayendrefresh){
+
+    if (needplayrefresh) {
+      if (needplayendrefresh) {
         btn = document.getElementById("pageform:btn_playendrefresh");
         console.log("PLAYENDREFRESH");
       } else {
         btn = document.getElementById("pageform:btn_playrefresh");
         console.log("PLAYREFRESH");
-      }  
-      
+      }
+
       if (btn !== null) {
         console.log("CLICK");
         btn.dispatchEvent(new Event("click"));
@@ -158,6 +153,63 @@ function setMessages(xhr, status, args) {
     }
   }
 
+  if (!needplayrefresh) {
+    var ot_newboardhits = document.getElementById("pageform:ot_boardhits2");
+    if (ot_newboardhits !== null) {
+      console.log(ot_newboardhits.innerHTML);
+      var cv_board = document.getElementById("cv_board");
+      var ot_prevboardhits = document.getElementById("pageform:ot_boardhits");
+      console.log(cv_board === null);
+      if (cv_board !== null) {
+        console.log(ot_prevboardhits.innerHTML);
+        if (ot_prevboardhits.innerHTML !== ot_newboardhits.innerHTML) {
+          ot_prevboardhits.innerHTML = ot_newboardhits.innerHTML;
+
+          var ctx = cv_board.getContext("2d");
+          if (ot_newboardhits.innerHTML === "") {
+            console.log("clearRect");
+            ctx.clearRect(0, 0, cv_board.width, cv_board.height);
+          } else {
+            console.log("stroke");
+            var hitsstr = ot_newboardhits.innerHTML;
+            cv_board.width = 186;
+            cv_board.height = 186;
+            var pos = 0;
+            while (pos < hitsstr.length) {
+              if (hitsstr.charAt(pos) === "H" || hitsstr.charAt(pos) === "V") {
+                var horizontal = (hitsstr.charAt(pos) === "H");
+                var line = hitsstr.charAt(pos + 1);
+                var startpos = hitsstr.charAt(pos + 2);
+                var length = hitsstr.charAt(pos + 3);
+                drawHitRect(ctx, horizontal, line, startpos, length);
+              }
+              pos += 4;
+            }
+          }
+        }
+      }
+    }
+  }
+
 }
 
+function drawHitRect(ctx, horizontal, line, startpos, length) {
+  const cornerx = 4;
+  const cornery = 4;
 
+  var startx = cornerx + 31 * startpos;
+  var starty = cornerx + 31 * line;
+  var widthx = 31 * length - 8;
+  var widthy = 23;
+
+  ctx.beginPath();
+  ctx.setLineDash([2, 2]);
+  if (horizontal === true) {
+    ctx.strokeStyle = "rgb(255, 0, 0)";
+    ctx.rect(startx, starty, widthx, widthy);
+  } else {
+    ctx.strokeStyle = "rgb(102, 150, 83)";
+    ctx.rect(starty, startx, widthy, widthx);
+  }
+  ctx.stroke();
+}
