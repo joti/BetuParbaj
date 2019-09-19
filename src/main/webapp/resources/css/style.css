@@ -26,6 +26,9 @@ input{
   box-shadow: none;
 }
 
+input::placeholder {
+  color: #c6ce92;
+}
 .ui-inputfield.ui-state-focus{
   outline: none;
   box-shadow: none;
@@ -118,6 +121,8 @@ textarea{
   border-bottom-color: #707561;
   border-right-color: #707561;
   padding: 3px;
+  margin-left: 0px; 
+  margin-right: 0px;
   text-transform: uppercase;
 }
 
@@ -331,6 +336,26 @@ textarea{
   font-weight: normal;
   color: #808571;
   line-height: 1.2;
+}
+
+.gamesetupplayer{
+  display: inline-block;
+  padding-top: 2px;
+  padding-left:5px;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 20px;
+  width: 234px;
+  font-weight: bold;
+  color: #656E28;
+  text-overflow: ellipsis;
+  margin-left: 3px;
+  margin-top: 2px;
+  vertical-align: middle;
+  border-radius: 2px;
+  border: 1px solid #cad1a5;
+  background-color: rgba(198,206,146,0.4);
+  display:inline-block; 
 }
 
 .gamebg { 
@@ -876,6 +901,7 @@ textarea{
   border-radius: 2px;
   border: 2px solid #cad1a5;
   background-color: rgba(198,206,146,0.4);
+  opacity: 0.95;
 }
 
 .lobbyplayernametext{
@@ -939,6 +965,8 @@ textarea{
   width: auto;
   height: auto;  
   vertical-align: text-bottom;
+  position: relative;
+  top: 2px;
 }
 
 .curplayerimage{

@@ -55,6 +55,7 @@ public class Game implements Serializable {
   public static final int DEF_DRAWMODE = 1;
   public static final int DEF_MINPLAYERS = 2;
   public static final int DEF_MAXPLAYERS = 4;
+  public static final boolean DEF_RANDOMPLACE = true;
   
   private int id;
   private List<Board> boards;
@@ -71,6 +72,7 @@ public class Game implements Serializable {
   private int adminPlayerPos;
   private int numberOfActivePlayers;
   private boolean randomOrder;
+  private boolean randomPlace;
   private int timeLimit;
   private int scoringMode;
   private Date openDate; // A játék elérhetővé válik a lobbyban, játékosok csatlakozására vár
@@ -93,7 +95,7 @@ public class Game implements Serializable {
     init();
   }
 
-  public Game(int id, String name, boolean easyVowelRule, boolean noDigraph, boolean includeY, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
+  public Game(int id, String name, boolean easyVowelRule, boolean noDigraph, boolean includeY, boolean randomPlace, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
     this.id = id;
     this.name = name;
     this.easyVowelRule = easyVowelRule;
@@ -104,10 +106,11 @@ public class Game implements Serializable {
     this.maxPlayers = maxPlayers;
     this.timeLimit = timeLimit;
     this.scoringMode = scoringMode;
+    this.randomPlace = randomPlace;
     init();
   }
 
-  public Game(String name, boolean easyVowelRule, boolean noDigraph, boolean includeY, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
+  public Game(String name, boolean easyVowelRule, boolean noDigraph, boolean includeY, boolean randomPlace, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
     this.name = name;
     this.easyVowelRule = easyVowelRule;
     this.noDigraph = noDigraph;
@@ -117,6 +120,7 @@ public class Game implements Serializable {
     this.maxPlayers = maxPlayers;
     this.timeLimit = timeLimit;
     this.scoringMode = scoringMode;
+    this.randomPlace = randomPlace;
     init();
   }
 
@@ -181,7 +185,7 @@ public class Game implements Serializable {
     setAdminPlayer();
   }
 
-  public String getPlayerName(Long pos) {
+  public String getPlayerName(Long pos, boolean inLobby) {
     int playerPos = (int) (long) pos;
     if (boards.size() > pos) {
       return boards.get(playerPos).getPlayer().getName();
@@ -189,10 +193,17 @@ public class Game implements Serializable {
     if (startDate == null){
       if (playerPos >= maxPlayers)
         return "";
-      else if (playerPos >= minPlayers)
-        return "...........";
-      else
-        return "...........";
+      else if (playerPos >= minPlayers){
+        if (inLobby)
+          return "...........";
+        else 
+          return "............................";
+      } else {
+        if (inLobby)
+          return "...........";
+        else
+          return "............................";
+      }
     } else
       return "";
   }
@@ -208,7 +219,7 @@ public class Game implements Serializable {
     if (openDate != null) {
       int playerPos = (int) (long) pos;
       if (numberOfPlayers > playerPos){
-        if (randomOrder)
+        if (startDate == null && randomOrder)
           return 5;
         else
           return playerPos + 1;
@@ -357,6 +368,14 @@ public class Game implements Serializable {
     return settings;
   }
 
+  public String getScoringModeString(){
+    String sm = "";
+    for (int wordlen = 1; wordlen < VALUE_OF_WORDS[scoringMode].length; wordlen++) {
+      sm += ((wordlen > 1) ? "-" : "" ) + VALUE_OF_WORDS[scoringMode][wordlen];
+    }
+    return sm;
+  }
+  
   public String getCreator() {
     if (boards.size() > 0) {
       return boards.get(0).getPlayer().getName();
@@ -454,8 +473,11 @@ public class Game implements Serializable {
       // Ha valamelyik játékos még nem helyezte le a betűt a táblájára, akkor most lerakjuk valahová
       for (Board board : boards) {
         int letterCount = board.getLetterCount();
-        if (letterCount < turn) {
-          board.setLetterRandom(selectedLetters[turn - 1]);
+        if (letterCount < turn){
+          if (randomPlace)
+            board.setLetterRandom(selectedLetters[turn - 1]);
+          else
+            board.getUnplacedLetters().add(selectedLetters[turn - 1]);
         }
       }
     }
@@ -811,6 +833,14 @@ public class Game implements Serializable {
 
   public void setScoringMode(int scoringMode) {
     this.scoringMode = scoringMode;
+  }
+
+  public boolean isRandomPlace() {
+    return randomPlace;
+  }
+
+  public void setRandomPlace(boolean randomPlace) {
+    this.randomPlace = randomPlace;
   }
 
 }

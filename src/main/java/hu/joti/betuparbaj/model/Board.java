@@ -26,6 +26,8 @@ public class Board implements Serializable {
   private Player player;
   //elhelyezett betűk
   private String[][] letters;
+  //el nem helyezett betűk
+  private List<String> unplacedLetters;
   // pontot érő szavak a táblán
   private List<Hit> hits;
   // összpontszám
@@ -46,6 +48,7 @@ public class Board implements Serializable {
     }
 
     hits = new ArrayList<>();
+    unplacedLetters = new ArrayList<>();
     joinDate = new Date();
   }
 
@@ -64,6 +67,10 @@ public class Board implements Serializable {
       }
     }
     return letterCount;
+  }
+
+  public int getTotalLetterCount() {
+    return getLetterCount() + unplacedLetters.size();
   }
 
   public void setLetter(String letter, int row, int column) {
@@ -170,6 +177,14 @@ public class Board implements Serializable {
 
   public void setPosition(int position) {
     this.position = position;
+  }
+
+  public List<String> getUnplacedLetters() {
+    return unplacedLetters;
+  }
+
+  public void setUnplacedLetters(List<String> unplacedLetters) {
+    this.unplacedLetters = unplacedLetters;
   }
 
 }

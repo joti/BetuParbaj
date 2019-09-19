@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 
 /**
@@ -164,7 +167,7 @@ public class GameManager implements Serializable {
         if (turn > 0) {
           for (Board board : game.getBoards()) {
             // Kilépett játékosra nem várakozunk
-            if (board.getLetterCount() < game.getTurn() && board.getQuitDate() == null) {
+            if (board.getTotalLetterCount() < game.getTurn() && board.getQuitDate() == null) {
               needWait = true;
               break;
             }
@@ -203,7 +206,10 @@ public class GameManager implements Serializable {
         /* Végighaladunk a tábla sorain */
         for (int row = 0; row < Board.BOARD_SIZE; row++) {
           for (int col = 0; col < Board.BOARD_SIZE; col++) {
-            streak[col] = letters[row][col];
+            if (letters[row][col].isEmpty())
+              streak[col] = "_";
+            else  
+              streak[col] = letters[row][col];
           }
           Hit hit = glossary.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
           if (hit != null) {
@@ -311,10 +317,10 @@ public class GameManager implements Serializable {
     
     /* A játékos legutóbbi asztalának beállításaival indítunk */
     if (prevGame != null){
-      game = new Game(gameId, name, prevGame.isEasyVowelRule(), prevGame.isNoDigraph(), prevGame.isIncludeY(), prevGame.getDrawmode(), 
+      game = new Game(gameId, name, prevGame.isEasyVowelRule(), prevGame.isNoDigraph(), prevGame.isIncludeY(), prevGame.isRandomPlace(), prevGame.getDrawmode(), 
                       prevGame.getMinPlayers(), prevGame.getMaxPlayers(), prevGame.getTimeLimit(), prevGame.getScoringMode());
     } else {
-      game = new Game(gameId, name, Game.DEF_EASYVOWELRULE, Game.DEF_NODIGRAPH, Game.DEF_INCLUDEY, Game.DEF_DRAWMODE, 
+      game = new Game(gameId, name, Game.DEF_EASYVOWELRULE, Game.DEF_NODIGRAPH, Game.DEF_INCLUDEY, Game.DEF_RANDOMPLACE, Game.DEF_DRAWMODE, 
                       Game.DEF_MINPLAYERS, Game.DEF_MAXPLAYERS, Game.DEF_TIMELIMIT, Game.DEF_SCORING_MODE);
     }  
     
@@ -346,17 +352,19 @@ public class GameManager implements Serializable {
       return canJoinGame(g);
   }
 
+    public boolean canJoinGameWOPassword(Game g) {
+    if (game != null || g == null || g.getOpenDate() == null || g.getEndDate() != null)
+      return false;
+
+    if (!g.getPassword().isEmpty())
+      return false;
+    else
+      return canJoinGame(g);
+  }
+
   public void joinGame(Game g) {
+    System.out.println("JOINGAME");
     if (game == null && g != null && g.getOpenDate() != null && g.getEndDate() == null) {
-      if (!g.getPassword().isEmpty()){
-        System.out.println(g.getPassword());
-        System.out.println(password);
-        if (!g.getPassword().equalsIgnoreCase(password)){
-          password = "";
-          return;        
-        }  
-      }  
-      
       logger.info(loginData.getName() + " joins game #" + g.getId());
       game = g;
       game.addPlayer(loginData.getPlayer());
@@ -565,7 +573,7 @@ public class GameManager implements Serializable {
           return true;
         }
       } else if (turn > 0) {
-        if (game.getBoards().get(player).getLetterCount() >= turn) {
+        if (game.getBoards().get(player).getTotalLetterCount() >= turn) {
           return true;
         }
       }
@@ -609,7 +617,7 @@ public class GameManager implements Serializable {
     }
 
     int turn = game.getTurn();
-    if (game.getBoards().get(myPosition).getLetterCount() < turn) // A játékos még nem rakta le az aktuális betűt
+    if (game.getBoards().get(myPosition).getTotalLetterCount() < turn) // A játékos még nem rakta le az aktuális betűt
     {
       return 1;
     }
