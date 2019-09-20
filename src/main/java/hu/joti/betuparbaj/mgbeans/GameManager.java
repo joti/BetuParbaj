@@ -161,7 +161,7 @@ public class GameManager implements Serializable {
       // akkor szükség esetén elindítjuk a következő kört
       if (game.getNextActivePlayerPos() == myPosition) {
 
-        // Rakott-e már mindenki betűt és a soron következő játékos kiválasztotta-e már a következő betűt?
+        // Rakott-e már mindenki betűt?
         boolean needWait = false;
         int turn = game.getTurn();
         if (turn > 0) {
@@ -173,6 +173,8 @@ public class GameManager implements Serializable {
             }
           }
         }
+        
+        // A soron következő játékos kiválasztotta-e már a következő betűt?
         if (!needWait && game.getTurn() < 36 && game.getDrawmode() == Game.PLAYER_DRAW
                 && game.getBoards().get(game.getCurrentPlayer()).getQuitDate() == null) {
           if (game.getSelectedLetters()[turn].isEmpty()) {
@@ -223,7 +225,10 @@ public class GameManager implements Serializable {
         /* ...és az oszlopain */
         for (int col = 0; col < Board.BOARD_SIZE; col++) {
           for (int row = 0; row < Board.BOARD_SIZE; row++) {
-            streak[row] = letters[row][col];
+            if (letters[row][col].isEmpty())
+              streak[row] = "_";
+            else
+              streak[row] = letters[row][col];
           }
           Hit hit = glossary.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
           if (hit != null) {
@@ -617,9 +622,12 @@ public class GameManager implements Serializable {
     }
 
     int turn = game.getTurn();
+    System.out.println("GETPLAYERSTATE - " + loginData.getName() + ": turn = " + turn + ", total = " + game.getBoards().get(myPosition).getTotalLetterCount() + 
+                       ", PLACED = " + game.getBoards().get(myPosition).getLetterCount() + ", UNPLACED = " + game.getBoards().get(myPosition).getUnplacedLetters().size() +
+                       " (" + loginData.getSeconds() + " s)");
     if (game.getBoards().get(myPosition).getTotalLetterCount() < turn) // A játékos még nem rakta le az aktuális betűt
     {
-      return 1;
+      return 1; 
     }
 
     if (turn < 36 && myPosition == game.getCurrentPlayer() && game.getSelectedLetters()[turn].isEmpty()) {
@@ -686,7 +694,7 @@ public class GameManager implements Serializable {
         }
       }
       if (count > 1 && count == game.getBoards().size()) {
-        msg = "A játék véget ért.\n\nAz eredmény döntetlen.";
+        msg = "\n\n\n\nA játék véget ért.\n\nAz eredmény döntetlen.";
       } else {
         msg = String.format("\n\n\n\nA játék véget ért.\n\nA győztes:\n\n%s", name);
       }

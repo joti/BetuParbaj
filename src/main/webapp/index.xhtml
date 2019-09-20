@@ -251,7 +251,7 @@
                               </div>
 
                               <div style="position: absolute; top: 35px; left: 30px">
-                                Játékosok az asztalnál:
+                                Résztvevők:
                               </div>
 
                               <h:panelGroup id="pg_players">
@@ -405,7 +405,7 @@
                                 <p:selectBooleanCheckbox id="chk_randomplace" class="select1" value="#{gameManager.game.randomPlace}" label="" disabled="#{gameManager.game.openDate != null}"/>              
                               </div>
                               <div style="position: absolute; top: 345px; left: 245px">
-                                <h:outputLabel id="randomplacelabel" for="chk_randomplace">Az idő leteltekor a betű táblára kerül</h:outputLabel>
+                                <h:outputLabel id="randomplacelabel" for="chk_randomplace">Minden betű táblára kerül</h:outputLabel>
                                 <p:tooltip id="tip_randomplacelabel" for="chk_randomplace randomplacelabel" escape="false" class="tooltiptext">
                                   <h:outputText value="Az idő lejártakor a le nem helyezett betű véletlenszerű helyre kerül a táblán." escape="false" />                            
                                 </p:tooltip>

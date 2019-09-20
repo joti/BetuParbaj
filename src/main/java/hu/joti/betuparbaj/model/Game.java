@@ -197,12 +197,12 @@ public class Game implements Serializable {
         if (inLobby)
           return "...........";
         else 
-          return "............................";
+          return "...........................";
       } else {
         if (inLobby)
           return "...........";
         else
-          return "............................";
+          return "...........................";
       }
     } else
       return "";
@@ -472,7 +472,7 @@ public class Game implements Serializable {
     if (turn > 0) {
       // Ha valamelyik játékos még nem helyezte le a betűt a táblájára, akkor most lerakjuk valahová
       for (Board board : boards) {
-        int letterCount = board.getLetterCount();
+        int letterCount = board.getTotalLetterCount();
         if (letterCount < turn){
           if (randomPlace)
             board.setLetterRandom(selectedLetters[turn - 1]);

@@ -159,7 +159,6 @@ function setMessages(xhr, status, args) {
       console.log(ot_newboardhits.innerHTML);
       var cv_board = document.getElementById("cv_board");
       var ot_prevboardhits = document.getElementById("pageform:ot_boardhits");
-      console.log(cv_board === null);
       if (cv_board !== null) {
         console.log(ot_prevboardhits.innerHTML);
         if (ot_prevboardhits.innerHTML !== ot_newboardhits.innerHTML) {
