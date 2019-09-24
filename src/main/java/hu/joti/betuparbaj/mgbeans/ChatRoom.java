@@ -60,10 +60,10 @@ public class ChatRoom implements Serializable {
     System.out.println("Lobby.PostConstruct method at " + (new Date()));
 
     // teszteléshez felveszünk pár kamu usert
-    addTestPlayers();
+    // addTestPlayers();
     
     // és velük néhány dummy asztalt is
-    addTestGamesToLobby(2,1);
+    // addTestGamesToLobby(2,1);
     
     scheduler = Executors.newSingleThreadScheduledExecutor();
     scheduler.scheduleAtFixedRate(new Runnable(){

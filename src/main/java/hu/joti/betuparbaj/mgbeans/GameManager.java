@@ -59,7 +59,7 @@ public class GameManager implements Serializable {
   private List<Integer> cellIndices;
   private String testWord;
   private int testResult;
-
+  
   private static final Logger logger = Logger.getLogger(GameManager.class.getName());
 
   public GameManager() {

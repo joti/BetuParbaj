@@ -27,7 +27,7 @@ input{
 }
 
 input::placeholder {
-  color: #c6ce92;
+  color: #b6be92;
 }
 .ui-inputfield.ui-state-focus{
   outline: none;
@@ -124,6 +124,13 @@ textarea{
   margin-left: 0px; 
   margin-right: 0px;
   text-transform: uppercase;
+}
+
+.wrongvalueinput{
+  border-left-color: #f2928f;
+  border-top-color: #f2928f;
+  border-bottom-color: #f56964;
+  border-right-color: #f56964;
 }
 
 .inputtextareasmall {
@@ -907,6 +914,13 @@ textarea{
 .lobbyplayernametext{
   /*margin-left: 2px;*/ 
   text-overflow: ellipsis;
+  position: relative;
+  top: 2px;
+}
+
+.gamesetupnametext{
+  /*margin-left: 2px;*/ 
+  text-overflow: hidden;
   position: relative;
   top: 2px;
 }

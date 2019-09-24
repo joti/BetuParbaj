@@ -85,7 +85,9 @@ public class Lobby implements Serializable {
 
   public synchronized String getDefGameName() {
     LocalDate today = LocalDate.now();
-    if (today != lastGameDate){
+    System.out.println("today: " + today);
+    System.out.println("lastGameDate: " + lastGameDate);
+    if (!today.isEqual(lastGameDate)){
       lastGameDate = today;
       dailyCounter = 0;
     }
