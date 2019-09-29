@@ -84,15 +84,20 @@
                                       </h:panelGroup>
                                       <h:panelGroup style="display:inline-block">
                                         <h:panelGroup rendered="#{gameManager.canJoinGameWithPassword(game)}">
-                                          <p:inputText id="it_joinpw" class="inputtextsmalluc #{pwValidator.getErrorStyle(game)}" binding="#{pwValidator.pwInput}" style="width:85px;"
-                                                       placeholder="Jelszó" >
-                                            <f:validator validatorId="pwValidator"/>
-                                            <f:attribute name="gamePassword" value="#{game.password}"/>
-                                            <f:attribute name="gameId" value="#{game.id}"/>
-
-                                          </p:inputText>
-                                          <p:commandButton id="btn_joingamewpw" value="Csatlakozás" class="buttonsmall2" action="#{gameManager.joinGame(game)}" 
-                                                           process="@parent"  update=":pageform:pg_main"/>
+                                          <h:panelGroup id="pg_joinpw">
+                                            <p:inputText id="it_joinpw" class="inputtextsmalluc #{pwValidator.getErrorStyle(game)}" binding="#{pwValidator.pwInput}" style="width:85px;"
+                                                         placeholder="Jelszó">
+                                              <f:validator validatorId="pwValidator"/>
+                                              <f:attribute name="gamePassword" value="#{game.password}"/>
+                                              <f:attribute name="gameId" value="#{game.id}"/>
+                                              <f:attribute name="btnId" value="#{param[joinbtn.clientId]}"/>
+                                            </p:inputText>
+                                          </h:panelGroup>
+                                          <p:defaultCommand target="btn_joingamewpw" scope="pg_joinpw" />          
+                                          <p:commandButton id="btn_joingamewpw" value="Csatlakozás" class="buttonsmall2" action="#{gameManager.joinGame(game)}" binding="#{joinbtn}"
+                                                           process="@parent"  update=":pageform:pg_main">
+                                            <f:param name="btnclick" value="1" />
+                                          </p:commandButton>
                                         </h:panelGroup>
                                         <p:commandButton id="btn_joingamenopw" value="Csatlakozás" class="buttonsmall2" action="#{gameManager.joinGame(game)}" 
                                                          rendered="#{gameManager.canJoinGameWOPassword(game)}" process="@parent" update=":pageform:pg_main"/>
@@ -260,11 +265,13 @@
 
                               <h:panelGroup id="pg_players">
                                 <h:panelGroup id="pg_player1" rendered="#{gameManager.game.maxPlayers > 0}">
-                                  <div class="gamesetupplayer" style="position: absolute; top: 26px; left: 212px; opacity: 0.85;">
+                                  <div class="gamesetupplayer" style="position: absolute; top: 26px; left: 212px;">
                                     <h:graphicImage class="lobbyrowimage" url="/images/player1.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 1}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 5}"/>
-                                    <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(0, false)}"/>       
-                                    <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px;" rendered="#{gameManager.game.adminPlayerPos == 0}"/>
+                                    <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
+                                      <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(0, false)}"/>       
+                                      <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px;" rendered="#{gameManager.game.adminPlayerPos == 0}"/>
+                                    </div>
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 31px; left: 466px; display: inline-block" 
                                                 rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
@@ -275,12 +282,14 @@
                                   </h:panelGroup>
                                 </h:panelGroup>
                                 <h:panelGroup id="pg_player2" rendered="#{gameManager.game.maxPlayers > 1}">
-                                  <div class="gamesetupplayer" style="position: absolute; top: 57px; left: 212px; opacity: 0.85;">
+                                  <div class="gamesetupplayer" style="position: absolute; top: 57px; left: 212px;">
                                     <h:graphicImage class="lobbyrowimage" url="/images/player2.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 2}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 5}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 6}"/>
-                                    <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(1, false)}"/>       
-                                    <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 1}"/>
+                                    <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
+                                      <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(1, false)}"/>       
+                                      <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 1}"/>
+                                    </div>
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 62px; left: 466px; display: inline-block; margin-right: 15px" 
                                                 rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
@@ -295,13 +304,15 @@
                                   </h:panelGroup>
                                 </h:panelGroup>
                                 <h:panelGroup id="pg_player3" rendered="#{gameManager.game.maxPlayers > 2}">
-                                  <div class="gamesetupplayer" style="position: absolute; top: 88px; left: 212px; opacity: 0.85;">
+                                  <div class="gamesetupplayer" style="position: absolute; top: 88px; left: 212px;">
                                     <h:graphicImage class="lobbyrowimage" url="/images/player3.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 3}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 5}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 6}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(2) eq 7}"/>
-                                    <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(2, false)}"/>       
-                                    <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 2}"/>
+                                    <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
+                                      <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(2, false)}"/>       
+                                      <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 2}"/>
+                                    </div>
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 93px; left: 466px; display: inline-block" 
                                                 rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
@@ -316,13 +327,15 @@
                                   </h:panelGroup>
                                 </h:panelGroup>
                                 <h:panelGroup id="pg_player4" rendered="#{gameManager.game.maxPlayers > 3}">
-                                  <div class="gamesetupplayer" style="position: absolute; top: 119px; left: 212px; opacity: 0.85;">
+                                  <div class="gamesetupplayer" style="position: absolute; top: 119px; left: 212px;">
                                     <h:graphicImage class="lobbyrowimage" url="/images/player4.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 4}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 5}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 6}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(3) eq 7}"/>
-                                    <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(3, false)}"/>       
-                                    <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 3}"/>
+                                    <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
+                                      <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(3, false)}"/>       
+                                      <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 3}"/>
+                                    </div>  
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 123px; left: 466px; display: inline-block" 
                                                 rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
@@ -516,7 +529,7 @@
                               <canvas id="cv_board" style="position: absolute; top: 55px; left: 336px; width: 186px; height: 186px;"/>
                               <h:panelGroup id="pg_boardbuttons" class="boardbuttonarea" style="position: absolute; top: 53px; left: 333px; width: 188px; height: 185px; text-align: center">
                                 <ui:repeat value="#{gameManager.cellIndices}" var="cell">
-                                  <p:commandButton class="boardbutton" value="#{gameManager.getBoardLetter(cell)}" 
+                                  <p:commandButton class="#{gameManager.getBoardLetterClass(cell)}" value="#{gameManager.getBoardLetter(cell)}" 
                                                    action="#{gameManager.placeLetter(cell)}" disabled="#{!gameManager.canPlaceBoardLetter(cell)}"
                                                    update=":pageform:pg_boardbuttons"/>
                                 </ui:repeat>  
@@ -725,7 +738,7 @@
                 </td>
               </tr>
               <tr>
-                <td colspan="2">
+                <td colspan="2" style="display: none">
                   <h:outputText id="ot_seconds" value="#{loginData.seconds}" />
                   <h:outputText id="ot_turnsec2" style="color:red" value="#{gameManager.remainingTurnSec}" />
                   <h:panelGroup style="display:block">

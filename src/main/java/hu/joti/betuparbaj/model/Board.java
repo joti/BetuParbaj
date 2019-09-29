@@ -26,6 +26,8 @@ public class Board implements Serializable {
   private Player player;
   //elhelyezett betűk
   private String[][] letters;
+  //elhelyezett betűk
+  private int[][] turnPlaces;
   //el nem helyezett betűk
   private List<String> unplacedLetters;
   // pontot érő szavak a táblán
@@ -44,6 +46,13 @@ public class Board implements Serializable {
     for (int i = 0; i < BOARD_SIZE; i++) {
       for (int j = 0; j < BOARD_SIZE; j++) {
         letters[i][j] = "";
+      }
+    }
+
+    turnPlaces = new int[BOARD_SIZE][BOARD_SIZE];
+    for (int i = 0; i < BOARD_SIZE; i++) {
+      for (int j = 0; j < BOARD_SIZE; j++) {
+        turnPlaces[i][j] = 0;
       }
     }
 
@@ -73,14 +82,16 @@ public class Board implements Serializable {
     return getLetterCount() + unplacedLetters.size();
   }
 
-  public void setLetter(String letter, int row, int column) {
+  public void setLetter(String letter, int row, int column, int turn) {
     letters[row][column] = letter;
+    turnPlaces[row][column] = turn;
   }
 
   public void setLetterRandom(String letter) {
     Random rnd = new Random();
     int letterPos;
     int count = 0;
+    int turn = getLetterCount() + 1;
 
     letterPos = rnd.nextInt(36 - getLetterCount()) + 1;
     for (int row = 0; row < BOARD_SIZE; row++) {
@@ -89,6 +100,7 @@ public class Board implements Serializable {
           count++;
           if (count == letterPos) {
             letters[row][col] = letter;
+            turnPlaces[row][col] = turn;
             System.out.println(player.getName() + " random -> " + row + "/" + col);
             break;
           }
@@ -113,6 +125,18 @@ public class Board implements Serializable {
       hitsString += (hit.isHorizontal()?"H":"V") + hit.getLine() + hit.getStart() + (hit.getEnd() - hit.getStart() + 1) + "";
     }
     return hitsString;
+  }
+  
+  public void fillGaps(){
+    int index = 0;
+    for (int row = 0; row < 6; row++) {
+      for (int col = 0; col < 6; col++) {
+        if (turnPlaces[row][col] == 0){
+          letters[row][col] = unplacedLetters.get(index);
+          index++;
+        }
+      }
+    }
   }
   
   public Player getPlayer() {
@@ -179,12 +203,21 @@ public class Board implements Serializable {
     this.position = position;
   }
 
+  
   public List<String> getUnplacedLetters() {
     return unplacedLetters;
   }
 
   public void setUnplacedLetters(List<String> unplacedLetters) {
     this.unplacedLetters = unplacedLetters;
+  }
+
+  public int[][] getTurnPlaces() {
+    return turnPlaces;
+  }
+
+  public void setTurnPlaces(int[][] turnPlaces) {
+    this.turnPlaces = turnPlaces;
   }
 
 }

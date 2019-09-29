@@ -585,7 +585,7 @@ public class Game implements Serializable {
   public void placeLetter(int playerPos, int row, int column) {
     if (startDate != null && endDate == null) {
       String letter = getSelectedLetter();
-      boards.get(playerPos).setLetter(letter, row, column);
+      boards.get(playerPos).setLetter(letter, row, column, turn);
     }
   }
 

@@ -203,12 +203,13 @@ public class GameManager implements Serializable {
       for (Board board : game.getBoards()) {
         System.out.println("Board: " + board.getPlayer().getName());
         String[][] letters = board.getLetters();
+        int[][] turnPlaces = board.getTurnPlaces();
         String[] streak = new String[6];
 
         /* Végighaladunk a tábla sorain */
         for (int row = 0; row < Board.BOARD_SIZE; row++) {
           for (int col = 0; col < Board.BOARD_SIZE; col++) {
-            if (letters[row][col].isEmpty())
+            if (turnPlaces[row][col] == 0)
               streak[col] = "_";
             else  
               streak[col] = letters[row][col];
@@ -225,7 +226,7 @@ public class GameManager implements Serializable {
         /* ...és az oszlopain */
         for (int col = 0; col < Board.BOARD_SIZE; col++) {
           for (int row = 0; row < Board.BOARD_SIZE; row++) {
-            if (letters[row][col].isEmpty())
+            if (turnPlaces[row][col] == 0)
               streak[row] = "_";
             else
               streak[row] = letters[row][col];
@@ -242,6 +243,7 @@ public class GameManager implements Serializable {
         logger.info(board.getPlayer().getName() + " szavainak száma: " + board.getHits().size());
         board.evaluate();
         logger.info(board.getPlayer().getName() + " pontszáma: " + board.getScore());
+        board.fillGaps();
       }
 
       // Helyezések kiszámítása
@@ -853,8 +855,26 @@ public class GameManager implements Serializable {
     return "";
   }
 
+  public String getPlacedBoardLetter(int row, int column) {
+    if (game != null && game.getStartDate() != null) {
+      Board board = game.getBoards().get(myPosition);
+      if (board.getTurnPlaces()[row][column] > 0)
+        return board.getLetters()[row][column];
+    }
+    return "";
+  }
+
   public String getBoardLetter(int index) {
     return getBoardLetter(index / 6, index % 6);
+  }
+  
+  public String getBoardLetterClass(int index) {
+    if (game != null && game.getEndDate() != null){
+      if (getPlacedBoardLetter(index / 6, index % 6).isEmpty()){
+        return "unplacedletterbutton";
+      }
+    }
+    return "boardbutton";
   }
 
   public boolean hasBoardLetter(int row, int column) {

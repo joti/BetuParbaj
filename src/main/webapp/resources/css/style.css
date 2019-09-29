@@ -349,13 +349,13 @@ textarea{
   display: inline-block;
   padding-top: 2px;
   padding-left:5px;
+  padding-right: 5px;
   white-space: nowrap;
   overflow: hidden;
   height: 20px;
-  width: 234px;
+  width: 228px;
   font-weight: bold;
   color: #656E28;
-  text-overflow: ellipsis;
   margin-left: 3px;
   margin-top: 2px;
   vertical-align: middle;
@@ -363,6 +363,18 @@ textarea{
   border: 1px solid #cad1a5;
   background-color: rgba(198,206,146,0.4);
   display:inline-block; 
+  opacity: 0.8;
+}
+
+.gamesetupnamearea{
+  margin-right: 12px; 
+  overflow: hidden;
+  width: 202px;
+  height: 24px;
+  line-height: 24px;
+}
+
+.gamesetupnametext{
 }
 
 .gamebg { 
@@ -517,6 +529,25 @@ textarea{
   color: #A0A591;
   border-color: transparent;
   background: transparent;
+}
+
+.unplacedletterbutton {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: bold;
+  border: 1px solid;
+  border-color: transparent;
+  color: rgba(128,133,113,0.25);
+  background: transparent;
+  outline: 0;
+  padding: 0px;
+  margin: 3px;
+  width: 28px;
+  height: 25px;
+  vertical-align: top;
+  margin-right: 2px;
+  margin-left: 1px;
+  box-shadow: none;
 }
 
 .letterbutton {
@@ -918,13 +949,6 @@ textarea{
   top: 2px;
 }
 
-.gamesetupnametext{
-  /*margin-left: 2px;*/ 
-  text-overflow: hidden;
-  position: relative;
-  top: 2px;
-}
-
 .lobbyrowrules{
   table-layout: fixed ;
   width: 100% ;  
@@ -978,9 +1002,8 @@ textarea{
   max-height:15px;
   width: auto;
   height: auto;  
-  vertical-align: text-bottom;
   position: relative;
-  top: 2px;
+  top: 3px;
 }
 
 .curplayerimage{

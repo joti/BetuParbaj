@@ -8,12 +8,14 @@ package hu.joti.betuparbaj.mgbeans;
 import hu.joti.betuparbaj.model.Game;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Map;
 import javax.el.ValueExpression;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
@@ -28,6 +30,7 @@ import javax.faces.validator.ValidatorException;
 public class PwValidator implements Serializable, Validator {
 
   private UIComponent pwInput;
+  private boolean btnClicked;
 
   /**
    * Creates a new instance of PwValidator
@@ -40,23 +43,25 @@ public class PwValidator implements Serializable, Validator {
   public void validate(FacesContext fc, UIComponent uic, Object t) throws ValidatorException {
     System.out.println("VALIDATE4");
 
-    String gamePassword = (String) uic.getAttributes().get("gamePassword");
+    Map<String, Object> attrs = uic.getAttributes();
+    
+    String gamePassword = (String) attrs.get("gamePassword");
     System.out.println(gamePassword);
     if (gamePassword.isEmpty())
       return;
 
-    int gId = (Integer) uic.getAttributes().get("gameId");
+    int gId = (Integer) attrs.get("gameId");
     System.out.println("gId: " + gId);
-    
-    ValueExpression ve = uic.getValueExpression("gamePassword");
-    String IdString = (ve != null) ? (String)ve.getValue(fc.getELContext()) : "";    
-    System.out.println("IdString = " + IdString);
 
-    ve = uic.getValueExpression("gameId");
-    int gId2 = (ve != null) ? (Integer)ve.getValue(fc.getELContext()) : 0;    
-    System.out.println("gId2 = " + gId2);
+    System.out.println(attrs.get("btnId") == null);
+    String btnId = "";
+    if (attrs.get("btnId") != null){
+      btnId = (String)attrs.get("btnId");
+      System.out.println(btnId);
+    }  
+    if (btnId.isEmpty())
+      return;
     
-
     String inputValue = (String)t;
     System.out.println(inputValue);
     System.out.println(inputValue.isEmpty());
@@ -66,7 +71,7 @@ public class PwValidator implements Serializable, Validator {
       
       FacesMessage msg = new FacesMessage("Nem megfelelő jelszó.");
       msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-      if (!inputValue.isEmpty())
+//      if (!inputValue.isEmpty())
         msg.setDetail(gId + "");
       
       throw new ValidatorException(msg);
@@ -98,6 +103,11 @@ public class PwValidator implements Serializable, Validator {
     return null;
   }
   
+  public void clickBtn(ActionEvent event){
+    System.out.println("button clicked");
+    btnClicked = true;
+  }
+  
   public UIComponent getPwInput() {
     return pwInput;
   }
@@ -106,4 +116,13 @@ public class PwValidator implements Serializable, Validator {
     this.pwInput = pwInput;
   }  
 
+  public boolean isBtnClicked() {
+    return btnClicked;
+  }
+
+  public void setBtnClicked(boolean btnClicked) {
+    this.btnClicked = btnClicked;
+  }
+
+  
 }
