@@ -711,7 +711,7 @@ textarea{
   border-right-color: #808571;
   color: #808571;
   background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 90%);  
-  background-image: url("/betuparbaj/images/search.png");  
+  background-image: url("/images/search.png");  
   outline: 0;
   padding: 0px;
   text-align: center;
@@ -764,7 +764,7 @@ textarea{
   background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
   background-position-x: -145px;
   background-position-y: -80px;
-  background-image: url("/betuparbaj/images/bp-icons.png");  
+  background-image: url("/images/bp-icons.png");  
   outline: 0;
   padding: 0px;
   margin-right: 13px;
@@ -793,7 +793,7 @@ textarea{
   background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
   background-position-x: -130px;
   background-position-y: -80px;
-  background-image: url("/betuparbaj/images/bp-icons.png");  
+  background-image: url("/images/bp-icons.png");  
   outline: 0;
   padding: 0px;
   text-align: center;
@@ -1205,7 +1205,7 @@ textarea{
 .select2 .ui-radiobutton-icon.ui-icon.ui-icon-bullet{
   background-position-x: -81px;
   background-position-y: -144px;
-  background-image: url("/betuparbaj/images/bp-icons.png");
+  background-image: url("/images/bp-icons.png");
 }
 
 /**********************************/
@@ -1245,7 +1245,7 @@ textarea{
 .select3 .ui-icon.ui-icon-triangle-1-s.ui-c{
   background-position-x: -67px;
   background-position-y: -16px;
-  background-image: url("/betuparbaj/images/bp-icons.png");
+  background-image: url("/images/bp-icons.png");
 }
 
 .select3 .ui-widget-content{
@@ -1363,7 +1363,7 @@ textarea{
   height: 15px;
   background-position-x: -97px;
   background-position-y: -128px;
-  background-image: url("/betuparbaj/images/bp-icons.png");
+  background-image: url("/images/bp-icons.png");
 }
 
 .select1 .ui-icon-box {

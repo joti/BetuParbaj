@@ -1,5 +1,4 @@
 function setMessages(xhr, status, args) {
-  console.log("setMessages");
   var scrollPos;
   var scrollHgt;
   var prevVal;
@@ -140,14 +139,11 @@ function setMessages(xhr, status, args) {
     if (needplayrefresh) {
       if (needplayendrefresh) {
         btn = document.getElementById("pageform:btn_playendrefresh");
-        console.log("PLAYENDREFRESH");
       } else {
         btn = document.getElementById("pageform:btn_playrefresh");
-        console.log("PLAYREFRESH");
       }
 
       if (btn !== null) {
-        console.log("CLICK");
         btn.dispatchEvent(new Event("click"));
       }
     }
@@ -156,20 +152,16 @@ function setMessages(xhr, status, args) {
   if (!needplayrefresh) {
     var ot_newboardhits = document.getElementById("pageform:ot_boardhits2");
     if (ot_newboardhits !== null) {
-      console.log(ot_newboardhits.innerHTML);
       var cv_board = document.getElementById("cv_board");
       var ot_prevboardhits = document.getElementById("pageform:ot_boardhits");
       if (cv_board !== null) {
-        console.log(ot_prevboardhits.innerHTML);
         if (ot_prevboardhits.innerHTML !== ot_newboardhits.innerHTML) {
           ot_prevboardhits.innerHTML = ot_newboardhits.innerHTML;
 
           var ctx = cv_board.getContext("2d");
           if (ot_newboardhits.innerHTML === "") {
-            console.log("clearRect");
             ctx.clearRect(0, 0, cv_board.width, cv_board.height);
           } else {
-            console.log("stroke");
             var hitsstr = ot_newboardhits.innerHTML;
             cv_board.width = 186;
             cv_board.height = 186;

@@ -42,7 +42,7 @@ public class ChatRoom implements Serializable {
 
   public static final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
   public static final boolean ONE_NAME_PER_ROW = true;
-  public static final String[] TESTPLAYERS = {"Pali", "Sanyiarettenthetetlensanyi", "Fecó", "Bruckner Szigfrid", "Szilveszter", "Juliska", "Mariska", "Ákóisz Igor", "LevenGyula", "Ősember", "Maci Laci", "Róbert Gida", "Mekk Elek", "szigfrid"};
+  public static final String[] TESTPLAYERS = {"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm"};
 
   private Set<Player> players;
   private List<Message> messages;
@@ -57,9 +57,7 @@ public class ChatRoom implements Serializable {
 
   @PostConstruct
   public void init() {
-    System.out.println("Lobby.PostConstruct method at " + (new Date()));
-
-    // teszteléshez felveszünk pár kamu usert
+    // teszteléshez felvehetünk pár kamu usert
     // addTestPlayers();
     
     // és velük néhány dummy asztalt is
@@ -70,15 +68,12 @@ public class ChatRoom implements Serializable {
       @Override
       public void run() {
         schedCount++;
-        System.out.println("Scheduled task runs... (" + schedCount + ")");
+        System.out.println("Inactivity check #" + schedCount + " - " + players.size() + " players");
         
         /* Az inaktív usereket kiléptetjük */
-        System.out.println("Játékosok száma vizsgálat előtt: " + players.size());
         removeInactivePlayers();
-        System.out.println("Játékosok száma vizsgálat után: " + players.size());
       }
     }, 10, 10, TimeUnit.SECONDS);
-    System.out.println("Scheduled task started");
   }
   
   @PreDestroy
