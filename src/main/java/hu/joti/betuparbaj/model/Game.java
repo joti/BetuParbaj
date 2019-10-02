@@ -22,7 +22,7 @@ import java.util.Random;
 public class Game implements Serializable {
 
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};
-  public static final Integer[] TIMELIMITS = {2, 5, 10, 20, 30, 45, 60, 90, 120};
+  public static final Integer[] TIMELIMITS = {5, 10, 20, 30, 45, 60, 90, 120};
   public static final int TURN0_TIMELIMIT = 15;
 
   public static final String[] SCORING_MODES = {"Lineáris (2-3-4-5-6)","Fibonacci (2-3-5-8-13)","Négyzetes (4-9-16-25-36)"};

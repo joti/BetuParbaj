@@ -79,7 +79,7 @@
                                       <h:panelGroup style="text-align: center; vertical-align: middle;">
                                         <h:outputText class="lobbyrowgamename" style="margin-left: 5px; position: relative; top: 3px" value="&gt;&gt; #{game.name}"/>  
                                         <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/images/opening.png" rendered="#{game.endDate eq null}"/>
-                                        <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/images/closing.png" rendered="#{game.endDate ne null}"/>
+                                        <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/images/ending.png" rendered="#{game.endDate ne null}"/>
                                         <h:outputText class="lobbyrowdateinfo" style="margin-left: 7px; position: relative; top: 3px" value="#{game.dateInfo}"/>  
                                       </h:panelGroup>
                                       <h:panelGroup style="display:inline-block">
@@ -106,8 +106,8 @@
                                             <f:param name="mode" value="'hide'"/>
                                           </p:effect>                          
                                         </p:commandButton>
-                                        <p:commandButton value="Eredmény" class="buttonsmall2" style="width: 90px;" action="#{gameManager.viewGame(game)}" 
-                                                         rendered="#{gameManager.canViewGame(game)}" update="pg_main"/>
+                                        <p:commandButton id="btn_viewgame" value="Eredmény" class="buttonsmall2" style="width: 90px;" action="#{gameManager.viewGame(game)}" 
+                                                         rendered="#{gameManager.canViewGame(game)}" update=":pageform:pg_main"/>
                                       </h:panelGroup>
                                     </h:panelGrid>
                                     <h:panelGrid id="gr_lobbyrowplayers" class="lobbyrowplayers" columns="4">
