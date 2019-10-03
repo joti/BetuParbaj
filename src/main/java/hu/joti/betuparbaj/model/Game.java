@@ -226,7 +226,7 @@ public class Game implements Serializable {
       } 
       if (playerPos < minPlayers)
         return 6;
-      else
+      else if (playerPos < maxPlayers)
         return 7;
     }          
     return 0;

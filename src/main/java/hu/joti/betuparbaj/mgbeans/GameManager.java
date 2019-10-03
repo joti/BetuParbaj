@@ -413,9 +413,11 @@ public class GameManager implements Serializable {
   public void quitGame() {
     logger.info(loginData.getName() + " quits game #" + game.getId());
     if (game != null) {
-      game.removePlayer(loginData.getName());
+      if (game.getEndDate() == null){
+        game.removePlayer(loginData.getName());
+        logger.info(loginData.getName() + " removed from game #" + game.getId());
+      }  
       clearWord();
-      logger.info(loginData.getName() + " removed from game #" + game.getId());
       prevGame = game;
       game = null;
     }
@@ -632,7 +634,7 @@ public class GameManager implements Serializable {
       return 1; 
     }
 
-    if (turn < 36 && myPosition == game.getCurrentPlayer() && game.getSelectedLetters()[turn].isEmpty()) {
+    if (turn < 36 && myPosition == game.getCurrentPlayer() && game.getSelectedLetters()[turn].isEmpty() && game.getDrawmode() == Game.PLAYER_DRAW) {
       return 2;
     }
 
@@ -714,7 +716,7 @@ public class GameManager implements Serializable {
       } else if (playerState == 1) {
         // A kiválasztott betűt el kell helyezni a táblán
         String letter = game.getSelectedLetter();
-        if (turn < 36 && myPosition == game.getCurrentPlayer()) {
+        if (turn < 36 && myPosition == game.getCurrentPlayer() && game.getDrawmode() == Game.PLAYER_DRAW) {
           msg = String.format("\n\n\nA %d. betű:\n\n\n\n\n\n Helyezd el a táblán,\nmajd válaszd ki\na következő betűt!", turn);
         } else {
           msg = String.format("\n\n\nA %d. betű:\n\n\n\n\n\n Helyezd el a táblán!", turn);

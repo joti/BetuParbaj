@@ -274,7 +274,7 @@
                                     </div>
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 31px; left: 466px; display: inline-block" 
-                                                rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
+                                                rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
                                     <h:commandButton id="btn_p1down" value="" class="buttonsmall5" 
                                                      action="#{gameManager.swapPlayers(0,1)}" rendered="#{gameManager.game.numberOfPlayers gt 1}">
                                       <f:ajax execute="" render="pg_player1 pg_player2"/>
@@ -292,7 +292,7 @@
                                     </div>
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 62px; left: 466px; display: inline-block; margin-right: 15px" 
-                                                rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
+                                                rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
                                     <h:commandButton id="btn_p2down" value="" class="buttonsmall5"
                                                      action="#{gameManager.swapPlayers(1,2)}" rendered="#{gameManager.game.numberOfPlayers gt 2}">
                                       <f:ajax execute="" render="pg_player2 pg_player3"/>
@@ -303,7 +303,7 @@
                                     </h:commandButton>
                                   </h:panelGroup>
                                 </h:panelGroup>
-                                <h:panelGroup id="pg_player3" rendered="#{gameManager.game.maxPlayers > 2}">
+                                <h:panelGroup id="pg_player3" rendered="#{gameManager.game.maxPlayers gt 2 and !(gameManager.game.startDate ne null and gameManager.game.numberOfPlayers lt 3)}">
                                   <div class="gamesetupplayer" style="position: absolute; top: 88px; left: 212px;">
                                     <h:graphicImage class="lobbyrowimage" url="/images/player3.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 3}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 5}"/>
@@ -315,7 +315,7 @@
                                     </div>
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 93px; left: 466px; display: inline-block" 
-                                                rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
+                                                rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
                                     <h:commandButton id="btn_p3down" value="" class="buttonsmall5"
                                                      action="#{gameManager.swapPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
                                       <f:ajax execute="" render="pg_player3 pg_player4"/>
@@ -326,7 +326,7 @@
                                     </h:commandButton>
                                   </h:panelGroup>
                                 </h:panelGroup>
-                                <h:panelGroup id="pg_player4" rendered="#{gameManager.game.maxPlayers > 3}">
+                                <h:panelGroup id="pg_player4" rendered="#{gameManager.game.maxPlayers gt 3 and !(gameManager.game.startDate ne null and gameManager.game.numberOfPlayers lt 4)}">
                                   <div class="gamesetupplayer" style="position: absolute; top: 119px; left: 212px;">
                                     <h:graphicImage class="lobbyrowimage" url="/images/player4.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 4}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 5}"/>
@@ -338,7 +338,7 @@
                                     </div>  
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 123px; left: 466px; display: inline-block" 
-                                                rendered="#{!gameManager.game.randomOrder and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
+                                                rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
                                     <h:commandButton id="btn_p4up" value="" class="buttonsmall6" 
                                                      action="#{gameManager.swapPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
                                       <f:ajax execute="" render="pg_player3 pg_player4"/>
@@ -392,7 +392,7 @@
                                 <p:tooltip id="tip_playerdraw" for="drawmoderadio" class="tooltiptext" escape="false" 
                                            value="A következő betűt kiválaszthatja a soron következő játékos a gondolkodási idején belül &lt;br/&gt; vagy véletlenszerűen is meghatározásra kerülhet a készletből."/>
                               </h:panelGroup>
-                              <h:panelGroup id="selecteddrawmode" style="position: absolute; top: 283px; left: 217px" rendered="#{gameManager.isInGameState(2)}">
+                              <h:panelGroup id="selecteddrawmode" style="position: absolute; top: 283px; left: 217px" rendered="#{gameManager.isInGameState(2,4)}">
                                 <h:panelGroup rendered="#{gameManager.game.drawmode lt 2}">
                                   Játékosok által
                                 </h:panelGroup>
@@ -414,7 +414,7 @@
                                   mp
                                 </div>
                               </h:panelGroup>  
-                              <h:panelGroup style="position: absolute; top: 314px; left:217px" rendered="#{gameManager.isInGameState(2)}">
+                              <h:panelGroup style="position: absolute; top: 314px; left:217px" rendered="#{gameManager.isInGameState(2,4)}">
                                 #{gameManager.game.timeLimit} mp
                               </h:panelGroup>
 
@@ -438,7 +438,7 @@
                                              value="A 2,3,4,5,6 betűs szavak pontértéke."/>
                                 </div>
                               </h:panelGroup>  
-                              <h:panelGroup rendered="#{gameManager.isInGameState(2)}">
+                              <h:panelGroup rendered="#{gameManager.isInGameState(2,4)}">
                                 <div style="position: absolute; top: 376px; left: 30px">
                                   Pontozási módszer:
                                 </div>
@@ -458,15 +458,17 @@
                                              rendered="#{gameManager.game.boards.size() eq 1}" 
                                              update="pg_main"/>
                             <p:commandButton class="gamebutton" style="width: 185px" value="Asztal elhagyása" action="#{gameManager.quitGame()}"
-                                             rendered="#{gameManager.game.boards.size() gt 1}" 
+                                             rendered="#{gameManager.game.boards.size() gt 1 and gameManager.game.startDate == null}" 
                                              update="pg_main"/>
                             <p:commandButton class="gamebutton" style="width: 185px;" value="Asztal megnyitása" action="#{gameManager.openGame()}"
                                              rendered="#{gameManager.game.openDate == null}"
                                              update="pg_main"/>
                             <p:commandButton class="gamebutton" style="width: 185px;" value="Játék indítása" action="#{gameManager.startGame()}" 
-                                             rendered="#{gameManager.game.openDate != null}" 
+                                             rendered="#{gameManager.game.openDate != null and gameManager.game.startDate == null}" 
                                              disabled="#{gameManager.game.numberOfPlayers lt gameManager.game.minPlayers or gameManager.myGamePos ne gameManager.game.adminPlayerPos}"
                                              update="pg_main"/>
+                            <p:commandButton class="gamebutton" style="width: 185px" value="Asztal bezárása" action="#{gameManager.quitGame()}"
+                                             rendered="#{gameManager.game.endDate != null}" update="pg_main"/>
                             <p:commandButton class="gamebutton" style="width: 185px;" value="Végeredmény" action="#{gameManager.switchGameViewMode()}" 
                                              rendered="#{gameManager.game.endDate != null}" 
                                              update="pg_main"/>
@@ -652,9 +654,9 @@
                               <f:ajax execute="" render="pg_main"/>
                             </p:commandButton>
 
-                            <p:commandButton id="btn_closegame" class="gamebutton" style="width: 208px" value="Asztal bezárása" action="#{gameManager.dropGame()}"
-                                             rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode == 0}" update="pg_main"/>
-                            <p:commandButton class="gamebutton" style="width: 208px;" value="Asztal beállításai" action="#{gameManager.switchGameViewMode()}" 
+                            <p:commandButton id="btn_closegame" class="gamebutton" style="width: 185px" value="Asztal bezárása" action="#{gameManager.quitGame()}"
+                                             rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2}" update="pg_main"/>
+                            <p:commandButton id="btn_viewgamesetup" class="gamebutton" style="width: 185px;" value="Asztal beállításai" action="#{gameManager.switchGameViewMode()}" 
                                              rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode == 1}" 
                                              update="pg_main"/>
                           </h:panelGroup>
