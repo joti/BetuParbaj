@@ -656,7 +656,7 @@
 
                             <p:commandButton id="btn_closegame" class="gamebutton" style="width: 185px" value="Asztal bezárása" action="#{gameManager.quitGame()}"
                                              rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2}" update="pg_main"/>
-                            <p:commandButton id="btn_viewgamesetup" class="gamebutton" style="width: 185px;" value="Asztal beállításai" action="#{gameManager.switchGameViewMode()}" 
+                            <p:commandButton id="btn_viewgamesetup" class="gamebutton" style="width: 216px;" value="Asztal beállításai" action="#{gameManager.switchGameViewMode()}" 
                                              rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode == 1}" 
                                              update="pg_main"/>
                           </h:panelGroup>
