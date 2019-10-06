@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package hu.joti.betuparbaj.model;
 
 import java.io.BufferedReader;
@@ -22,9 +21,9 @@ import javax.servlet.ServletContext;
  * @author Joti
  */
 public class WordDaoTxt implements WordDao, Serializable {
-  
+
   private static final String RELATIVE_WEBPATH = "/resources/data/words.txt";
-  
+
   String absolutePath;
 
   public WordDaoTxt() {
@@ -34,34 +33,27 @@ public class WordDaoTxt implements WordDao, Serializable {
     absolutePath = servletContext.getRealPath(RELATIVE_WEBPATH);
     System.out.println(absolutePath);
   }
-  
+
   @Override
   public List<Word> findAllWords() throws FileNotFoundException, IOException {
     List<Word> words = new ArrayList<>();
 
-//    try {
-//      FileReader fr = new FileReader(absolutePath);
-      BufferedReader br = new BufferedReader(new InputStreamReader(
-                      new FileInputStream(absolutePath), "UTF8"));
-      String row;
+    BufferedReader br = new BufferedReader(new InputStreamReader(
+            new FileInputStream(absolutePath), "UTF8"));
+    String row;
 
-      while ((row = br.readLine()) != null){
-        Word word = new Word(row.trim());
-        words.add(word);  
-      }
-      br.close();
-//    } catch (FileNotFoundException ex) {
-//      System.out.println("A fájl nem található.");
-//    } catch (IOException ex) {
-//      System.out.println("A fájl nem olvasható.");
-//    }
+    while ((row = br.readLine()) != null) {
+      Word word = new Word(row.trim());
+      words.add(word);
+    }
+    br.close();
     System.out.println(words.size());
-    return words;    
+    return words;
   }
 
   @Override
   public void close() {
     /* Nincs teendő */
   }
-  
+
 }
