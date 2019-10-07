@@ -103,7 +103,8 @@ public class Game implements Serializable {
     this.name = name;
     this.easyVowelRule = easyVowelRule;
     this.noDigraph = noDigraph;
-    this.includeX = includeX;
+    this.includeX = includeX
+            ;
     this.includeY = includeY;
     this.drawmode = drawmode;
     this.minPlayers = minPlayers;

@@ -752,9 +752,7 @@
                         </div>
                         <div style="position: absolute; top:523px; left:266px">
                           <p:commandButton id="btn_sendmsg" class="buttonsmall" value="OK" style="width:30px"
-                                           action="#{loginData.sendMessage()}">  
-                            <f:ajax execute="it_message" render="it_message ita_messages2"/>
-                          </p:commandButton>
+                                           action="#{loginData.sendMessage()}" process="@parent" update="it_message ita_messages2"/>  
                         </div>
                       </h:panelGroup> <!-- pg_chat -->
                       <p:defaultCommand target="btn_sendmsg" scope="pg_chat"/>
