@@ -37,20 +37,21 @@ public class Game implements Serializable {
 
   // Betűkészlet
   public static final String[] ALPHABET = {"A", "Á", "B", "C", "CS", "D", "E", "É", "F", "G", "GY", "H", "I", "Í", "J", "K", "L", "LY", "M", "N", "NY",
-    "O", "Ó", "Ö", "Ő", "P", "R", "S", "SZ", "T", "TY", "U", "Ú", "Ü", "Ű", "V", "Y", "Z", "ZS"};
+    "O", "Ó", "Ö", "Ő", "P", "R", "S", "SZ", "T", "TY", "U", "Ú", "Ü", "Ű", "V", "X", "Y", "Z", "ZS"};
   // A betűk számossága egy scrabble készletben - gép által sorsolt betűk esetén figyelembe vesszük
   // (Kivétel: az Y nem szerepel külön betűként a scrabble-ben, itt önkényesen hozzárendelünk egy számot)
   public static final int[] LETTERSET = {6, 4, 3, 1, 1, 3, 6, 3, 2, 3, 2, 2, 3, 1, 2, 6, 4, 1, 3, 4, 1,
-    3, 3, 2, 1, 2, 4, 3, 2, 5, 1, 2, 1, 2, 1, 2, 2, 2, 1};
+    3, 3, 2, 1, 2, 4, 3, 2, 5, 1, 2, 1, 2, 1, 2, 0, 2, 2, 1};
   // Hosszú és rövid magánhangzók
   public static final int[] VOWELTYPES = {1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0,
-    1, 2, 1, 2, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 0, 0, 0, 0};
+    1, 2, 1, 2, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 0, 0, 0, 0, 0};
 
   // Alapértelmezett beállítások
   public static final int DEF_SCORING_MODE = 2;
   public static final int DEF_TIMELIMIT = 30;
   public static final boolean DEF_EASYVOWELRULE = true;
   public static final boolean DEF_NODIGRAPH = true;
+  public static final boolean DEF_INCLUDEX = true;
   public static final boolean DEF_INCLUDEY = true;
   public static final int DEF_DRAWMODE = 1;
   public static final int DEF_MINPLAYERS = 2;
@@ -64,6 +65,7 @@ public class Game implements Serializable {
   private String password;
   private boolean easyVowelRule;
   private boolean noDigraph;
+  private boolean includeX;
   private boolean includeY;
   private int drawmode;
   private int minPlayers;
@@ -95,11 +97,13 @@ public class Game implements Serializable {
     init();
   }
 
-  public Game(int id, String name, boolean easyVowelRule, boolean noDigraph, boolean includeY, boolean randomPlace, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
+  public Game(int id, String name, boolean easyVowelRule, boolean noDigraph, boolean includeX, boolean includeY, 
+              boolean randomPlace, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
     this.id = id;
     this.name = name;
     this.easyVowelRule = easyVowelRule;
     this.noDigraph = noDigraph;
+    this.includeX = includeX;
     this.includeY = includeY;
     this.drawmode = drawmode;
     this.minPlayers = minPlayers;
@@ -110,10 +114,12 @@ public class Game implements Serializable {
     init();
   }
 
-  public Game(String name, boolean easyVowelRule, boolean noDigraph, boolean includeY, boolean randomPlace, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
+  public Game(String name, boolean easyVowelRule, boolean noDigraph, boolean includeX, boolean includeY, 
+              boolean randomPlace, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
     this.name = name;
     this.easyVowelRule = easyVowelRule;
     this.noDigraph = noDigraph;
+    this.includeX = includeX;
     this.includeY = includeY;
     this.drawmode = drawmode;
     this.minPlayers = minPlayers;
@@ -273,7 +279,7 @@ public class Game implements Serializable {
   public void start() {
     // betűkészlet összeállítása
     for (int i = 0; i < ALPHABET.length; i++) {
-      if (!((ALPHABET[i].length() == 2 && noDigraph) || (ALPHABET[i].equals("Y") && !includeY) || (VOWELTYPES[i] == 2 && easyVowelRule))) {
+      if (!((ALPHABET[i].length() == 2 && noDigraph) || (ALPHABET[i].equals("Y") && !includeY) || (ALPHABET[i].equals("X") && !includeX) || (VOWELTYPES[i] == 2 && easyVowelRule))) {
         availableLetters.put(ALPHABET[i], LETTERSET[i]);
       }
     }
@@ -339,6 +345,9 @@ public class Game implements Serializable {
       if (!noDigraph) {
         settings += "+CS,GY," + "\u2026" + " ";
       }
+      if (includeX) {
+        settings += "+X ";
+      }
       if (includeY) {
         settings += "+Y ";
       }
@@ -356,6 +365,9 @@ public class Game implements Serializable {
         settings += "U,Ú,Ü,Ű,";
       }
       settings += "V,";
+      if (includeX) {
+        settings += "X,";
+      }
       if (includeY) {
         settings += "Y,";
       }
@@ -671,6 +683,14 @@ public class Game implements Serializable {
     this.noDigraph = noDigraph;
   }
 
+  public boolean isIncludeX() {
+    return includeX;
+  }
+
+  public void setIncludeX(boolean includeX) {
+    this.includeX = includeX;
+  }
+  
   public boolean isIncludeY() {
     return includeY;
   }

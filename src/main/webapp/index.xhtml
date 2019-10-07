@@ -215,13 +215,16 @@
                               </div>
                               <h:inputText class="inputtextsmall" style="position: absolute; top: 28px; left: 215px; width: 230px" maxlength="22" value="#{gameManager.game.name}"/>
 
-                              <div style="position: absolute; top: 64px; left: 30px">
+                              <h:outputLabel id="ol_gamepwd" style="position: absolute; top: 64px; left: 30px">
                                 Jelszó (opcionális):
-                              </div>
+                              </h:outputLabel>
                               <div style="position: absolute; top: 59px; left: 215px;">
                                 <h:inputText id="it_gamepwd" class="inputtextsmalluc" style="width:230px" value="#{gameManager.game.password}"/>
-                                <p:tooltip id="tip_gamepwd" for="it_gamepwd" escape="false" class="tooltiptext">
-                                  <h:outputText value="Az asztalhoz csatlakozni kívánó játékosok által megadandó jelszó. &lt;br/&gt; Üres érték esetén az asztalhoz bárki csatlakozhat." escape="false" />                            
+                                <p:tooltip id="tip_gamepwd" for="ol_gamepwd" escape="false" class="tooltiptext">
+                                  <div class="tooltiptext2">
+                                    Az asztalhoz csatlakozni kívánó játékosok által megadandó jelszó.<br/>
+                                    Üres érték esetén az asztalhoz bárki csatlakozhat.                            
+                                  </div>
                                 </p:tooltip>
                               </div>
 
@@ -249,8 +252,10 @@
 
                               <div style="position: absolute; top: 128px; left: 245px">
                                 <h:outputLabel id="randomorderlabel">Véletlenszerű ülésrend</h:outputLabel>
-                                <p:tooltip id="tip_randomorder" for="randomorderlabel chk_randomorder" escape="false" class="tooltiptext">
-                                  <h:outputText value="A játékosok végleges sorrendjét a gép sorsolja." escape="false" />                            
+                                <p:tooltip id="tip_randomorder" for="randomorderlabel" escape="false" class="tooltiptext">
+                                  <div class="tooltiptext2">
+                                    A játékosok végleges sorrendjét a gép sorsolja.                            
+                                  </div>
                                 </p:tooltip>
                               </div>
                             </h:panelGroup>
@@ -360,37 +365,63 @@
                               </div>
                               <div style="position: absolute; top: 190px; left: 245px">
                                 <h:outputLabel id="evrlabel">Csak rövid magánhangzók</h:outputLabel>
-                                <p:tooltip id="tip_evr" for="evrlabel chk_easyvowelrule" escape="false" class="tooltiptext" value="A betűkészletben nem szerepelnek a hosszú Í, Ó, Ő, Ú, Ű magánhangzók, &lt;br/&gt; helyettük is a rövid megfelelőjük használható."/>
+                                <p:tooltip id="tip_evr" for="evrlabel" escape="false" class="tooltiptext">
+                                  <div class="tooltiptext2">
+                                    A betűkészletben nem szerepelnek a hosszú Í, Ó, Ő, Ú, Ű magánhangzók,<br/>
+                                    helyettük is a rövid megfelelőjük használható.
+                                  </div>
+                                </p:tooltip>
                               </div>
                               <div style="position: absolute; top: 217px; left: 217px">
                                 <p:selectBooleanCheckbox id="chk_nodigraph" class="select1" value="#{gameManager.game.noDigraph}" label="" disabled="#{gameManager.game.openDate != null}"/>              
                               </div>
                               <div style="position: absolute; top: 221px; left: 245px">
                                 <h:outputLabel id="digraphlabel">Csak egyjegyű mássalhangzók</h:outputLabel>
-                                <p:tooltip id="tip_digraph" for="digraphlabel chk_nodigraph" escape="false" class="tooltiptext">
-                                  <h:outputText value="A betűkészletben nem szerepelnek az alábbi betűk: &lt;br/&gt; CS, GY, LY, NY, SZ, TY, ZS." escape="false" />                            
+                                <p:tooltip id="tip_digraph" for="digraphlabel" escape="false" class="tooltiptext">
+                                  <div class="tooltiptext2">
+                                    A betűkészletben nem szerepelnek az alábbi betűk:<br/>
+                                    CS, GY, LY, NY, SZ, TY, ZS.                            
+                                  </div>
                                 </p:tooltip>
                               </div>
                               <div style="position: absolute; top: 248px; left: 217px">
-                                <p:selectBooleanCheckbox id="chk_includey" class="select1" value="#{gameManager.game.includeY}" label="" disabled="#{gameManager.game.openDate != null}"/>              
+                                <p:selectBooleanCheckbox id="chk_includex" class="select1" value="#{gameManager.game.includeX}" label="" disabled="#{gameManager.game.openDate != null}"/>              
                               </div>
                               <div style="position: absolute; top: 252px; left: 245px">
-                                <h:outputLabel id="ylabel">Y önállóan is választható</h:outputLabel>
-                                <p:tooltip id="tip_y" for="ylabel chk_includey" escape="false" class="tooltiptext">
-                                  <h:outputText value="Az Y önálló betűként is a készletbe kerül." escape="false" />                            
+                                <h:outputLabel id="xlabel">X választható</h:outputLabel>
+                                <p:tooltip id="tip_x" for="xlabel" escape="false" class="tooltiptext">
+                                  <div class="tooltiptext2">
+                                    Az X betű is a készletbe kerül.                            
+                                  </div>
+                                </p:tooltip>
+                              </div>
+                              <div style="position: absolute; top: 248px; left: 374px">
+                                <p:selectBooleanCheckbox id="chk_includey" class="select1" value="#{gameManager.game.includeY}" label="" disabled="#{gameManager.game.openDate != null}"/>              
+                              </div>
+                              <div style="position: absolute; top: 252px; left: 402px">
+                                <h:outputLabel id="ylabel">Y önállóan is</h:outputLabel>
+                                <p:tooltip id="tip_y" for="ylabel" escape="false" class="tooltiptext">
+                                  <div class="tooltiptext2">
+                                    Az Y önálló betűként is a készletbe kerül.                            
+                                  </div>
                                 </p:tooltip>
                               </div>
 
-                              <div style="position: absolute; top: 283px; left: 30px">
+                              <h:outputLabel id="ol_drawmode" style="position: absolute; top: 283px; left: 30px">
                                 Betűválasztás:
-                              </div>
+                              </h:outputLabel>
                               <h:panelGroup id="selectdrawmode" style="position: absolute; top: 273px; left: 214px" rendered="#{gameManager.isInGameState(1)}">
                                 <p:selectOneRadio id="drawmoderadio" class="select2" value="#{gameManager.game.drawmode}" disabled="#{gameManager.game.openDate != null}">
                                   <f:selectItem id="playerdrawlabel" itemValue = "1" itemLabel = "Játékosok által" /> 
                                   <f:selectItem id="randomdrawlabel" itemValue = "2" itemLabel = "Sorsolással" />                            
                                 </p:selectOneRadio>
-                                <p:tooltip id="tip_playerdraw" for="drawmoderadio" class="tooltiptext" escape="false" 
-                                           value="A következő betűt kiválaszthatja a soron következő játékos a gondolkodási idején belül &lt;br/&gt; vagy véletlenszerűen is meghatározásra kerülhet a készletből."/>
+                                
+                                <p:tooltip id="tip_playerdraw" for="ol_drawmode" class="tooltiptext" escape="false">
+                                  <div class="tooltiptext2">
+                                  A következő betűt kiválaszthatja a soron következő játékos a gondolkodási idején belül,<br/>
+                                  vagy véletlenszerűen is meghatározásra kerülhet a készletből. 
+                                  </div>
+                                </p:tooltip>
                               </h:panelGroup>
                               <h:panelGroup id="selecteddrawmode" style="position: absolute; top: 283px; left: 217px" rendered="#{gameManager.isInGameState(2,4)}">
                                 <h:panelGroup rendered="#{gameManager.game.drawmode lt 2}">
@@ -401,9 +432,9 @@
                                 </h:panelGroup>
                               </h:panelGroup>
 
-                              <div style="position: absolute; top: 314px; left: 30px">
+                              <h:outputLabel id="ol_timelimit" style="position: absolute; top: 314px; left: 30px">
                                 Gondolkodási idő:
-                              </div>
+                              </h:outputLabel>
                               <h:panelGroup rendered="#{gameManager.isInGameState(1)}">
                                 <div style="position: absolute; top: 308px; left: 217px">
                                   <p:selectOneMenu class="select3" value="#{gameManager.game.timeLimit}" >
@@ -413,6 +444,11 @@
                                 <div style="position: absolute; top: 314px; left: 281px">
                                   mp
                                 </div>
+                                <p:tooltip id="tip_timelimit" for="ol_timelimit" class="tooltiptext" escape="false">
+                                  <div class="tooltiptext2">
+                                  A játékosok számára egy betű lehelyezésére rendelkezésre álló idő. 
+                                  </div>
+                                </p:tooltip>
                               </h:panelGroup>  
                               <h:panelGroup style="position: absolute; top: 314px; left:217px" rendered="#{gameManager.isInGameState(2,4)}">
                                 #{gameManager.game.timeLimit} mp
@@ -423,19 +459,24 @@
                               </div>
                               <div style="position: absolute; top: 345px; left: 245px">
                                 <h:outputLabel id="randomplacelabel" for="chk_randomplace">Minden betű táblára kerül</h:outputLabel>
-                                <p:tooltip id="tip_randomplacelabel" for="chk_randomplace randomplacelabel" escape="false" class="tooltiptext">
-                                  <h:outputText value="Az idő lejártakor a le nem helyezett betű véletlenszerű helyre kerül a táblán." escape="false" />                            
+                                <p:tooltip id="tip_randomplacelabel" for="randomplacelabel" escape="false" class="tooltiptext">
+                                  <div class="tooltiptext2">
+                                    Az idő lejártakor a le nem helyezett betű véletlenszerű helyre kerül a táblán.        
+                                  </div>
                                 </p:tooltip>
                               </div>
 
                               <h:panelGroup rendered="#{gameManager.isInGameState(1)}">
-                                <h:outputLabel style="position: absolute; top: 376px; left: 30px" value="Pontozási módszer:" for="sel_scoringmode"/>
+                                <h:outputLabel id="ol_scoringmode" style="position: absolute; top: 376px; left: 30px" value="Pontozási módszer:" for="sel_scoringmode"/>
                                 <div style="position: absolute; top: 370px; left: 217px">
                                   <p:selectOneMenu id="sel_scoringmode" class="select3" style="width:210px" value="#{gameManager.game.scoringMode}">
                                     <f:selectItems value="#{gameManager.allScoringModes}" var="scoringMode" itemLabel="#{scoringMode.label}" itemValue="#{scoringMode.index}"/>
                                   </p:selectOneMenu>
-                                  <p:tooltip id="tip_scoringmode" for="sel_scoringmode" class="tooltiptext" escape="false" 
-                                             value="A 2,3,4,5,6 betűs szavak pontértéke."/>
+                                  <p:tooltip id="tip_scoringmode" for="ol_scoringmode" class="tooltiptext" escape="false">
+                                    <div class="tooltiptext2">
+                                       A 2,3,4,5,6 betűs szavak pontértéke.        
+                                    </div>
+                                  </p:tooltip>
                                 </div>
                               </h:panelGroup>  
                               <h:panelGroup rendered="#{gameManager.isInGameState(2,4)}">

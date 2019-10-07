@@ -114,7 +114,7 @@ public class ChatRoom implements Serializable {
       timeLimit = Game.TIMELIMITS[rnd.nextInt(Game.TIMELIMITS.length)];
       scoringMode = rnd.nextInt(Game.SCORING_MODES.length);
 
-      game = new Game(gameId, gameName, rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), 1, 2, maxPlayers, timeLimit, scoringMode);
+      game = new Game(gameId, gameName, rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), 1, 2, maxPlayers, timeLimit, scoringMode);
 
       gamePlayers.clear();
       for (int j = 0; j < numOfPlayers; j++) {

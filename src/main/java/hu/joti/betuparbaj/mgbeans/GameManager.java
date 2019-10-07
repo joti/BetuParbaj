@@ -324,10 +324,10 @@ public class GameManager implements Serializable {
     
     /* A játékos legutóbbi asztalának beállításaival indítunk */
     if (prevGame != null){
-      game = new Game(gameId, name, prevGame.isEasyVowelRule(), prevGame.isNoDigraph(), prevGame.isIncludeY(), prevGame.isRandomPlace(), prevGame.getDrawmode(), 
+      game = new Game(gameId, name, prevGame.isEasyVowelRule(), prevGame.isNoDigraph(), prevGame.isIncludeX(), prevGame.isIncludeY(), prevGame.isRandomPlace(), prevGame.getDrawmode(), 
                       prevGame.getMinPlayers(), prevGame.getMaxPlayers(), prevGame.getTimeLimit(), prevGame.getScoringMode());
     } else {
-      game = new Game(gameId, name, Game.DEF_EASYVOWELRULE, Game.DEF_NODIGRAPH, Game.DEF_INCLUDEY, Game.DEF_RANDOMPLACE, Game.DEF_DRAWMODE, 
+      game = new Game(gameId, name, Game.DEF_EASYVOWELRULE, Game.DEF_NODIGRAPH, Game.DEF_INCLUDEX, Game.DEF_INCLUDEY, Game.DEF_RANDOMPLACE, Game.DEF_DRAWMODE, 
                       Game.DEF_MINPLAYERS, Game.DEF_MAXPLAYERS, Game.DEF_TIMELIMIT, Game.DEF_SCORING_MODE);
     }  
     
