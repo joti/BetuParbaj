@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hu.joti.betuparbaj.model;
 
 import java.io.Serializable;
@@ -24,6 +19,7 @@ public class Game implements Serializable {
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};
   public static final Integer[] TIMELIMITS = {5, 10, 20, 30, 45, 60, 90, 120};
   public static final int TURN0_TIMELIMIT = 15;
+  public static final int TURN_INTERMISSION = 3;
 
   public static final String[] SCORING_MODES = {"Lineáris (2-3-4-5-6)","Fibonacci (2-3-5-8-13)","Négyzetes (4-9-16-25-36)"};
   public static final int[][] VALUE_OF_WORDS = {{0, 2, 3, 4, 5, 6},{0, 2, 3, 5, 8, 13},{0, 4, 9, 16, 25, 36}};
@@ -83,6 +79,7 @@ public class Game implements Serializable {
 
   private Map<String, Integer> availableLetters;
   private String[] selectedLetters;
+  private boolean[] randomLetters;
   private int[] selectedVowelTypes;
 
   private int turn; // Forduló sorszáma (egy forduló a kiválasztott betű lehelyezésére és a soron következő játékos 
@@ -90,7 +87,11 @@ public class Game implements Serializable {
   // A "0. forduló" csonka: itt a kezdő játékosnak legfeljebb TURN0_TIMELIMIT mp-e van az első betű kijelölésére
   // A forduló véget ér, ha letelik a timelimit mp, vagy ha minden játékos lerakta a betűt, 
   // és a következő betű is kiválasztásra került.
+  // Ha valamelyik játékos kifut az időből, akkor a következő kör csak TURN_INTERMISSION mp-nyi szünetet követően indul el.
+  // (Ezalatt ezen játékos üzenetet kap arról, hogy hová került lehelyezésre a betűje, ill. melyik betűt sorsolta a gép helyette.)
   private Date turnStart; // Az aktuális forduló pontos kezdő időpontja                   
+  private Date intermissionStart; // Fordulók közötti szünet kezdő időpontja (csak ha valamelyik játékos kifutott az időből)
+  private boolean intermission;
   private int currentPlayer;
 
   public Game() {
@@ -140,6 +141,7 @@ public class Game implements Serializable {
     for (int i = 0; i < selectedLetters.length; i++) {
       selectedLetters[i] = "";
     }
+    randomLetters = new boolean[36];
     selectedVowelTypes = new int[36];
     turn = 0;
   }
@@ -311,13 +313,6 @@ public class Game implements Serializable {
     }
   }
 
-//  public void accessBoard(String name) {
-//    int pos = getPlayerPos(name);
-//    if (pos >= 0) {
-//      boards.get(pos).setLastAccess(new Date());
-//    }
-//  }
-
   public boolean isPlayerActive(String name) {
     int pos = getPlayerPos(name);
     if (pos >= 0) {
@@ -477,11 +472,13 @@ public class Game implements Serializable {
       return timeLimit;
   }
 
-  public void nextTurn() {
-    if (endDate != null) {
+  public void endTurn(){
+    System.out.println("endTurn");
+    if (endDate != null || intermissionStart != null) {
       return;
     }
 
+    boolean needIntermission = false;  
     if (turn > 0) {
       // Ha valamelyik játékos még nem helyezte le a betűt a táblájára, akkor most lerakjuk valahová
       for (Board board : boards) {
@@ -490,25 +487,42 @@ public class Game implements Serializable {
           if (randomPlace)
             board.setLetterRandom(selectedLetters[turn - 1]);
           else
-            board.getUnplacedLetters().add(selectedLetters[turn - 1]);
+            board.getUnplacedLetters().put(turn, selectedLetters[turn - 1]);
+          needIntermission = true;
         }
       }
+    }  
+
+    if (turn < 36) {
+      // Ha még nem lett kiválasztva a következő betű, akkor most kisorsoljuk
+      if (selectedLetters[turn].equals("")) {
+        selectedLetters[turn] = drawLetter();
+        randomLetters[turn] = true;
+        needIntermission = true;
+      }
+      int count = availableLetters.get(selectedLetters[turn]);
+      availableLetters.put(selectedLetters[turn], count - 1);
+    }  
+    
+    System.out.println("NEEDINTERMISSION: " + needIntermission);
+    if (needIntermission)
+      intermissionStart = new Date();
+
+  }
+  
+  public void nextTurn() {
+    if (endDate != null) {
+      return;
     }
 
     if (turn == 36) {
       System.out.println("Játék vége.");
       endDate = new Date();
     } else {
-      // Ha még nem lett kiválasztva a következő betű, akkor most kisorsoljuk
-      if (selectedLetters[turn].equals("")) {
-        selectedLetters[turn] = drawLetter();
-      }
-      int count = availableLetters.get(selectedLetters[turn]);
-      availableLetters.put(selectedLetters[turn], count - 1);
-
       currentPlayer = (currentPlayer + 1) % numberOfPlayers;
       turn++;
       turnStart = new Date();
+      intermissionStart = null;
     }
   }
 
@@ -610,7 +624,7 @@ public class Game implements Serializable {
     }
     return letter;
   }
-
+  
   public String getDateInfo(){
     Date now = new Date();
     Date compareDate;
@@ -804,6 +818,14 @@ public class Game implements Serializable {
     this.selectedVowelTypes = selectedVowelTypes;
   }
 
+  public boolean[] getRandomLetters() {
+    return randomLetters;
+  }
+
+  public void setRandomLetters(boolean[] randomLetters) {
+    this.randomLetters = randomLetters;
+  }
+  
   public int getTurn() {
     return turn;
   }
@@ -820,6 +842,22 @@ public class Game implements Serializable {
     this.turnStart = turnStart;
   }
 
+  public Date getIntermissionStart() {
+    return intermissionStart;
+  }
+
+  public void setIntermissionStart(Date intermissionStart) {
+    this.intermissionStart = intermissionStart;
+  }
+
+  public boolean isIntermission() {
+    return intermission;
+  }
+
+  public void setIntermission(boolean intermission) {
+    this.intermission = intermission;
+  }
+  
   public int getCurrentPlayer() {
     return currentPlayer;
   }

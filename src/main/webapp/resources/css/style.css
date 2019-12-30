@@ -21,6 +21,14 @@ and open the template in the editor.
    gray1: #d9d8bf // RGB: 217 216 191 // Keretek alsó és jobboldala
 */
 
+a:link {
+  color: #919b55;
+}
+
+a:visited {
+  color: #919b55;
+}
+
 input{
   outline: none;
   box-shadow: none;
@@ -61,6 +69,22 @@ textarea{
   font-weight: bold;
   color: red;
   line-height: 1.2;
+}
+
+.logintext {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: normal;
+  color: #555C23;
+  line-height: 1.7;
+}
+
+.logintextsmall {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;	
+  font-weight: normal;
+  color: #808571;
+  line-height: 1.9;
 }
 
 .text {

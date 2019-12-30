@@ -24,7 +24,7 @@
       <h:form id="pageform" acceptcharset="UTF-8">
         <h:panelGroup id="pg_login" rendered="#{loginData.entered == false}">
           <p align="center">
-            <table align="center" class="text" width="940px">
+            <table align="center" class="logintext" width="940px">
               <tr style="height:627px;" valign="top">
                 <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/images/bpbg3.jpg);background-repeat: no-repeat;">
                   <div style="position: relative;">
@@ -39,8 +39,15 @@
                         <f:ajax execute="it_name" render="pageform"/>
                       </h:commandButton>
                     </div>
-                    <div style="position: absolute; top:308px;left:60px">
+                    <div style="position: absolute; top:277px;left:60px">
                       <h:outputText id="ot_error" value="#{loginData.error}" class="errortext"/>
+                    </div>
+                    <div class="logintextsmall" style="position: absolute; top:339px; width:490px;left:60px">
+                      A játék <b>Chrome</b>, <b>Firefox</b> és <b>Opera</b> böngészőkön lett tesztelve, egyéb böngészők esetében előfordulhat, hogy nem megfelelően (vagy egyáltalán nem) működik.
+                    </div>
+                    <div class="logintextsmall" style="position: absolute; top:463px; width:506px;left:60px">
+                      Amennyiben észrevételed van a játékkal kapcsolatban, vagy hibát találtál (elnézést érte!), akkor kérlek, írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> 
+                      avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!
                     </div>
                   </div>  
                 </td>

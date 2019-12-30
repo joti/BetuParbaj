@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hu.joti.betuparbaj.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -26,10 +23,10 @@ public class Board implements Serializable {
   private Player player;
   //elhelyezett betűk
   private String[][] letters;
-  //elhelyezett betűk
+  //cellák betöltésének köre (gép által elhelyezett betűk esetén a forduló sorszámának ellentettje)
   private int[][] turnPlaces;
-  //el nem helyezett betűk
-  private List<String> unplacedLetters;
+  //el nem helyezett betűk (forduló -> betű map)
+  private Map<Integer,String> unplacedLetters;
   // pontot érő szavak a táblán
   private List<Hit> hits;
   // összpontszám
@@ -57,7 +54,7 @@ public class Board implements Serializable {
     }
 
     hits = new ArrayList<>();
-    unplacedLetters = new ArrayList<>();
+    unplacedLetters = new HashMap<>();
     joinDate = new Date();
   }
 
@@ -100,7 +97,7 @@ public class Board implements Serializable {
           count++;
           if (count == letterPos) {
             letters[row][col] = letter;
-            turnPlaces[row][col] = turn;
+            turnPlaces[row][col] = -1 * turn;
             System.out.println(player.getName() + " random -> " + row + "/" + col);
             break;
           }
@@ -109,6 +106,17 @@ public class Board implements Serializable {
     }
   }
 
+  public boolean isRandomPlaced(int turn){
+    for (int i = 0; i < turnPlaces.length; i++) {
+      for (int j = 0; j < turnPlaces[i].length; j++) {
+        if (turnPlaces[i][j] == -1 * turn){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  
   public void evaluate(){
     score = 0;
     for (Hit hit : hits) {
@@ -129,10 +137,15 @@ public class Board implements Serializable {
   
   public void fillGaps(){
     int index = 0;
+    List<String> unplacedLetterList = new ArrayList<>();
+    for (String value : unplacedLetters.values()) {
+      unplacedLetterList.add(value);      
+    }
+            
     for (int row = 0; row < 6; row++) {
       for (int col = 0; col < 6; col++) {
         if (turnPlaces[row][col] == 0){
-          letters[row][col] = unplacedLetters.get(index);
+          letters[row][col] = unplacedLetterList.get(index);
           index++;
         }
       }
@@ -204,11 +217,11 @@ public class Board implements Serializable {
   }
 
   
-  public List<String> getUnplacedLetters() {
+  public Map<Integer,String> getUnplacedLetters() {
     return unplacedLetters;
   }
 
-  public void setUnplacedLetters(List<String> unplacedLetters) {
+  public void setUnplacedLetters(Map<Integer,String> unplacedLetters) {
     this.unplacedLetters = unplacedLetters;
   }
 
