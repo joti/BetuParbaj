@@ -17,6 +17,7 @@ import hu.joti.betuparbaj.model.Message;
 import hu.joti.betuparbaj.model.Player;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -35,9 +36,9 @@ public class ChatRoom implements Serializable {
   @ManagedProperty("#{lobby}")
   Lobby lobby;
 
-  public static final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
   public static final boolean ONE_NAME_PER_ROW = true;
   public static final String[] TESTPLAYERS = {"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm"};
+  public static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
 
   private Set<Player> players;
   private List<Message> messages;
@@ -48,6 +49,7 @@ public class ChatRoom implements Serializable {
   public ChatRoom() {
     players = new TreeSet<>();
     messages = new ArrayList<>();
+    SDF.setTimeZone(TimeZone.getTimeZone("Europe/Budapest"));
   }
 
   @PostConstruct

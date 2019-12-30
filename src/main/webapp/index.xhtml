@@ -749,13 +749,15 @@
                         <div style="position: absolute; top:125px; left:0px">
                           <h:outputText id="ot_chat" class="gridheader" value="Chat:"/><br/>
                           <h:inputTextarea id="ita_messages" class="inputtextchatsmall chatscroll" rows="100" cols="20" 
-                                           style="width:360px;height:365px" readonly="true"/><br/>
-                          <p:inputText id="it_message" class="inputtextchatsmall" placeholder="Írj valamit" style="width:320px;height:14px" 
-                                       value="#{loginData.message}"/>
+                                           style="width:360px;height:365px" readonly="true"/>
                           <script>
                             $(".chatscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0,
                               railpadding: {top: 0, right: 73, left: 0, bottom: 0}, autohidemode: 'leave'});
                           </script>
+                        </div>
+                        <div style="position: absolute; top:523px; left:0px">
+                          <p:inputText id="it_message" class="inputtextchatsmall" placeholder="Írj valamit" style="width:320px;height:14px" 
+                                       value="#{loginData.message}"/>
                         </div>
                         <div style="position: absolute; top:523px; left:266px">
                           <p:commandButton id="btn_sendmsg" class="buttonsmall" value="OK" style="width:30px"
