@@ -184,7 +184,8 @@
                             </h:dataTable>
                           </div>
                           <script>
-                            $(".lobbyscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave', emulatetouch: true, cursordragontouch: true});
+                            $(".lobbyscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave',
+                                                          emulatetouch: true, cursordragontouch: true, touchbehavior: true, preventmultitouchscrolling: false});
                           </script>
                         </div>
 
@@ -752,7 +753,8 @@
                           <h:inputTextarea id="ita_names" class="inputtextareasmall namesscroll" rows="100" cols="20" style="width:287px;height:81px;" 
                                            readonly="true" value="#{loginData.nameList}"/>
                           <script>
-                            $(".namesscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave', emulatetouch: true, cursordragontouch: true});
+                            $(".namesscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave',
+                                                          emulatetouch: true, cursordragontouch: true, touchbehavior: true, preventmultitouchscrolling: false});
                           </script>
                         </div>
                         <div style="position: absolute; top:125px; left:0px">
@@ -761,7 +763,8 @@
                                            style="width:360px;height:365px" readonly="true"/>
                           <script>
                             $(".chatscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0,
-                              railpadding: {top: 0, right: 73, left: 0, bottom: 0}, autohidemode: 'leave', emulatetouch: true, cursordragontouch: true});
+                                                         railpadding: {top: 0, right: 73, left: 0, bottom: 0}, autohidemode: 'leave', 
+                                                         emulatetouch: true, cursordragontouch: true, touchbehavior: true, preventmultitouchscrolling: false});
                           </script>
                         </div>
                         <div style="position: absolute; top:523px; left:0px">
