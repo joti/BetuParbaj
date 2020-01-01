@@ -41,7 +41,7 @@ public class ChatRoom implements Serializable {
   
   public static final boolean ONE_NAME_PER_ROW = true;
   public static final String[] TESTPLAYERS = {"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm"};
-  public static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
+  public static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm");
 
   private Set<Player> players;
   private List<Message> messages;

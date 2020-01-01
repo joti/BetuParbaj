@@ -35,7 +35,7 @@
                     <div class="gamesetupframe" style='position: absolute; top: 104px; left: 44px; width: 519px; height: 456px;'>
                     </div>
                     <div style="position: absolute; top:120px; width:470px;left:60px">Üdvözöllek a betűpárbaj játékban!</div>
-                    <div style="position: absolute; top:182px; width:470px;left:60px">Kérlek, belépés előtt add meg,<br/> 
+                    <div style="position: absolute; top:182px; width:530px;left:60px">Kérlek, belépés előtt add meg,<br/> 
                       hogy milyen névvel szeretnél játszani!</div>
                     <div style="position: absolute; top:242px;left:60px">
                       <h:inputText id ="it_name" class="inputname" style="width:328px" value="#{loginData.name}" maxlength="20" a:autofocus="true" disabled="#{loginData.entered == true}"/>
@@ -48,11 +48,11 @@
                     <div style="position: absolute; top:277px;left:60px">
                       <h:outputText id="ot_error" value="#{loginData.error}" class="errortext"/>
                     </div>
-                    <div class="logintextsmall" style="position: absolute; top:339px; width:546px;left:60px">
+                    <div class="logintextsmall" style="position: absolute; top:339px; width:586px;left:60px">
                       Amennyiben észrevételed van a játékkal kapcsolatban,<br/>vagy hibát találtál (elnézést érte!), akkor kérlek,<br/>hogy írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> 
                       avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!
                     </div>
-                    <div class="logintextsmall" style="position: absolute; top:432px; width:546px;left:60px">
+                    <div class="logintextsmall" style="position: absolute; top:432px; width:586px;left:60px">
                       A játék <b>Windows (7, 8, 10)</b> és <b>Android (5+)</b> operációs<br/>
                       rendszereken futó <b>Chrome</b>, <b>Firefox</b> és <b>Opera</b> böngészőkre<br/>
                       lett optimalizálva, ezért egyéb környezeteken sajnos<br/>
@@ -184,7 +184,7 @@
                             </h:dataTable>
                           </div>
                           <script>
-                            $(".lobbyscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave'});
+                            $(".lobbyscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave', emulatetouch: true, cursordragontouch: true});
                           </script>
                         </div>
 
@@ -752,7 +752,7 @@
                           <h:inputTextarea id="ita_names" class="inputtextareasmall namesscroll" rows="100" cols="20" style="width:287px;height:81px;" 
                                            readonly="true" value="#{loginData.nameList}"/>
                           <script>
-                            $(".namesscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave'});
+                            $(".namesscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave', emulatetouch: true, cursordragontouch: true});
                           </script>
                         </div>
                         <div style="position: absolute; top:125px; left:0px">
@@ -761,7 +761,7 @@
                                            style="width:360px;height:365px" readonly="true"/>
                           <script>
                             $(".chatscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0,
-                              railpadding: {top: 0, right: 73, left: 0, bottom: 0}, autohidemode: 'leave'});
+                              railpadding: {top: 0, right: 73, left: 0, bottom: 0}, autohidemode: 'leave', emulatetouch: true, cursordragontouch: true});
                           </script>
                         </div>
                         <div style="position: absolute; top:523px; left:0px">
