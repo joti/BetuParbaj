@@ -28,8 +28,14 @@
               <tr style="height:627px;" valign="top">
                 <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/images/bpbg3.jpg);background-repeat: no-repeat;">
                   <div style="position: relative;">
-                    <div style="position: absolute; top:120px; width:470px;left:60px">Üdvözöllek a betűpárbaj játékban!<br/><br/>
-                      Kérlek, belépés előtt add meg,<br/> 
+                    <div id="gameloginbg" class="gamebg" style="position: absolute; left: 30px; top: 90px; width: 547px; height: 485px">
+                    </div>
+                    <div id="gameloginarea" class="gamearea" style="position: absolute; left: 30px; top: 90px; width: 547px; height: 485px">
+                    </div>
+                    <div class="gamesetupframe" style='position: absolute; top: 104px; left: 44px; width: 519px; height: 456px;'>
+                    </div>
+                    <div style="position: absolute; top:120px; width:470px;left:60px">Üdvözöllek a betűpárbaj játékban!</div>
+                    <div style="position: absolute; top:182px; width:470px;left:60px">Kérlek, belépés előtt add meg,<br/> 
                       hogy milyen névvel szeretnél játszani!</div>
                     <div style="position: absolute; top:242px;left:60px">
                       <h:inputText id ="it_name" class="inputname" style="width:328px" value="#{loginData.name}" maxlength="20" a:autofocus="true" disabled="#{loginData.entered == true}"/>
@@ -42,12 +48,15 @@
                     <div style="position: absolute; top:277px;left:60px">
                       <h:outputText id="ot_error" value="#{loginData.error}" class="errortext"/>
                     </div>
-                    <div class="logintextsmall" style="position: absolute; top:339px; width:490px;left:60px">
-                      A játék <b>Chrome</b>, <b>Firefox</b> és <b>Opera</b> böngészőkön lett tesztelve, egyéb böngészők esetében előfordulhat, hogy nem megfelelően (vagy egyáltalán nem) működik.
-                    </div>
-                    <div class="logintextsmall" style="position: absolute; top:463px; width:506px;left:60px">
-                      Amennyiben észrevételed van a játékkal kapcsolatban, vagy hibát találtál (elnézést érte!), akkor kérlek, írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> 
+                    <div class="logintextsmall" style="position: absolute; top:339px; width:546px;left:60px">
+                      Amennyiben észrevételed van a játékkal kapcsolatban,<br/>vagy hibát találtál (elnézést érte!), akkor kérlek,<br/>hogy írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> 
                       avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!
+                    </div>
+                    <div class="logintextsmall" style="position: absolute; top:432px; width:546px;left:60px">
+                      A játék <b>Windows (7, 8, 10)</b> és <b>Android (5+)</b> operációs<br/>
+                      rendszereken futó <b>Chrome</b>, <b>Firefox</b> és <b>Opera</b> böngészőkre<br/>
+                      lett optimalizálva, ezért egyéb környezeteken sajnos<br/>
+                      könnyen előfordulhat, hogy nem működik megfelelően.
                     </div>
                   </div>  
                 </td>

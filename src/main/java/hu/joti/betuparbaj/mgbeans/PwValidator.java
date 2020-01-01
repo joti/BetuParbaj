@@ -13,6 +13,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -23,6 +24,8 @@ import javax.faces.validator.ValidatorException;
 @FacesValidator("pwValidator")
 public class PwValidator implements Serializable, Validator {
 
+  private static final Logger logger = Logger.getLogger(PwValidator.class.getName());
+  
   private UIComponent pwInput;
   private boolean btnClicked;
 
@@ -35,42 +38,32 @@ public class PwValidator implements Serializable, Validator {
 
   @Override
   public void validate(FacesContext fc, UIComponent uic, Object t) throws ValidatorException {
-    System.out.println("VALIDATE4");
-
     Map<String, Object> attrs = uic.getAttributes();
     
     String gamePassword = (String) attrs.get("gamePassword");
-    System.out.println(gamePassword);
     if (gamePassword.isEmpty())
       return;
 
     int gId = (Integer) attrs.get("gameId");
-    System.out.println("gId: " + gId);
-
-    System.out.println(attrs.get("btnId") == null);
     String btnId = "";
     if (attrs.get("btnId") != null){
       btnId = (String)attrs.get("btnId");
-      System.out.println(btnId);
     }  
     if (btnId.isEmpty())
       return;
     
     String inputValue = (String)t;
-    System.out.println(inputValue);
-    System.out.println(inputValue.isEmpty());
     
     if (!gamePassword.equalsIgnoreCase(inputValue)) {
-      System.out.println("NOK");
+      logger.debug("Wrong password: " + inputValue);
       
       FacesMessage msg = new FacesMessage("Nem megfelelő jelszó.");
       msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-//      if (!inputValue.isEmpty())
-        msg.setDetail(gId + "");
+      msg.setDetail(gId + "");
       
       throw new ValidatorException(msg);
     }
-    System.out.println("PASSWORD IS OK");
+    logger.debug("Right password: " + inputValue);
 
   }
 
@@ -78,27 +71,21 @@ public class PwValidator implements Serializable, Validator {
     FacesContext context = FacesContext
         .getCurrentInstance();
     String clientId = pwInput.getClientId(context);
-    System.out.println("clientId = " + clientId);
-    System.out.println("Game " + g.getId());
     Iterator<FacesMessage> messages = context
         .getMessages(clientId);
     while (messages.hasNext()) {
       FacesMessage msg = messages.next();
       if (msg.getSeverity().compareTo(
           FacesMessage.SEVERITY_ERROR) >= 0) {
-        System.out.println("Severity");
-        System.out.println(msg.getDetail());
         if (msg.getDetail().equals(g.getId() + "")){
           return "wrongvalueinput";
         } 
-        System.out.println("Return után");
       }
     }
     return null;
   }
   
   public void clickBtn(ActionEvent event){
-    System.out.println("button clicked");
     btnClicked = true;
   }
   

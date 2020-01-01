@@ -98,7 +98,6 @@ public class Board implements Serializable {
           if (count == letterPos) {
             letters[row][col] = letter;
             turnPlaces[row][col] = -1 * turn;
-            System.out.println(player.getName() + " random -> " + row + "/" + col);
             break;
           }
         }
@@ -121,9 +120,7 @@ public class Board implements Serializable {
     score = 0;
     for (Hit hit : hits) {
       score += hit.getScore();
-      System.out.println(hit.getWord() + " szó értéke: " + hit.getScore() + " pt");
     }
-    System.out.println("Összpontsám: " + score);
   }
   
   public String getHitsString(){

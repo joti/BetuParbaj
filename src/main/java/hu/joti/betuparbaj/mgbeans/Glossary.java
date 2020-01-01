@@ -15,7 +15,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
-//import javax.enterprise.context.ApplicationScoped;
+import org.apache.log4j.Logger;
+
 
 /**
  *
@@ -24,6 +25,8 @@ import javax.faces.bean.ApplicationScoped;
 @ManagedBean(eager=true)
 @ApplicationScoped
 public class Glossary implements Serializable{
+
+  private static final Logger logger = Logger.getLogger(Glossary.class.getName());
 
   private Set<String> words;
   private Map<String,String> easyVowelWords;
@@ -34,7 +37,6 @@ public class Glossary implements Serializable{
    * @throws java.io.IOException
    */
   public Glossary() throws FileNotFoundException, IOException {
-    System.out.println("Glossary konstruktora indul");
     WordDao wordDao = new WordDaoTxt();
     
     words = new TreeSet<>();
@@ -55,8 +57,8 @@ public class Glossary implements Serializable{
       }
     }
 
-    System.out.println("Alapszótár mérete: " + words.size());
-    System.out.println("Hosszú mgh. szótár mérete: " + easyVowelWords.size()); 
+    logger.info("Alapszótár mérete: " + words.size());
+    logger.info("Hosszú mgh. szótár mérete: " + easyVowelWords.size());
   }
 
   public boolean includes(String word, boolean easyVowelRule){
@@ -79,19 +81,15 @@ public class Glossary implements Serializable{
     
     /* Az alábbi sorrendben ellenőrizzük a betűsorokat: 6 betűs: 1-6; 5 b.: 1-5, 2-6; 4 b.: 1-4, 2-5, 3-6; 3 b.: 1-3, 2-4, 3-5, 4-6; 2 b.: 1-2, 2-3, 3-4, 4-5, 5-6 */
     for (int len = letters.length; len > 1; len--) {
-      System.out.println("vizsgált szóhossz: " + len);
       for (int start = 0; start + len <= letters.length; start++) {
         word = "";
         for (int pos = start; pos - start < len ; pos++) {
           word += letters[pos];
         }
-        System.out.println("Vizsgált szó: " + word);
         
         String gWord = findGlossaryWord(word, easyVowelRule);
         if (!gWord.isEmpty()){
-          System.out.println("Találat: " + gWord);
           Hit hit = new Hit(start, start + len - 1, Game.VALUE_OF_WORDS[scoringMode][len - 1] , gWord);
-          System.out.println(hit.getWord() + " hossza: " + hit.getEnd() + " - " + hit.getStart() + " = " + (hit.getEnd() - hit.getStart()) + ", " + hit.getScore() + " pt");
           return hit;
         }
       }

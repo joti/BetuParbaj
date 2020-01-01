@@ -10,22 +10,25 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
+import org.apache.log4j.Logger;
 
 /**
  * @author Joti
  */
 public class WordDaoTxt implements WordDao, Serializable {
 
+  private static final Logger logger = Logger.getLogger(WordDaoTxt.class.getName());
+  
   private static final String RELATIVE_WEBPATH = "/resources/data/words.txt";
 
   String absolutePath;
 
   public WordDaoTxt() {
-    System.out.println("WordDaoTxt konstruktora 1");
     FacesContext facesContext = FacesContext.getCurrentInstance();
     ServletContext servletContext = (ServletContext) facesContext.getExternalContext().getContext();
     absolutePath = servletContext.getRealPath(RELATIVE_WEBPATH);
-    System.out.println(absolutePath);
+
+    logger.info("Absolute path of glossary: " + absolutePath);    
   }
 
   @Override
@@ -41,7 +44,7 @@ public class WordDaoTxt implements WordDao, Serializable {
       words.add(word);
     }
     br.close();
-    System.out.println(words.size());
+    logger.info("No of words in glossary: " + words.size());
     return words;
   }
 

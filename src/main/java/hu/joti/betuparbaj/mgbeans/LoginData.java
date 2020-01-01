@@ -31,32 +31,26 @@ public class LoginData implements Serializable {
   private Date time;
   private int seconds;
 
-  private static final Logger logger = Logger.getLogger(GameManager.class.getName());
+  private static final Logger logger = Logger.getLogger(LoginData.class.getName());
 
   /**
    * Creates a new instance of Login
    */
   public LoginData() {
-    logger.debug("New LD session");
     name = "";
   }
 
   @PostConstruct
   public void init() {
-    System.out.println("LoginData.PostConstruct method at " + (new Date()));
-    if (!name.isEmpty())
-      logger.info("LoginData session starts for " + name);
-    else
-      logger.info("LoginData session starts");
+    logger.debug("LoginData session starts");
   }
 
   @PreDestroy
   public void destroy() {
     if (!name.isEmpty())
-      logger.info("LoginData session ends for " + name);
+      logger.debug("LoginData session ends for " + name);
     else
-      logger.info("LoginData session ends");
-    System.out.println("LoginData.PreDestroy method at " + (new Date()));
+      logger.debug("LoginData session ends");
     doLogout();
   }
 
@@ -92,7 +86,7 @@ public class LoginData implements Serializable {
   }
 
   public void sendMessage() {
-    System.out.println("Event nélkül: " + message);
+    logger.debug(name + "'s message: " + message);
     if (!message.isEmpty()) {
       Message m = new Message(name, message);
       m.setTime(new Date());
@@ -108,12 +102,10 @@ public class LoginData implements Serializable {
 
   public void showRules() {
     rulemode = true;
-    System.out.println(rulemode);
   }
 
   public void showChat() {
     rulemode = false;
-    System.out.println(rulemode);
   }
 
   public void refresh() {

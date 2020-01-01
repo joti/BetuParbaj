@@ -73,18 +73,28 @@ textarea{
 
 .logintext {
   font-family: "Courier New", Courier, monospace;
-  font-size: 18px;	
+  font-size: 17px;	
   font-weight: normal;
   color: #555C23;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 .logintextsmall {
   font-family: "Courier New", Courier, monospace;
-  font-size: 16px;	
+  font-size: 15px;	
   font-weight: normal;
   color: #808571;
-  line-height: 1.9;
+  line-height: 2.1;
+  transform:scale(0.95,1.0);
+  transform-origin: left center;
+}
+
+.logintextsmall2 {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;	
+  font-weight: normal;
+  color: #808571;
+  line-height: 2.2;
 }
 
 .text {

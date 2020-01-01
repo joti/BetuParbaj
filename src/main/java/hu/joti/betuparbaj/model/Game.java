@@ -10,14 +10,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.apache.log4j.Logger;
 
 /**
  * @author Joti
  */
 public class Game implements Serializable {
 
+  private static final Logger logger = Logger.getLogger(Game.class.getName());
+  
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};
-  public static final Integer[] TIMELIMITS = {5, 10, 20, 30, 45, 60, 90, 120};
+  public static final Integer[] TIMELIMITS = {10, 20, 30, 45, 60, 90, 120};
   public static final int TURN0_TIMELIMIT = 15;
   public static final int TURN_INTERMISSION = 3;
 
@@ -91,7 +94,6 @@ public class Game implements Serializable {
   // (Ezalatt ezen játékos üzenetet kap arról, hogy hová került lehelyezésre a betűje, ill. melyik betűt sorsolta a gép helyette.)
   private Date turnStart; // Az aktuális forduló pontos kezdő időpontja                   
   private Date intermissionStart; // Fordulók közötti szünet kezdő időpontja (csak ha valamelyik játékos kifutott az időből)
-  private boolean intermission;
   private int currentPlayer;
 
   public Game() {
@@ -148,14 +150,18 @@ public class Game implements Serializable {
 
   public void addPlayer(Player player) {
     int pos = getPlayerPos(player.getName());
+    Board board;
     if (pos < 0){
-      Board board = new Board(player);
+      board = new Board(player);
       boards.add(board);
       numberOfPlayers++;
       if (boards.size() == 1)
         setAdminPlayer();
     } else {
-      boards.get(pos).setQuitDate(null);
+      board = boards.get(pos);
+      board.setPlayer(player);
+      board.setQuitDate(null);
+      
       numberOfActivePlayers++;
     }
   }
@@ -473,7 +479,6 @@ public class Game implements Serializable {
   }
 
   public void endTurn(){
-    System.out.println("endTurn");
     if (endDate != null || intermissionStart != null) {
       return;
     }
@@ -488,7 +493,9 @@ public class Game implements Serializable {
             board.setLetterRandom(selectedLetters[turn - 1]);
           else
             board.getUnplacedLetters().put(turn, selectedLetters[turn - 1]);
-          needIntermission = true;
+
+          if (board.getQuitDate() == null)
+            needIntermission = true;
         }
       }
     }  
@@ -498,13 +505,15 @@ public class Game implements Serializable {
       if (selectedLetters[turn].equals("")) {
         selectedLetters[turn] = drawLetter();
         randomLetters[turn] = true;
-        needIntermission = true;
+        
+        Board board = boards.get(currentPlayer);
+        if (board.getQuitDate() == null)
+          needIntermission = true;
       }
       int count = availableLetters.get(selectedLetters[turn]);
       availableLetters.put(selectedLetters[turn], count - 1);
     }  
     
-    System.out.println("NEEDINTERMISSION: " + needIntermission);
     if (needIntermission)
       intermissionStart = new Date();
 
@@ -516,7 +525,7 @@ public class Game implements Serializable {
     }
 
     if (turn == 36) {
-      System.out.println("Játék vége.");
+      logger.info("Game #" + id + " ends");
       endDate = new Date();
     } else {
       currentPlayer = (currentPlayer + 1) % numberOfPlayers;
@@ -571,7 +580,6 @@ public class Game implements Serializable {
 
     for (String letter : availableLetters.keySet()) {
       letterCount += availableLetters.get(letter);
-      System.out.println("betű: " + letter + ", összdb: " + letterCount + ", mgh. db: " + vowelCount + ", msh. db: " + consCount);
     }
 
     Random rnd = new Random();
@@ -581,7 +589,6 @@ public class Game implements Serializable {
 
     do {
       draw = rnd.nextInt(letterCount) + 1;
-      System.out.println("sorsolt szám: " + draw);
 
       int count = 0;
       for (String letter : availableLetters.keySet()) {
@@ -595,7 +602,7 @@ public class Game implements Serializable {
       vowelType = getLetterVowelType(selectedLetter);
     } while ((vowelCount >= 5 && vowelType > 0) || (consCount >= 5 && vowelType == 0));
 
-    System.out.println("Sorsolt betű: " + draw + ". = " + selectedLetter + ", " + (vowelType == 0 ? "msh" : "mgh"));
+    logger.debug("Random letter: " + selectedLetter + " -> " + (vowelType == 0 ? "consonant" : "vowel"));
     selectedVowelTypes[turn] = vowelType;
     return selectedLetter;
   }
@@ -633,13 +640,10 @@ public class Game implements Serializable {
     
     if (endDate != null){
       compareDate = endDate;
-//      pre = "Véget ért: ";
     } else if (startDate != null){
       compareDate = startDate;
-//      pre = "Elindítva: ";
     } else if (openDate != null) {
       compareDate = openDate;
-//      pre = "Készítve: ";
     } else
       return "";
     
@@ -850,14 +854,6 @@ public class Game implements Serializable {
     this.intermissionStart = intermissionStart;
   }
 
-  public boolean isIntermission() {
-    return intermission;
-  }
-
-  public void setIntermission(boolean intermission) {
-    this.intermission = intermission;
-  }
-  
   public int getCurrentPlayer() {
     return currentPlayer;
   }
