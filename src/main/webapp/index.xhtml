@@ -83,6 +83,8 @@
                         <div id="gamesetupbg" class="gamebg" style='position: absolute; top: 37px; width: 547px; height: 422px'>
                         </div>
 
+                        <div style="position: absolute; top:37px; left:0px; height: 428px; width: 427px; background: #dee4b9; opacity: 0.0; z-index: 999999"></div>
+                        
                         <div id="lobby" class="gamearea" style='position: absolute; top: 37px; width: 547px'>
                           <div id="lobbycontent" class="lobbyscroll" style='height:422px;overflow-y:auto;width:547px;'>
                             <h:dataTable id="dt_lobby" class="lobbytable" style="width:100%;"
@@ -184,8 +186,7 @@
                             </h:dataTable>
                           </div>
                           <script>
-                            $(".lobbyscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave',
-                                                          touchbehavior: true});
+                            $(".lobbyscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave'});
                           </script>
                         </div>
 
@@ -753,8 +754,7 @@
                           <h:inputTextarea id="ita_names" class="inputtextareasmall namesscroll" rows="100" cols="20" style="width:287px;height:81px;" 
                                            readonly="true" value="#{loginData.nameList}"/>
                           <script>
-                            $(".namesscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave',
-                                                          touchbehavior: true});
+                            $(".namesscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave'});
                           </script>
                         </div>
                         <div style="position: absolute; top:125px; left:0px">
@@ -763,7 +763,7 @@
                                            style="width:360px;height:365px" readonly="true"/>
                           <script>
                             $(".chatscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0,
-                                                         railpadding: {top: 0, right: 73, left: 0, bottom: 0}, autohidemode: 'leave', 
+                                                         railpadding: {top: 0, right: 73, left: 0, bottom: 0}, autohidemode: 'leave'});
                           </script>
                         </div>
                         <div style="position: absolute; top:523px; left:0px">
@@ -774,6 +774,7 @@
                           <p:commandButton id="btn_sendmsg" class="buttonsmall" value="OK" style="width:30px"
                                            action="#{loginData.sendMessage()}" process="@parent" update="it_message ita_messages2"/>  
                         </div>
+                        <div style="position: absolute; top:0px; left:300px; height: 627px; width: 100px; background: #dee4b9; opacity: 0.0; z-index: 999999"></div>
                       </h:panelGroup> <!-- pg_chat -->
                       <p:defaultCommand target="btn_sendmsg" scope="pg_chat"/>
 
