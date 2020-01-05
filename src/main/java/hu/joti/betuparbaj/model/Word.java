@@ -7,21 +7,35 @@ import java.io.Serializable;
  */
 public class Word implements Serializable {
 
-  private String word;
+  private String phrase;
+  private int category;
   
   public Word() {
   }
 
   public Word(String word) {
-    this.word = word;
+    this.phrase = word;
   }
 
-  public String getWord() {
-    return word;
+  public Word(String word, int category) {
+    this.phrase = word;
+    this.category = category;
+  }
+  
+  public String getPhrase() {
+    return phrase;
   }
 
-  public void setWord(String word) {
-    this.word = word;
+  public void setPhrase(String phrase) {
+    this.phrase = phrase;
+  }
+
+  public int getCategory() {
+    return category;
+  }
+
+  public void setCategory(int category) {
+    this.category = category;
   }
   
 }

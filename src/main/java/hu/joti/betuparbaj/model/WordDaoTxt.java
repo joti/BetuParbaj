@@ -32,25 +32,23 @@ public class WordDaoTxt implements WordDao, Serializable {
   }
 
   @Override
-  public List<Word> findAllWords() throws FileNotFoundException, IOException {
+  public List<Word> findAllWords() {
     List<Word> words = new ArrayList<>();
 
-    BufferedReader br = new BufferedReader(new InputStreamReader(
-            new FileInputStream(absolutePath), "UTF8"));
-    String row;
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(
+         new FileInputStream(absolutePath), "UTF8"))){
+      String row;
 
-    while ((row = br.readLine()) != null) {
-      Word word = new Word(row.trim());
-      words.add(word);
+      while ((row = br.readLine()) != null) {
+        Word word = new Word(row.trim(), 1);
+        words.add(word);
+      }
+    } catch (IOException ex) {
+      logger.error(ex);
     }
-    br.close();
-    logger.info("No of words in glossary: " + words.size());
+    
+    logger.info("No of words in txt glossary: " + words.size());
     return words;
-  }
-
-  @Override
-  public void close() {
-    /* Nincs teendő */
   }
 
 }

@@ -5,6 +5,7 @@ import hu.joti.betuparbaj.model.Hit;
 import hu.joti.betuparbaj.model.Word;
 import hu.joti.betuparbaj.model.WordDao;
 import hu.joti.betuparbaj.model.WordDaoTxt;
+import hu.joti.betuparbaj.model.WordDaoPq;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -36,29 +37,39 @@ public class Glossary implements Serializable{
    * @throws java.io.FileNotFoundException
    * @throws java.io.IOException
    */
-  public Glossary() throws FileNotFoundException, IOException {
-    WordDao wordDao = new WordDaoTxt();
+  public Glossary() {
     
     words = new TreeSet<>();
     easyVowelWords = new TreeMap<>();
 
+    WordDao wordDao = new WordDaoPq();
     List<Word> wordList = wordDao.findAllWords();
-    String entry;
-    String modEntry;
-    
-    for (Word word : wordList) {
-      entry = word.getWord();
-      entry = entry.replaceAll("1", "CS").replaceAll("2", "GY").replaceAll("3", "LY").replaceAll("4", "NY").replaceAll("5", "SZ").replaceAll("6", "TY").replaceAll("7", "ZS");       
-      words.add(entry);
-      
-      if (entry.contains("Í") || entry.contains("Ó") || entry.contains("Ő") || entry.contains("Ú") || entry.contains("Ű")){
-        modEntry = entry.replaceAll("Í", "I").replaceAll("Ó", "O").replaceAll("Ő", "Ö").replaceAll("Ú", "U").replaceAll("Ű", "Ü");
-        easyVowelWords.put(modEntry, entry);
-      }
+
+    if (wordList.isEmpty()){
+      wordDao = new WordDaoTxt();
+      wordList = wordDao.findAllWords();
     }
 
-    logger.info("Alapszótár mérete: " + words.size());
-    logger.info("Hosszú mgh. szótár mérete: " + easyVowelWords.size());
+    if (!wordList.isEmpty()){
+      String entry;
+      String modEntry;
+
+      for (Word word : wordList) {
+        entry = word.getPhrase();
+        entry = entry.replaceAll("1", "CS").replaceAll("2", "GY").replaceAll("3", "LY").replaceAll("4", "NY").replaceAll("5", "SZ").replaceAll("6", "TY").replaceAll("7", "ZS");       
+        words.add(entry);
+
+        if (entry.contains("Í") || entry.contains("Ó") || entry.contains("Ő") || entry.contains("Ú") || entry.contains("Ű")){
+          modEntry = entry.replaceAll("Í", "I").replaceAll("Ó", "O").replaceAll("Ő", "Ö").replaceAll("Ú", "U").replaceAll("Ű", "Ü");
+          easyVowelWords.put(modEntry, entry);
+        }
+      }
+
+      logger.info("Alapszótár mérete: " + words.size());
+      logger.info("Hosszú mgh. szótár mérete: " + easyVowelWords.size());
+    } else {
+      logger.error("A szótár üres!");
+    }
   }
 
   public boolean includes(String word, boolean easyVowelRule){

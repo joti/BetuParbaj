@@ -17,6 +17,7 @@
     <mojarra.version>2.4.0</mojarra.version>
     <primefaces.version>5.3</primefaces.version>
     <log4j.version>1.2.17</log4j.version>
+    <postgresql.version>42.2.1</postgresql.version>
   </properties>
     
   <dependencies>
@@ -52,6 +53,11 @@
       <artifactId>apache-log4j-extras</artifactId>
       <version>${log4j.version}</version>
     </dependency>    
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
+    </dependency>
   </dependencies>
 
   <build>

@@ -10,8 +10,6 @@ import java.util.List;
  */
 public interface WordDao {
 
-  List<Word> findAllWords() throws FileNotFoundException, IOException;
+  List<Word> findAllWords();
 
-  void close();
-  
 }

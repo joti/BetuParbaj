@@ -125,7 +125,7 @@ public class CharacterEncodingFilter implements Filter {
       // we still want to execute our after processing, and then
       // rethrow the problem after that.
       problem = t;
-      t.printStackTrace();
+      //t.printStackTrace();
     }
 
     doAfterProcessing(request, response);
