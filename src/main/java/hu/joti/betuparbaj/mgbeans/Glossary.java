@@ -42,6 +42,10 @@ public class Glossary implements Serializable{
     words = new TreeSet<>();
     easyVowelWords = new TreeMap<>();
 
+    loadWords();
+  }
+
+  public void loadWords(){
     WordDao wordDao = new WordDaoPq();
     List<Word> wordList = wordDao.findAllWords();
 
@@ -53,6 +57,9 @@ public class Glossary implements Serializable{
     if (!wordList.isEmpty()){
       String entry;
       String modEntry;
+
+      words.clear();
+      easyVowelWords.clear();
 
       for (Word word : wordList) {
         entry = word.getPhrase();
@@ -71,7 +78,7 @@ public class Glossary implements Serializable{
       logger.error("A szótár üres!");
     }
   }
-
+  
   public boolean includes(String word, boolean easyVowelRule){
     return ( words.contains(word.toUpperCase()) || (easyVowelRule && easyVowelWords.containsKey(word.toUpperCase())) );
   }

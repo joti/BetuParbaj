@@ -800,6 +800,13 @@
                 </td>
               </tr>
               <tr>
+                <td colspan="2">
+                  <h:commandButton id="btn_loadwords" class="gamebutton" value="Szótár frissítése" action="#{glossary.loadWords()}" rendered="#{loginData.admin == true}">
+                    <f:ajax execute="" render="pg_main"/>
+                  </h:commandButton>
+                </td>
+              </tr>
+              <tr>
                 <td colspan="2" style="display: none">
                   <h:outputText id="ot_seconds" value="#{loginData.seconds}" />
                   <h:outputText id="ot_turnsec2" style="color:red" value="#{gameManager.remainingTurnSec}" />

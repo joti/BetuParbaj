@@ -36,11 +36,9 @@ public class WordDaoPq implements WordDao, Serializable {
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
-    System.out.println("before getConection");
 
     try {
       conn = getConnection();
-      System.out.println("after getConection");
 
       pstmt = conn.prepareStatement("select * from word");
       rs = pstmt.executeQuery();
