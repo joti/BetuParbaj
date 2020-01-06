@@ -435,6 +435,14 @@ public class GameManager implements Serializable {
     }
   }
 
+  public void removeGame() {
+    if (game != null && game.getEndDate() != null) {
+      logger.info(loginData.getName() + " removes game #" + game.getId());
+      lobby.getGamesFinished().remove(game);
+      game = null;
+    }
+  }
+
   public boolean gameExists() {
     if (game == null) {
       return false;

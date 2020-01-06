@@ -718,6 +718,11 @@
                             <p:commandButton id="btn_viewgamesetup" class="gamebutton" style="width: 216px;" value="Asztal beállításai" action="#{gameManager.switchGameViewMode()}" 
                                              rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode == 1}" 
                                              update="pg_main"/>
+                            <p:commandButton id="btn_removegame" class="gamebutton" style="width: 154px" value="Eltávolítás" action="#{gameManager.removeGame()}"
+                                             rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2 and loginData.admin == true}">
+                              <p:confirm header="Megerősítés" message="Biztosan eltávolítod az asztalt?"/>
+                              <f:ajax execute="" render="pg_main"/>
+                            </p:commandButton>
                           </h:panelGroup>
                         </h:panelGroup> <!-- pg_gameplay -->
                         <h:outputText id="ot_gamehist" style="display:none"/>
@@ -734,16 +739,16 @@
                         <div style="position: absolute; top:1px; left:0px">
                           <h:outputText id="ot_rules" class="gridheader" style="width:287px;height:90px;" value="Játékszabályok:"/><br/><br/>
                           <div class="rulestext" style="width:320px">
-                            A kezdő játékos kiválaszt egy betűt, melyet az összes játékosnak be kell írnia a saját 6x6-os négyzetrácsának valamelyik négyzetébe. 
+                            A kezdő játékos kiválaszt egy betűt, melyet az összes játékosnak be kell írnia a saját 6x6-os négyzetrácsának valamelyik cellájába. 
                             Ezután a soron következő játékos is választ egy betűt, melyet szintén az összes játékosnak fel kell írnia a saját táblájának egy még üresen álló cellájába. 
-                            Ez így folytatódik mindaddig, amíg a négyzetrács teljesen be nem telik. (Eddig a pontig a játékosok egymás tábláit nem láthatják.)<br/><br/>
-                            A játék végén az egyes sorokban és oszlopokban kialakult leghosszabb (legalább kétbetűs) értelmes szavakért a játékosok a szavak hosszának megfelelő pontszámokat kapják. 
+                            Ez így folytatódik 36 fordulón keresztül, a teljes négyzetrács kitöltéséig. (Eddig a pontig a játékosok egymás tábláit nem láthatják.)<br/><br/>
+                            A játék végén az egyes sorokban és oszlopokban kialakult leghosszabb (legalább kétbetűs) értelmes szavakért a játékosok a szavak hosszától függő pontszámokat kapják. 
                             A játék gyűztese a legtöbb pontot gyűjtő játékos.<br/><br/>
-                            A játékosoknak az egyes betűket az időkorlát lejárta előtt be kell írniuk a táblára, ellenkező esetben a betű véletlenszerű helyre kerül. 
-                            A betűmondásban soron következő játékos csak akkor választhat betűt, ha a játékostárs által mondottat már beírta, és még az időkereten belül van. 
+                            A játékosoknak az egyes betűket az időkorlát lejárta előtt el kell helyezniük a táblán, ellenkező esetben a betű véletlenszerű helyre kerül. 
+                            A betűmondásban soron következő játékos csak akkor választhat betűt, ha a játékostárs által választottat már beírta, és még az időkereten belül van. 
                             Ha a játékosnak lejár a gondolkodási ideje, akkor a következő betű véletlenszerűen kerül meghatározásra.<br/><br/>
-                            A játék indítása előtt beállítható a játékosok száma (2-4), a gondolkodási idő, a betűkészlet (hosszú mgh.-k, kétjegyű msh.-k szerepeljenek-e),
-                            illetve van lehetőség gép által sorsolt betűkkel is játszani.
+                            A játékosok számára segítségképpen rendelkezésre áll egy szótár lekérdező funkció, amellyel ellenőrizhetik, hogy mely szavak minősülnek elfogadhatónak a játékban.
+                            A szótár tulajdonneveket, rövidítéseket és ragozott szavakat nem tartalmaz.
                           </div>
                         </div> 
                       </h:panelGroup> <!-- pg_rules -->

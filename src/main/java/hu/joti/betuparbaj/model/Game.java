@@ -20,7 +20,7 @@ public class Game implements Serializable {
   private static final Logger logger = Logger.getLogger(Game.class.getName());
   
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};
-  public static final Integer[] TIMELIMITS = {10, 20, 30, 45, 60, 90, 120};
+  public static final Integer[] TIMELIMITS = {15, 20, 30, 45, 60, 90, 120};
   public static final int TURN0_TIMELIMIT = 15;
   public static final int TURN_INTERMISSION = 3;
 
