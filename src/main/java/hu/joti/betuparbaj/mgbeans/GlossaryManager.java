@@ -6,8 +6,6 @@ import hu.joti.betuparbaj.model.Word;
 import hu.joti.betuparbaj.model.WordDao;
 import hu.joti.betuparbaj.model.WordDaoTxt;
 import hu.joti.betuparbaj.model.WordDaoPq;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -25,19 +23,17 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(eager=true)
 @ApplicationScoped
-public class Glossary implements Serializable{
+public class GlossaryManager implements Serializable{
 
-  private static final Logger logger = Logger.getLogger(Glossary.class.getName());
+  private static final Logger logger = Logger.getLogger(GlossaryManager.class.getName());
 
   private Set<String> words;
   private Map<String,String> easyVowelWords;
   
   /**
    * Creates a new instance of Glossary
-   * @throws java.io.FileNotFoundException
-   * @throws java.io.IOException
    */
-  public Glossary() {
+  public GlossaryManager() {
     
     words = new TreeSet<>();
     easyVowelWords = new TreeMap<>();

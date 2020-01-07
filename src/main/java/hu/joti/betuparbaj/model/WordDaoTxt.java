@@ -47,7 +47,7 @@ public class WordDaoTxt implements WordDao, Serializable {
       logger.error(ex);
     }
     
-    logger.info("No of words in txt glossary: " + words.size());
+    logger.info("No. of words in txt glossary: " + words.size());
     return words;
   }
 

@@ -806,7 +806,7 @@
               </tr>
               <tr>
                 <td colspan="2">
-                  <h:commandButton id="btn_loadwords" class="gamebutton" value="Szótár frissítése" action="#{glossary.loadWords()}" rendered="#{loginData.admin == true}">
+                  <h:commandButton id="btn_loadwords" class="gamebutton" value="Szótár frissítése" action="#{glossaryManager.loadWords()}" rendered="#{loginData.admin == true}">
                     <f:ajax execute="" render="pg_main"/>
                   </h:commandButton>
                 </td>
@@ -819,7 +819,7 @@
                     <h:outputText id="ot_gamestate2" value="#{gameManager.gameState}"/>/
                     <h:outputText id="ot_gamestate" />/
                     <h:outputText id="ot_playerstate" value="#{gameManager.playerState}"/>/
-                    <h:outputText id="ot_glossarysize" value="#{glossary.words.size()}"/>
+                    <h:outputText id="ot_glossarysize" value="#{glossaryManager.words.size()}"/>
                   </h:panelGroup>
                   <h:outputText id="ot_gamesetup2" style="display:block; color:blue" value="#{gameManager.getGameSetupString()}"/>
                   <h:outputText id="ot_gamehist2" style="display:block; color:brown" value="#{gameManager.getGameHistString()}"/>

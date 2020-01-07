@@ -40,15 +40,17 @@ public class WordDaoPq implements WordDao, Serializable {
     try {
       conn = getConnection();
 
-      pstmt = conn.prepareStatement("select * from word");
+      pstmt = conn.prepareStatement("select * from glossary");
       rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        String phrase = rs.getString("phrase");
-        int category = rs.getInt("category");
+        String[] phrases = rs.getString("gl_words").split(",");
+        int category = rs.getInt("gl_category");
 
-        Word word = new Word(phrase.trim(), category);
-        words.add(word);
+        for (String phrase : phrases) {
+          Word word = new Word(phrase.trim(), category);
+          words.add(word);
+        }
       }
     } catch (SQLException ex) {
       logger.error(ex);
@@ -76,7 +78,7 @@ public class WordDaoPq implements WordDao, Serializable {
       }
     }
 
-    logger.info("No of words in db glossary: " + words.size());
+    logger.info("No. of words in db glossary: " + words.size());
     return words;
   }
   

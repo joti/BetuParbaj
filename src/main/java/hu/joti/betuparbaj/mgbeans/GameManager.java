@@ -34,8 +34,8 @@ public class GameManager implements Serializable {
   @ManagedProperty("#{lobby}")
   Lobby lobby;
 
-  @ManagedProperty("#{glossary}")
-  Glossary glossary;
+  @ManagedProperty("#{glossaryManager}")
+  GlossaryManager glossaryManager;
 
   @ManagedProperty("#{loginData}")
   LoginData loginData;
@@ -206,7 +206,7 @@ public class GameManager implements Serializable {
             else
               streak[col] = letters[row][col];
           }
-          Hit hit = glossary.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
+          Hit hit = glossaryManager.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
           if (hit != null) {
             logger.info(board.getPlayer().getName() + "'s word: " + hit.getWord());
             hit.setHorizontal(true);
@@ -223,7 +223,7 @@ public class GameManager implements Serializable {
             else
               streak[row] = letters[row][col];
           }
-          Hit hit = glossary.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
+          Hit hit = glossaryManager.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
           if (hit != null) {
             logger.info(board.getPlayer().getName() + "'s word: " + hit.getWord());
             hit.setHorizontal(false);
@@ -962,7 +962,7 @@ public class GameManager implements Serializable {
 
   public void checkWord() {
     if (game != null && game.getStartDate() != null && !testWord.isEmpty()) {
-      if (glossary.includes(testWord, game.isEasyVowelRule()))
+      if (glossaryManager.includes(testWord, game.isEasyVowelRule()))
         testResult = 1;
       else
         testResult = 2;
@@ -996,8 +996,8 @@ public class GameManager implements Serializable {
     this.lobby = lobby;
   }
 
-  public void setGlossary(Glossary glossary) {
-    this.glossary = glossary;
+  public void setGlossaryManager(GlossaryManager glossaryManager) {
+    this.glossaryManager = glossaryManager;
   }
 
   public void setLoginData(LoginData loginData) {
