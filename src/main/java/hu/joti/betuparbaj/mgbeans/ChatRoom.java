@@ -24,7 +24,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedProperty;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -37,7 +38,7 @@ public class ChatRoom implements Serializable {
   @ManagedProperty("#{lobby}")
   Lobby lobby;
 
-  private static final Logger logger = Logger.getLogger(ChatRoom.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(ChatRoom.class.getName());
   
   public static final boolean ONE_NAME_PER_ROW = true;
   public static final String[] TESTPLAYERS = {"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm"};
@@ -71,9 +72,9 @@ public class ChatRoom implements Serializable {
         
         String msg = "Inactivity check #" + schedCount + " - " + players.size() + " players";
         if (schedCount % 180 == 0) // félóránként 
-          logger.info(msg);
+          LOGGER.info(msg);
         else
-          logger.debug(msg);
+          LOGGER.debug(msg);
         
         /* Az inaktív usereket kiléptetjük */
         removeInactivePlayers();
@@ -161,7 +162,7 @@ public class ChatRoom implements Serializable {
       getMessages().add(m);
       Collections.sort(getMessages());
 
-      logger.info(player.getName() + " removed");
+      LOGGER.info(player.getName() + " removed");
     }
   }
   

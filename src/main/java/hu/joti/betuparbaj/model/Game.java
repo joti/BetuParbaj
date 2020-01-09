@@ -10,14 +10,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Joti
  */
 public class Game implements Serializable {
 
-  private static final Logger logger = Logger.getLogger(Game.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(Game.class.getName());
   
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};
   public static final Integer[] TIMELIMITS = {15, 20, 30, 45, 60, 90, 120};
@@ -525,7 +526,7 @@ public class Game implements Serializable {
     }
 
     if (turn == 36) {
-      logger.info("Game #" + id + " ends");
+      LOGGER.info("Game #" + id + " ends");
       endDate = new Date();
     } else {
       currentPlayer = (currentPlayer + 1) % numberOfPlayers;
@@ -602,7 +603,7 @@ public class Game implements Serializable {
       vowelType = getLetterVowelType(selectedLetter);
     } while ((vowelCount >= 5 && vowelType > 0) || (consCount >= 5 && vowelType == 0));
 
-    logger.debug("Random letter: " + selectedLetter + " -> " + (vowelType == 0 ? "consonant" : "vowel"));
+    LOGGER.debug("Random letter: " + selectedLetter + " -> " + (vowelType == 0 ? "consonant" : "vowel"));
     selectedVowelTypes[turn] = vowelType;
     return selectedLetter;
   }

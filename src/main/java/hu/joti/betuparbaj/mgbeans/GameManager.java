@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.PostConstruct;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -57,8 +59,8 @@ public class GameManager implements Serializable {
   private String testWord;
   private int testResult;
 
-  private static final Logger logger = Logger.getLogger(GameManager.class.getName());
-
+  private static final Logger LOGGER = LogManager.getLogger(GameManager.class.getName());
+  
   public GameManager() {
     fadingGames = new HashSet<>();
     fadedGames = new HashSet<>();
@@ -80,12 +82,12 @@ public class GameManager implements Serializable {
 
   @PostConstruct
   public void init() {
-    logger.debug("GameManager session starts");
+    LOGGER.debug("GameManager session starts");
   }
 
   @PreDestroy
   public void destroy() {
-    logger.debug("GameManager session ends for " + loginData.getName());
+    LOGGER.debug("GameManager session ends for " + loginData.getName());
     if (game != null) {
       quitGame();
     }
@@ -110,15 +112,15 @@ public class GameManager implements Serializable {
           if (!fadedGames.contains(g.getId())) {
             if (!fadingGames.contains(g.getId())) {
               fadingGames.add(g.getId());
-              logger.debug("Game " + g.getId() + " is fading at " + sec + " s");
+              LOGGER.debug("Game " + g.getId() + " is fading at " + sec + " s");
             } else {
               fadedGames.add(g.getId());
-              logger.debug("Game " + g.getId() + " is already faded at " + sec + " s");
+              LOGGER.debug("Game " + g.getId() + " is already faded at " + sec + " s");
             }
           }
         } else {
           if (fadingGames.remove(g.getId())) {
-            logger.debug("Game " + g.getId() + " is not fading any more at " + sec + " s");
+            LOGGER.debug("Game " + g.getId() + " is not fading any more at " + sec + " s");
           }
           fadedGames.remove(g.getId());
         }
@@ -127,7 +129,7 @@ public class GameManager implements Serializable {
       for (Integer gId : fadingGames) {
         if (!gamesInLobby.contains(gId)) {
           if (fadingGames.remove(gId)) {
-            logger.debug("Game " + gId + " is not in lobby any more at " + sec + " s");
+            LOGGER.debug("Game " + gId + " is not in lobby any more at " + sec + " s");
           }
           fadedGames.remove(gId);
         }
@@ -174,7 +176,7 @@ public class GameManager implements Serializable {
             game.endTurn(); // Itt megtörténik a gépi lehelyezés és betűsorsolás, szükség esetén intermission indítása
           }  
           if (game.getIntermissionStart() == null || turnSec > turnTimeLimit + Game.TURN_INTERMISSION) {
-            logger.debug(loginData.getName() + ": turn " + turn + " -> " + (turn + 1));
+            LOGGER.debug(loginData.getName() + ": turn " + turn + " -> " + (turn + 1));
             game.nextTurn();
 
             if (game.getEndDate() != null) {
@@ -191,7 +193,7 @@ public class GameManager implements Serializable {
   }
 
   public void evaluateGame() {
-    logger.debug("Evaluating: #" + game.getId());
+    LOGGER.debug("Evaluating: #" + game.getId());
     if (game != null && game.getTurn() == 36) {
       for (Board board : game.getBoards()) {
         String[][] letters = board.getLetters();
@@ -208,7 +210,7 @@ public class GameManager implements Serializable {
           }
           Hit hit = glossaryManager.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
           if (hit != null) {
-            logger.info(board.getPlayer().getName() + "'s word: " + hit.getWord());
+            LOGGER.info(board.getPlayer().getName() + "'s word: " + hit.getWord());
             hit.setHorizontal(true);
             hit.setLine(row);
             board.getHits().add(hit);
@@ -225,16 +227,16 @@ public class GameManager implements Serializable {
           }
           Hit hit = glossaryManager.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
           if (hit != null) {
-            logger.info(board.getPlayer().getName() + "'s word: " + hit.getWord());
+            LOGGER.info(board.getPlayer().getName() + "'s word: " + hit.getWord());
             hit.setHorizontal(false);
             hit.setLine(col);
             board.getHits().add(hit);
           }
         }
 
-        logger.debug(board.getPlayer().getName() + "'s no of words: " + board.getHits().size());
+        LOGGER.debug(board.getPlayer().getName() + "'s no of words: " + board.getHits().size());
         board.evaluate();
-        logger.info(board.getPlayer().getName() + "'s points: " + board.getScore());
+        LOGGER.info(board.getPlayer().getName() + "'s points: " + board.getScore());
         board.fillGaps();
       }
 
@@ -290,9 +292,9 @@ public class GameManager implements Serializable {
 
   public void debugGame(String text) {
     if (loginData != null) {
-      logger.debug(text + " (" + loginData.getName() + ")");
+      LOGGER.debug(text + " (" + loginData.getName() + ")");
     } else {
-      logger.debug(text);
+      LOGGER.debug(text);
     }
   }
 
@@ -311,7 +313,7 @@ public class GameManager implements Serializable {
     int gameId = lobby.getGameId();
 
     String name = lobby.getDefGameName();
-    logger.info(loginData.getName() + " creates game #" + gameId + " with name " + name);
+    LOGGER.info(loginData.getName() + " creates game #" + gameId + " with name " + name);
 
     /* A játékos legutóbbi asztalának beállításaival indítunk */
     if (prevGame != null) {
@@ -361,7 +363,7 @@ public class GameManager implements Serializable {
 
   public void joinGame(Game g) {
     if (game == null && g != null && g.getOpenDate() != null && g.getEndDate() == null) {
-      logger.info(loginData.getName() + " joins game #" + g.getId());
+      LOGGER.info(loginData.getName() + " joins game #" + g.getId());
       game = g;
       game.addPlayer(loginData.getPlayer());
       fillMyPosition();
@@ -376,7 +378,7 @@ public class GameManager implements Serializable {
   }
 
   public void viewGame(Game g) {
-    logger.debug(loginData.getName() + " views game #" + g.getId());
+    LOGGER.debug(loginData.getName() + " views game #" + g.getId());
     if (game == null && g.getEndDate() != null) {
       game = g;
       myPosition = 0;
@@ -401,10 +403,10 @@ public class GameManager implements Serializable {
 
   public void quitGame() {
     if (game != null) {
-      logger.info(loginData.getName() + " quits game #" + game.getId());
+      LOGGER.info(loginData.getName() + " quits game #" + game.getId());
       if (game.getEndDate() == null) {
         game.removePlayer(loginData.getName());
-        logger.info(loginData.getName() + " removed from game #" + game.getId());
+        LOGGER.info(loginData.getName() + " removed from game #" + game.getId());
       }
       clearWord();
       prevGame = game;
@@ -414,7 +416,7 @@ public class GameManager implements Serializable {
 
   public void openGame() {
     if (game != null) {
-      logger.info(loginData.getName() + " opens game #" + game.getId());
+      LOGGER.info(loginData.getName() + " opens game #" + game.getId());
       game.setOpenDate(new Date());
       lobby.getGamesInPrep().remove(game);
       lobby.getGamesInLobby().add(game);
@@ -425,7 +427,7 @@ public class GameManager implements Serializable {
 
   public void dropGame() {
     if (game != null) {
-      logger.info(loginData.getName() + " drops game #" + game.getId());
+      LOGGER.info(loginData.getName() + " drops game #" + game.getId());
       clearWord();
       lobby.getGamesInPrep().remove(game);
       lobby.getGamesInLobby().remove(game);
@@ -437,7 +439,7 @@ public class GameManager implements Serializable {
 
   public void removeGame() {
     if (game != null && game.getEndDate() != null) {
-      logger.info(loginData.getName() + " removes game #" + game.getId());
+      LOGGER.info(loginData.getName() + " removes game #" + game.getId());
       lobby.getGamesFinished().remove(game);
       game = null;
     }
@@ -930,7 +932,7 @@ public class GameManager implements Serializable {
   }
 
   public void selectLetter(String letter) {
-    logger.debug(loginData.getName() + " selects letter " + letter);
+    LOGGER.debug(loginData.getName() + " selects letter " + letter);
     if (game != null && game.getStartDate() != null && getPlayerState() == 2) {
       game.selectLetter(letter);
     }
@@ -968,7 +970,7 @@ public class GameManager implements Serializable {
         testResult = 2;
     } else
       testResult = 0;
-    logger.debug(loginData.getName() + " wordcheck: " + testWord + " -> " + testResult);
+    LOGGER.debug(loginData.getName() + " wordcheck: " + testWord + " -> " + testResult);
   }
 
   public void clearWord() {

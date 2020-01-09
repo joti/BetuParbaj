@@ -13,14 +13,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Joti
  */
 public class WordDaoPq implements WordDao, Serializable {
 
-  private static final Logger logger = Logger.getLogger(WordDaoPq.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(WordDaoPq.class.getName());
 
   private static Connection getConnection() throws SQLException {
     // Heroku környezeti változón keresztül biztosítja a connection adatait
@@ -53,32 +54,32 @@ public class WordDaoPq implements WordDao, Serializable {
         }
       }
     } catch (SQLException ex) {
-      logger.error(ex);
+      LOGGER.error(ex);
     } finally {
       if (rs != null) {
         try {
           rs.close();
         } catch (SQLException ex) {
-          logger.error(ex);
+          LOGGER.error(ex);
         }
       }
       if (pstmt != null) {
         try {
           pstmt.close();
         } catch (SQLException ex) {
-          logger.error(ex);
+          LOGGER.error(ex);
         }
       }
       if (conn != null) {
         try {
           conn.close();
         } catch (SQLException ex) {
-          logger.error(ex);
+          LOGGER.error(ex);
         }
       }
     }
 
-    logger.info("No. of words in db glossary: " + words.size());
+    LOGGER.info("No. of words in db glossary: " + words.size());
     return words;
   }
   

@@ -13,7 +13,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -24,7 +25,7 @@ import org.apache.log4j.Logger;
 @FacesValidator("pwValidator")
 public class PwValidator implements Serializable, Validator {
 
-  private static final Logger logger = Logger.getLogger(PwValidator.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(PwValidator.class.getName());
   
   private UIComponent pwInput;
   private boolean btnClicked;
@@ -55,7 +56,7 @@ public class PwValidator implements Serializable, Validator {
     String inputValue = (String)t;
     
     if (!gamePassword.equalsIgnoreCase(inputValue)) {
-      logger.debug("Wrong password: " + inputValue);
+      LOGGER.debug("Wrong password: " + inputValue);
       
       FacesMessage msg = new FacesMessage("Nem megfelelő jelszó.");
       msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -63,7 +64,7 @@ public class PwValidator implements Serializable, Validator {
       
       throw new ValidatorException(msg);
     }
-    logger.debug("Right password: " + inputValue);
+    LOGGER.debug("Right password: " + inputValue);
 
   }
 

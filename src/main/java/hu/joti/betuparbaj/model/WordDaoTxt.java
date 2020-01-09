@@ -2,7 +2,6 @@ package hu.joti.betuparbaj.model;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -10,14 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Joti
  */
 public class WordDaoTxt implements WordDao, Serializable {
 
-  private static final Logger logger = Logger.getLogger(WordDaoTxt.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(WordDaoTxt.class.getName());
   
   private static final String RELATIVE_WEBPATH = "/resources/data/words.txt";
 
@@ -28,7 +28,7 @@ public class WordDaoTxt implements WordDao, Serializable {
     ServletContext servletContext = (ServletContext) facesContext.getExternalContext().getContext();
     absolutePath = servletContext.getRealPath(RELATIVE_WEBPATH);
 
-    logger.info("Absolute path of glossary: " + absolutePath);    
+    LOGGER.info("Absolute path of glossary: " + absolutePath);    
   }
 
   @Override
@@ -44,10 +44,10 @@ public class WordDaoTxt implements WordDao, Serializable {
         words.add(word);
       }
     } catch (IOException ex) {
-      logger.error(ex);
+      LOGGER.error(ex);
     }
     
-    logger.info("No. of words in txt glossary: " + words.size());
+    LOGGER.info("No. of words in txt glossary: " + words.size());
     return words;
   }
 

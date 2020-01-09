@@ -11,7 +11,9 @@ import hu.joti.betuparbaj.model.Player;
 import java.util.Iterator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  *
@@ -21,7 +23,7 @@ import org.apache.log4j.Logger;
 @ApplicationScoped
 public class Lobby implements Serializable {
 
-  private static final Logger logger = Logger.getLogger(Lobby.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(Lobby.class.getName());
 
   public static final int FINISHEDGAMES_MAXNUM = 10;
 
@@ -45,7 +47,7 @@ public class Lobby implements Serializable {
     lastId = (int) ((curTime.getTime() - startDate.getTime()) / 1000);
     lastGameDate = LocalDate.now();
     dailyCounter = 0;
-    logger.debug("lastId: " + lastId);
+    LOGGER.debug("lastId: " + lastId);
   }
 
   public void removePlayer(Player player) {

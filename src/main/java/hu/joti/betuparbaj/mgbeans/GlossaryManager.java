@@ -14,7 +14,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -25,7 +26,7 @@ import org.apache.log4j.Logger;
 @ApplicationScoped
 public class GlossaryManager implements Serializable{
 
-  private static final Logger logger = Logger.getLogger(GlossaryManager.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(GlossaryManager.class.getName());
 
   private Set<String> words;
   private Map<String,String> easyVowelWords;
@@ -68,10 +69,10 @@ public class GlossaryManager implements Serializable{
         }
       }
 
-      logger.info("Alapszótár mérete: " + words.size());
-      logger.info("Hosszú mgh. szótár mérete: " + easyVowelWords.size());
+      LOGGER.info("Alapszótár mérete: " + words.size());
+      LOGGER.info("Hosszú mgh. szótár mérete: " + easyVowelWords.size());
     } else {
-      logger.error("A szótár üres!");
+      LOGGER.error("A szótár üres!");
     }
   }
   

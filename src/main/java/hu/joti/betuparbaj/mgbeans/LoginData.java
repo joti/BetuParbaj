@@ -13,9 +13,9 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import javax.xml.bind.DatatypeConverter;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -37,7 +37,7 @@ public class LoginData implements Serializable {
   private Date time;
   private int seconds;
 
-  private static final Logger logger = Logger.getLogger(LoginData.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(LoginData.class.getName());
 
   /**
    * Creates a new instance of Login
@@ -48,20 +48,20 @@ public class LoginData implements Serializable {
 
   @PostConstruct
   public void init() {
-    logger.debug("LoginData session starts");
+    LOGGER.debug("LoginData session starts");
   }
 
   @PreDestroy
   public void destroy() {
     if (!name.isEmpty())
-      logger.debug("LoginData session ends for " + name);
+      LOGGER.debug("LoginData session ends for " + name);
     else
-      logger.debug("LoginData session ends");
+      LOGGER.debug("LoginData session ends");
     doLogout();
   }
 
   public void doLogin() {
-    logger.info("New Player: " + name);
+    LOGGER.info("New Player: " + name);
     error = "";
     admin = false;
 
@@ -114,14 +114,14 @@ public class LoginData implements Serializable {
       hashedName = md.digest(name.getBytes(StandardCharsets.UTF_8));
       isAdmin = (DatatypeConverter.printHexBinary(hashedName).equals(adminHash));
     } catch (NoSuchAlgorithmException ex) {
-      logger.error(ex);
+      LOGGER.error(ex);
     }
 
     return isAdmin; 
   }
   
   public void sendMessage() {
-    logger.debug(name + "'s message: " + message);
+    LOGGER.debug(name + "'s message: " + message);
     if (!message.isEmpty()) {
       Message m = new Message(name, message);
       m.setTime(new Date());
