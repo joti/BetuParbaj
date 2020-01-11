@@ -3,33 +3,52 @@ package hu.joti.betuparbaj.model;
 /**
  * @author Joti
  */
-public class ScoringMode {
+public enum ScoringMode {
 
-  private int index;
-  private String label;
+  LINEAR   ("Lineáris" , new int[]{0, 2, 3, 4, 5, 6}),
+  FIBONACCI("Fibonacci", new int[]{0, 2 ,3 ,5, 8, 13}),
+  SQUARE   ("Négyzetes", new int[]{0, 4, 9, 16, 25, 36});
 
-  public ScoringMode() {
-  }
-  
-  public ScoringMode(int id, String label) {
-    this.index = id;
-    this.label = label;
+  private final String name;
+  private final String valueLabel;
+  private final String label;
+  private final int[] lenValues;
+
+  private ScoringMode(String name, int[] lenValues) {
+    this.name = name;
+    this.lenValues = lenValues;
+    
+    String lab = "";
+    for (int i = 0; i < lenValues.length; i++) {
+      if (lenValues[i] > 0){
+        lab += lenValues[i];
+        if (i + 1 < lenValues.length){
+          lab += "-";
+        }    
+      }          
+    }
+    this.valueLabel = lab;
+    this.label = name + " (" + valueLabel + ")";
   }
 
   public String getLabel() {
-    return label;
+    return label; 
   }
 
-  public void setLabel(String label) {
-    this.label = label;
+  public String getName() {
+    return name;
   }
 
-  public int getIndex() {
-    return index;
+  public ScoringMode getValue(){
+    return this;
   }
 
-  public void setIndex(int index) {
-    this.index = index;
+  public String getValueLabel() {
+    return valueLabel;
   }
 
+  public int[] getLenValues() {
+    return lenValues;
+  }
+  
 }

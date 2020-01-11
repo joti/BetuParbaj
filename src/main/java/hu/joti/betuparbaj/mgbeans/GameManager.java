@@ -16,12 +16,13 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import hu.joti.betuparbaj.model.Game;
 import hu.joti.betuparbaj.model.Hit;
+import hu.joti.betuparbaj.model.RndLetterMode;
 import hu.joti.betuparbaj.model.ScoringMode;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.PostConstruct;
-//import org.apache.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +61,7 @@ public class GameManager implements Serializable {
   private int testResult;
 
   private static final Logger LOGGER = LogManager.getLogger(GameManager.class.getName());
-  
+
   public GameManager() {
     fadingGames = new HashSet<>();
     fadedGames = new HashSet<>();
@@ -147,13 +148,13 @@ public class GameManager implements Serializable {
 
         boolean endTurn = true;
         int turn = game.getTurn();
-        
+
         // Rakott-e már mindenki betűt?
         if (turn > 0) {
           for (Board board : game.getBoards()) {
             // Kilépett játékosra nem várakozunk
-            if ( ( board.getTotalLetterCount() < game.getTurn() || board.isRandomPlaced(turn) )
-                 && board.getQuitDate() == null ) {
+            if ((board.getTotalLetterCount() < turn || board.isRandomPlaced(turn))
+                    && board.getQuitDate() == null) {
               endTurn = false;
               break;
             }
@@ -161,20 +162,20 @@ public class GameManager implements Serializable {
         }
 
         // A soron következő játékos kiválasztotta-e már a következő betűt?
-        if (endTurn && turn < 36 && game.getDrawmode() == Game.PLAYER_DRAW
+        if (endTurn && turn < 36 && game.canPlayerSelectLetter()
                 && game.getBoards().get(game.getCurrentPlayer()).getQuitDate() == null) {
           if (game.getSelectedLetters()[turn].isEmpty() || game.getRandomLetters()[turn]) {
             endTurn = false;
           }
-        } 
+        }
 
         int turnSec = getTurnSec();
         int turnTimeLimit = game.getTurnTimeLimit();
-        
+
         if (turnSec > turnTimeLimit || endTurn) {
           if (game.getIntermissionStart() == null) {
             game.endTurn(); // Itt megtörténik a gépi lehelyezés és betűsorsolás, szükség esetén intermission indítása
-          }  
+          }
           if (game.getIntermissionStart() == null || turnSec > turnTimeLimit + Game.TURN_INTERMISSION) {
             LOGGER.debug(loginData.getName() + ": turn " + turn + " -> " + (turn + 1));
             game.nextTurn();
@@ -317,10 +318,10 @@ public class GameManager implements Serializable {
 
     /* A játékos legutóbbi asztalának beállításaival indítunk */
     if (prevGame != null) {
-      game = new Game(gameId, name, prevGame.isEasyVowelRule(), prevGame.isNoDigraph(), prevGame.isIncludeX(), prevGame.isIncludeY(), prevGame.isRandomPlace(), prevGame.getDrawmode(),
+      game = new Game(gameId, name, prevGame.isEasyVowelRule(), prevGame.isNoDigraph(), prevGame.isIncludeX(), prevGame.isIncludeY(), prevGame.isRandomPlace(), prevGame.getRndLetterMode(),
               prevGame.getMinPlayers(), prevGame.getMaxPlayers(), prevGame.getTimeLimit(), prevGame.getScoringMode());
     } else {
-      game = new Game(gameId, name, Game.DEF_EASYVOWELRULE, Game.DEF_NODIGRAPH, Game.DEF_INCLUDEX, Game.DEF_INCLUDEY, Game.DEF_RANDOMPLACE, Game.DEF_DRAWMODE,
+      game = new Game(gameId, name, Game.DEF_EASYVOWELRULE, Game.DEF_NODIGRAPH, Game.DEF_INCLUDEX, Game.DEF_INCLUDEY, Game.DEF_RANDOMPLACE, Game.DEF_RNDLETTERMODE,
               Game.DEF_MINPLAYERS, Game.DEF_MAXPLAYERS, Game.DEF_TIMELIMIT, Game.DEF_SCORING_MODE);
     }
 
@@ -577,17 +578,17 @@ public class GameManager implements Serializable {
     if (game.getStartDate() != null && game.getEndDate() == null) {
       int turn = game.getTurn();
 
-      if (turn < 36 && game.getCurrentPlayer() == player && game.getDrawmode() == Game.PLAYER_DRAW) {
+      if (turn < 36 && game.getCurrentPlayer() == player && game.canPlayerSelectLetter()) {
         if (!game.getSelectedLetters()[turn].isEmpty() && !game.getRandomLetters()[turn]) {
           return true;
         }
       } else if (turn > 0) {
         boolean intermission = (game.getIntermissionStart() != null);
         Board board = game.getBoards().get(player);
-        
-        if (board.getTotalLetterCount() >= turn &&
-             !( (!game.isRandomPlace() && board.getUnplacedLetters().containsKey(turn)) 
-              || (game.isRandomPlace() && board.isRandomPlaced(turn)) )) {
+
+        if (board.getTotalLetterCount() >= turn
+                && !((!game.isRandomPlace() && board.getUnplacedLetters().containsKey(turn))
+                || (game.isRandomPlace() && board.isRandomPlaced(turn)))) {
           return true;
         }
       }
@@ -596,7 +597,7 @@ public class GameManager implements Serializable {
   }
 
   public boolean canPlayerSelectLetterInTurn(int player) {
-    return (game != null && game.getDrawmode() == Game.PLAYER_DRAW && game.getTurn() < 36 && game.getCurrentPlayer() == player);
+    return (game != null && game.canPlayerSelectLetter() && game.getTurn() < 36 && game.getCurrentPlayer() == player);
   }
 
   public boolean canPlayerSelectLetter() {
@@ -636,7 +637,7 @@ public class GameManager implements Serializable {
       return 1;
     }
 
-    if (turn < 36 && myPosition == game.getCurrentPlayer() && game.getSelectedLetters()[turn].isEmpty() && game.getDrawmode() == Game.PLAYER_DRAW) {
+    if (turn < 36 && myPosition == game.getCurrentPlayer() && game.getSelectedLetters()[turn].isEmpty() && game.canPlayerSelectLetter()) {
       return 2;
     }
 
@@ -720,7 +721,7 @@ public class GameManager implements Serializable {
       } else if (playerState == 1) {
         // A kiválasztott betűt el kell helyezni a táblán
         String letter = game.getSelectedLetter();
-        if (turn < 36 && myPosition == currentPlayerPos && game.getDrawmode() == Game.PLAYER_DRAW) {
+        if (turn < 36 && myPosition == currentPlayerPos && game.canPlayerSelectLetter()) {
           msg = String.format("\n\n\nA %d. betű:\n\n\n\n\n\n Helyezd el a táblán,\nmajd válaszd ki\na következő betűt!", turn);
         } else {
           msg = String.format("\n\n\nA %d. betű:\n\n\n\n\n\n Helyezd el a táblán!", turn);
@@ -729,25 +730,24 @@ public class GameManager implements Serializable {
         msg = "\n\nVálaszd ki\na következő betűt!";
       } else {
         // Kifutottunk az időből
-        if (intermission){
+        if (intermission) {
           Board board = game.getBoards().get(myPosition);
-          
+
           // Nem sikerült időben lehelyezni a betűt
-          if (turn > 0 &&
-             ( (!game.isRandomPlace() && board.getUnplacedLetters().containsKey(turn)) 
-             || (game.isRandomPlace() && board.isRandomPlaced(turn)) ) ){
+          if (turn > 0
+                  && ((!game.isRandomPlace() && board.getUnplacedLetters().containsKey(turn))
+                  || (game.isRandomPlace() && board.isRandomPlaced(turn)))) {
             msg = "\n\n\n\n\n\nLejárt az idő.";
-          }
-          // A következő betű kiválasztása nem sikerült időben
-          else if (turn < 36 && myPosition == currentPlayerPos && game.getRandomLetters()[turn] && game.getDrawmode() == Game.PLAYER_DRAW){
+          } // A következő betű kiválasztása nem sikerült időben
+          else if (turn < 36 && myPosition == currentPlayerPos && game.getRandomLetters()[turn] && game.canPlayerSelectLetter()) {
             msg = "\n\n\n\n\n\nLejárt az idő.";
           } else {
             msg = "\n\n\n\n\nVárakozás\na többi játékosra...";
           }
         } else {
           msg = "\n\n\n\n\nVárakozás\na többi játékosra...";
-        } 
-        
+        }
+
       }
     }
     return msg;
@@ -802,7 +802,7 @@ public class GameManager implements Serializable {
     }
     return turnSec;
   }
-  
+
   public int getRemainingTurnSec() {
     int rTurnSec = 1000;
     if (game != null && game.getStartDate() != null && game.getEndDate() == null) {
@@ -988,8 +988,17 @@ public class GameManager implements Serializable {
 
   public List<ScoringMode> getAllScoringModes() {
     List<ScoringMode> modes = new ArrayList<>();
-    for (int i = 0; i < Game.SCORING_MODES.length; i++) {
-      modes.add(new ScoringMode(i, Game.SCORING_MODES[i]));
+    for (ScoringMode value : ScoringMode.values()) {
+      modes.add(value);
+    }
+    
+    return modes;
+  }
+
+  public List<RndLetterMode> getAllRndLetterModes() {
+    List<RndLetterMode> modes = new ArrayList<>();
+    for (RndLetterMode value : RndLetterMode.values()) {
+      modes.add(value);
     }
     return modes;
   }

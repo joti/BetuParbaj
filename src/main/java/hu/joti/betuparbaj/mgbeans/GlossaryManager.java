@@ -1,7 +1,7 @@
 package hu.joti.betuparbaj.mgbeans;
 
-import hu.joti.betuparbaj.model.Game;
 import hu.joti.betuparbaj.model.Hit;
+import hu.joti.betuparbaj.model.ScoringMode;
 import hu.joti.betuparbaj.model.Word;
 import hu.joti.betuparbaj.model.WordDao;
 import hu.joti.betuparbaj.model.WordDaoTxt;
@@ -91,7 +91,7 @@ public class GlossaryManager implements Serializable{
     return "";
   }
   
-  public Hit findHit(String[] letters, boolean easyVowelRule, int scoringMode){
+  public Hit findHit(String[] letters, boolean easyVowelRule, ScoringMode scoringMode){
     String word;
     
     /* Az alábbi sorrendben ellenőrizzük a betűsorokat: 6 betűs: 1-6; 5 b.: 1-5, 2-6; 4 b.: 1-4, 2-5, 3-6; 3 b.: 1-3, 2-4, 3-5, 4-6; 2 b.: 1-2, 2-3, 3-4, 4-5, 5-6 */
@@ -104,7 +104,7 @@ public class GlossaryManager implements Serializable{
         
         String gWord = findGlossaryWord(word, easyVowelRule);
         if (!gWord.isEmpty()){
-          Hit hit = new Hit(start, start + len - 1, Game.VALUE_OF_WORDS[scoringMode][len - 1] , gWord);
+          Hit hit = new Hit(start, start + len - 1, scoringMode.getLenValues()[len - 1] , gWord);
           return hit;
         }
       }

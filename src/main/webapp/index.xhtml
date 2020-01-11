@@ -174,7 +174,7 @@
                                         </div>
                                         <div class="lobbyrowrule">
                                           <h:graphicImage class="lobbyrowimage" url="/images/scoring.png"/>
-                                          <h:outputText style="margin-left: 7px; position:relative; top: 2px;font-size: 12px;" value="#{game.scoringModeString}" />       
+                                          <h:outputText style="margin-left: 7px; position:relative; top: 2px;font-size: 12px;" value="#{game.scoringMode.valueLabel}" />       
                                         </div>
                                       </h:panelGroup>
                                     </h:panelGrid>
@@ -423,31 +423,30 @@
                                 </p:tooltip>
                               </div>
 
-                              <h:outputLabel id="ol_drawmode" style="position: absolute; top: 283px; left: 30px">
-                                Betűválasztás:
-                              </h:outputLabel>
-                              <h:panelGroup id="selectdrawmode" style="position: absolute; top: 273px; left: 214px" rendered="#{gameManager.isInGameState(1)}">
-                                <p:selectOneRadio id="drawmoderadio" class="select2" value="#{gameManager.game.drawmode}" disabled="#{gameManager.game.openDate != null}">
-                                  <f:selectItem id="playerdrawlabel" itemValue = "1" itemLabel = "Játékosok által" /> 
-                                  <f:selectItem id="randomdrawlabel" itemValue = "2" itemLabel = "Sorsolással" />                            
-                                </p:selectOneRadio>
-                                
-                                <p:tooltip id="tip_playerdraw" for="ol_drawmode" class="tooltiptext" escape="false">
-                                  <div class="tooltiptext2">
-                                  A következő betűt kiválaszthatja a soron következő játékos a gondolkodási idején belül,<br/>
-                                  vagy véletlenszerűen is meghatározásra kerülhet a készletből. 
-                                  </div>
-                                </p:tooltip>
+                              <h:panelGroup rendered="#{gameManager.isInGameState(1)}">
+                                <h:outputLabel id="ol_rndlettermode" style="position: absolute; top: 283px; left: 30px" value="Sorsolt betűk:" for="sel_rndlettermode"/>
+                                <div style="position: absolute; top: 277px; left: 217px">
+                                  <p:selectOneMenu id="sel_rndlettermode" class="select3" style="width:210px" value="#{gameManager.game.rndLetterMode}">
+                                    <f:selectItems value="#{gameManager.allRndLetterModes}" var="rndLetterMode" itemLabel="#{rndLetterMode.label}" itemValue="#{rndLetterMode.value}"/>
+                                  </p:selectOneMenu>
+                                  <p:tooltip id="tip_rndlettermode" for="ol_rndlettermode" class="tooltiptext" escape="false">
+                                    <div class="tooltiptext2">
+                                       A játék mely szakaszában történjen a betűk kiválasztása a játékosok helyett a számítógép által.
+                                    </div>
+                                  </p:tooltip>
+                                </div>
+                              </h:panelGroup>  
+                              <h:panelGroup rendered="#{gameManager.isInGameState(2,4)}">
+                                <div style="position: absolute; top: 283px; left: 30px">
+                                  Sorsolt betűk:
+                                </div>
+                                <div style="position: absolute; top: 283px; left:217px">
+                                  #{gameManager.game.rndLetterMode.label}
+                                </div>
                               </h:panelGroup>
-                              <h:panelGroup id="selecteddrawmode" style="position: absolute; top: 283px; left: 217px" rendered="#{gameManager.isInGameState(2,4)}">
-                                <h:panelGroup rendered="#{gameManager.game.drawmode lt 2}">
-                                  Játékosok által
-                                </h:panelGroup>
-                                <h:panelGroup rendered="#{gameManager.game.drawmode eq 2}">
-                                  Sorsolással
-                                </h:panelGroup>
-                              </h:panelGroup>
-
+                              
+                              
+                              
                               <h:outputLabel id="ol_timelimit" style="position: absolute; top: 314px; left: 30px">
                                 Gondolkodási idő:
                               </h:outputLabel>
@@ -486,7 +485,7 @@
                                 <h:outputLabel id="ol_scoringmode" style="position: absolute; top: 376px; left: 30px" value="Pontozási módszer:" for="sel_scoringmode"/>
                                 <div style="position: absolute; top: 370px; left: 217px">
                                   <p:selectOneMenu id="sel_scoringmode" class="select3" style="width:210px" value="#{gameManager.game.scoringMode}">
-                                    <f:selectItems value="#{gameManager.allScoringModes}" var="scoringMode" itemLabel="#{scoringMode.label}" itemValue="#{scoringMode.index}"/>
+                                    <f:selectItems value="#{gameManager.allScoringModes}" var="scoringMode" itemLabel="#{scoringMode.label}" itemValue="#{scoringMode.value}"/>
                                   </p:selectOneMenu>
                                   <p:tooltip id="tip_scoringmode" for="ol_scoringmode" class="tooltiptext" escape="false">
                                     <div class="tooltiptext2">
@@ -500,7 +499,7 @@
                                   Pontozási módszer:
                                 </div>
                                 <div style="position: absolute; top: 376px; left:217px">
-                                  #{gameManager.game.scoringModeLabel}
+                                  #{gameManager.game.scoringMode.label}
                                 </div>
                               </h:panelGroup>
                             </h:panelGroup>

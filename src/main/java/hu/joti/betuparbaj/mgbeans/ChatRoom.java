@@ -15,6 +15,8 @@ import javax.faces.bean.ApplicationScoped;
 import hu.joti.betuparbaj.model.Game;
 import hu.joti.betuparbaj.model.Message;
 import hu.joti.betuparbaj.model.Player;
+import hu.joti.betuparbaj.model.RndLetterMode;
+import hu.joti.betuparbaj.model.ScoringMode;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.TimeZone;
@@ -103,7 +105,8 @@ public class ChatRoom implements Serializable {
     int maxPlayers;
     int numOfPlayers;
     int timeLimit;
-    int scoringMode;
+    int scoringModeIndex;
+    ScoringMode scoringMode = ScoringMode.SQUARE;
     int fullcount = 0;
     Set<String> gamePlayers = new HashSet<>();
 
@@ -118,9 +121,16 @@ public class ChatRoom implements Serializable {
         numOfPlayers = rnd.nextInt(maxPlayers) + 1;
       }  
       timeLimit = Game.TIMELIMITS[rnd.nextInt(Game.TIMELIMITS.length)];
-      scoringMode = rnd.nextInt(Game.SCORING_MODES.length);
 
-      game = new Game(gameId, gameName, rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), 1, 2, maxPlayers, timeLimit, scoringMode);
+      scoringModeIndex = rnd.nextInt(ScoringMode.values().length);
+      for (ScoringMode value : ScoringMode.values()) {
+        if (value.ordinal() == scoringModeIndex){
+          scoringMode = value;
+          break;
+        }
+      }
+
+      game = new Game(gameId, gameName, rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), rnd.nextBoolean(), RndLetterMode.NORNDLETTER, 2, maxPlayers, timeLimit, scoringMode);
 
       gamePlayers.clear();
       for (int j = 0; j < numOfPlayers; j++) {

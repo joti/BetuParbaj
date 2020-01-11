@@ -16,24 +16,24 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author Joti
  */
+
+
+//public RndLetterMode getRndLetterMode(){
+//  return rndLetterMode;
+//}
+//
+//public void setRndLetterMode(RndLetterMode rndLetterMode){
+//  this.rndLetterMode = rndLetterMode;
+//}
+//}
 public class Game implements Serializable {
 
-  private static final Logger LOGGER = LogManager.getLogger(Game.class.getName());
-  
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};
   public static final Integer[] TIMELIMITS = {15, 20, 30, 45, 60, 90, 120};
   public static final int TURN0_TIMELIMIT = 15;
   public static final int TURN_INTERMISSION = 3;
-
-  public static final String[] SCORING_MODES = {"Lineáris (2-3-4-5-6)","Fibonacci (2-3-5-8-13)","Négyzetes (4-9-16-25-36)"};
-  public static final int[][] VALUE_OF_WORDS = {{0, 2, 3, 4, 5, 6},{0, 2, 3, 5, 8, 13},{0, 4, 9, 16, 25, 36}};
-
   public static final int PLAYER_DRAW = 1;
   public static final int RANDOM_DRAW = 2;
-
-  private final static int ALPHABETSETTINGSSTRING_MODE = 2;
-
-  private static final DateFormat SDF = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
   // Betűkészlet
   public static final String[] ALPHABET = {"A", "Á", "B", "C", "CS", "D", "E", "É", "F", "G", "GY", "H", "I", "Í", "J", "K", "L", "LY", "M", "N", "NY",
@@ -47,17 +47,21 @@ public class Game implements Serializable {
     1, 2, 1, 2, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 0, 0, 0, 0, 0};
 
   // Alapértelmezett beállítások
-  public static final int DEF_SCORING_MODE = 2;
   public static final int DEF_TIMELIMIT = 30;
   public static final boolean DEF_EASYVOWELRULE = true;
   public static final boolean DEF_NODIGRAPH = true;
   public static final boolean DEF_INCLUDEX = true;
   public static final boolean DEF_INCLUDEY = true;
-  public static final int DEF_DRAWMODE = 1;
+  public static final RndLetterMode DEF_RNDLETTERMODE = RndLetterMode.NORNDLETTER;
+  public static final ScoringMode DEF_SCORING_MODE = ScoringMode.SQUARE;
   public static final int DEF_MINPLAYERS = 2;
   public static final int DEF_MAXPLAYERS = 4;
   public static final boolean DEF_RANDOMPLACE = true;
-  
+
+  private static final Logger LOGGER = LogManager.getLogger(Game.class.getName());
+  private static final int ALPHABETSETTINGSSTRING_MODE = 2;
+  private static final DateFormat SDF = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+
   private int id;
   private List<Board> boards;
 
@@ -67,7 +71,8 @@ public class Game implements Serializable {
   private boolean noDigraph;
   private boolean includeX;
   private boolean includeY;
-  private int drawmode;
+  private RndLetterMode rndLetterMode;
+  private ScoringMode scoringMode;
   private int minPlayers;
   private int maxPlayers;
   private int numberOfPlayers;
@@ -76,7 +81,6 @@ public class Game implements Serializable {
   private boolean randomOrder;
   private boolean randomPlace;
   private int timeLimit;
-  private int scoringMode;
   private Date openDate; // A játék elérhetővé válik a lobbyban, játékosok csatlakozására vár
   private Date startDate; // A játék elindul
   private Date endDate; // A játék véget ér
@@ -101,16 +105,15 @@ public class Game implements Serializable {
     init();
   }
 
-  public Game(int id, String name, boolean easyVowelRule, boolean noDigraph, boolean includeX, boolean includeY, 
-              boolean randomPlace, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
+  public Game(int id, String name, boolean easyVowelRule, boolean noDigraph, boolean includeX, boolean includeY,
+          boolean randomPlace, RndLetterMode rndLetterMode, int minPlayers, int maxPlayers, int timeLimit, ScoringMode scoringMode) {
     this.id = id;
     this.name = name;
     this.easyVowelRule = easyVowelRule;
     this.noDigraph = noDigraph;
-    this.includeX = includeX
-            ;
+    this.includeX = includeX;
     this.includeY = includeY;
-    this.drawmode = drawmode;
+    this.rndLetterMode = rndLetterMode;
     this.minPlayers = minPlayers;
     this.maxPlayers = maxPlayers;
     this.timeLimit = timeLimit;
@@ -119,14 +122,14 @@ public class Game implements Serializable {
     init();
   }
 
-  public Game(String name, boolean easyVowelRule, boolean noDigraph, boolean includeX, boolean includeY, 
-              boolean randomPlace, int drawmode, int minPlayers, int maxPlayers, int timeLimit, int scoringMode) {
+  public Game(String name, boolean easyVowelRule, boolean noDigraph, boolean includeX, boolean includeY,
+          boolean randomPlace, RndLetterMode rndLetterMode, int minPlayers, int maxPlayers, int timeLimit, ScoringMode scoringMode) {
     this.name = name;
     this.easyVowelRule = easyVowelRule;
     this.noDigraph = noDigraph;
     this.includeX = includeX;
     this.includeY = includeY;
-    this.drawmode = drawmode;
+    this.rndLetterMode = rndLetterMode;
     this.minPlayers = minPlayers;
     this.maxPlayers = maxPlayers;
     this.timeLimit = timeLimit;
@@ -152,7 +155,7 @@ public class Game implements Serializable {
   public void addPlayer(Player player) {
     int pos = getPlayerPos(player.getName());
     Board board;
-    if (pos < 0){
+    if (pos < 0) {
       board = new Board(player);
       boards.add(board);
       numberOfPlayers++;
@@ -162,15 +165,15 @@ public class Game implements Serializable {
       board = boards.get(pos);
       board.setPlayer(player);
       board.setQuitDate(null);
-      
+
       numberOfActivePlayers++;
     }
   }
 
-  public void removePlayer(Player player){
+  public void removePlayer(Player player) {
     removePlayer(player.getName());
   }
-  
+
   public void removePlayer(String name) {
     Iterator iter = boards.iterator();
     boolean needSetAdminPlayer = false;
@@ -206,13 +209,13 @@ public class Game implements Serializable {
     if (boards.size() > pos) {
       return boards.get(playerPos).getPlayer().getName();
     }
-    if (startDate == null){
+    if (startDate == null) {
       if (playerPos >= maxPlayers)
         return "";
-      else if (playerPos >= minPlayers){
+      else if (playerPos >= minPlayers) {
         if (inLobby)
           return "...........";
-        else 
+        else
           return "...........................";
       } else {
         if (inLobby)
@@ -224,30 +227,30 @@ public class Game implements Serializable {
       return "";
   }
 
-  public int getPlayerPosState(Long pos){
+  public int getPlayerPosState(Long pos) {
     /* Lehetséges visszatérési értékek:
        - 0: a maximális játékosszámnál nagyobb pozíció
        - 1-4: van játékos a pozícióban, a helye fix
        - 5: van játékos a pozícióban, a végső helye sorsolással dől el
        - 6: a pozíció még betöltetlen, szükséges a játék indításához
        - 7: a pozíció még betöltetlen, a minimum játékosszámon túli
-    */
+     */
     if (openDate != null) {
       int playerPos = (int) (long) pos;
-      if (numberOfPlayers > playerPos){
+      if (numberOfPlayers > playerPos) {
         if (startDate == null && randomOrder)
           return 5;
         else
           return playerPos + 1;
-      } 
+      }
       if (playerPos < minPlayers)
         return 6;
       else if (playerPos < maxPlayers)
         return 7;
-    }          
+    }
     return 0;
   }
-  
+
   public int getPlayerPos(String name) {
     for (int i = 0; i < boards.size(); i++) {
       if (boards.get(i).getPlayer().getName().equals(name))
@@ -313,9 +316,10 @@ public class Game implements Serializable {
     currentPlayer = 0;
     turn = 0;
 
-    if (drawmode == PLAYER_DRAW) {
+    if (canPlayerSelectLetter()) {
       turnStart = new Date();
     } else {
+      endTurn();
       nextTurn();
     }
   }
@@ -383,14 +387,6 @@ public class Game implements Serializable {
     return settings;
   }
 
-  public String getScoringModeString(){
-    String sm = "";
-    for (int wordlen = 1; wordlen < VALUE_OF_WORDS[scoringMode].length; wordlen++) {
-      sm += ((wordlen > 1) ? "-" : "" ) + VALUE_OF_WORDS[scoringMode][wordlen];
-    }
-    return sm;
-  }
-  
   public String getCreator() {
     if (boards.size() > 0) {
       return boards.get(0).getPlayer().getName();
@@ -416,7 +412,7 @@ public class Game implements Serializable {
 
   public String getGameSetupString() {
     return id + ":" + getPlayersString() + ":" + adminPlayerPos + ":" + getAlphabetSettingsString() + ":"
-            + ":" + drawmode + ":" + timeLimit + "." + (randomOrder ? "+" : "-");
+            + ":" + rndLetterMode + ":" + timeLimit + "." + (randomOrder ? "+" : "-");
   }
 
   public String getGameHistString() {
@@ -479,17 +475,17 @@ public class Game implements Serializable {
       return timeLimit;
   }
 
-  public void endTurn(){
+  public void endTurn() {
     if (endDate != null || intermissionStart != null) {
       return;
     }
 
-    boolean needIntermission = false;  
+    boolean needIntermission = false;
     if (turn > 0) {
       // Ha valamelyik játékos még nem helyezte le a betűt a táblájára, akkor most lerakjuk valahová
       for (Board board : boards) {
         int letterCount = board.getTotalLetterCount();
-        if (letterCount < turn){
+        if (letterCount < turn) {
           if (randomPlace)
             board.setLetterRandom(selectedLetters[turn - 1]);
           else
@@ -499,27 +495,29 @@ public class Game implements Serializable {
             needIntermission = true;
         }
       }
-    }  
+    }
 
     if (turn < 36) {
       // Ha még nem lett kiválasztva a következő betű, akkor most kisorsoljuk
       if (selectedLetters[turn].equals("")) {
         selectedLetters[turn] = drawLetter();
         randomLetters[turn] = true;
-        
-        Board board = boards.get(currentPlayer);
-        if (board.getQuitDate() == null)
-          needIntermission = true;
+
+        if (canPlayerSelectLetter()){
+          Board board = boards.get(currentPlayer);
+          if (board.getQuitDate() == null)
+            needIntermission = true;
+        }  
       }
       int count = availableLetters.get(selectedLetters[turn]);
       availableLetters.put(selectedLetters[turn], count - 1);
-    }  
-    
+    }
+
     if (needIntermission)
       intermissionStart = new Date();
 
   }
-  
+
   public void nextTurn() {
     if (endDate != null) {
       return;
@@ -560,6 +558,18 @@ public class Game implements Serializable {
     return availableLetters.containsKey(letter);
   }
 
+  public boolean canPlayerSelectLetter(){
+    if (startDate == null)
+      return false;
+    
+    int roundLimit = rndLetterMode.getRoundLimit();
+    int letterNumLimit = rndLetterMode.getLetterNumLimit();
+    if (letterNumLimit == 0 && roundLimit > 0){
+      letterNumLimit = roundLimit * boards.size();
+    }          
+    return (turn >= letterNumLimit);
+  }
+  
   public String drawLetter() {
     int letterCount = 0;
     String selectedLetter = "";
@@ -632,29 +642,29 @@ public class Game implements Serializable {
     }
     return letter;
   }
-  
-  public String getDateInfo(){
+
+  public String getDateInfo() {
     Date now = new Date();
     Date compareDate;
     String dateInfo;
     String pre = "";
-    
-    if (endDate != null){
+
+    if (endDate != null) {
       compareDate = endDate;
-    } else if (startDate != null){
+    } else if (startDate != null) {
       compareDate = startDate;
     } else if (openDate != null) {
       compareDate = openDate;
     } else
       return "";
-    
+
     long timeDiff = now.getTime() - compareDate.getTime();
-    int mins = (int)(timeDiff / 60000);
+    int mins = (int) (timeDiff / 60000);
     if (mins == 0)
       dateInfo = pre + "most";
     else if (mins < 60)
       dateInfo = pre + mins + " perce";
-    else{
+    else {
       int hours = mins / 60;
       if (hours < 24)
         dateInfo = pre + hours + " órája";
@@ -665,11 +675,7 @@ public class Game implements Serializable {
     }
     return dateInfo;
   }
-  
-  public String getScoringModeLabel(){
-    return SCORING_MODES[scoringMode];
-  }
-  
+
   public List<Board> getBoards() {
     return boards;
   }
@@ -687,14 +693,6 @@ public class Game implements Serializable {
     this.easyVowelRule = easyVowelRule;
   }
 
-  public int getDrawmode() {
-    return drawmode;
-  }
-
-  public void setDrawmode(int drawmode) {
-    this.drawmode = drawmode;
-  }
-
   public boolean isNoDigraph() {
     return noDigraph;
   }
@@ -710,7 +708,7 @@ public class Game implements Serializable {
   public void setIncludeX(boolean includeX) {
     this.includeX = includeX;
   }
-  
+
   public boolean isIncludeY() {
     return includeY;
   }
@@ -830,7 +828,7 @@ public class Game implements Serializable {
   public void setRandomLetters(boolean[] randomLetters) {
     this.randomLetters = randomLetters;
   }
-  
+
   public int getTurn() {
     return turn;
   }
@@ -883,11 +881,11 @@ public class Game implements Serializable {
     this.password = password;
   }
 
-  public int getScoringMode() {
+  public ScoringMode getScoringMode() {
     return scoringMode;
   }
 
-  public void setScoringMode(int scoringMode) {
+  public void setScoringMode(ScoringMode scoringMode) {
     this.scoringMode = scoringMode;
   }
 
@@ -899,4 +897,12 @@ public class Game implements Serializable {
     this.randomPlace = randomPlace;
   }
 
+  public RndLetterMode getRndLetterMode() {
+    return rndLetterMode;
+  }
+
+  public void setRndLetterMode(RndLetterMode rndLetterMode) {
+    this.rndLetterMode = rndLetterMode;
+  }
+  
 }
