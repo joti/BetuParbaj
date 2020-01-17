@@ -24,7 +24,7 @@
           <p align="center">
             <table align="center" class="logintext" width="940px">
               <tr style="height:627px;" valign="top">
-                <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/images/bpbg3.jpg);background-repeat: no-repeat;">
+                <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/resources/images/bpbg3.jpg);background-repeat: no-repeat;">
                   <div style="position: relative;">
                     <div id="gameloginbg" class="gamebg" style="position: absolute; left: 30px; top: 90px; width: 547px; height: 485px">
                     </div>
@@ -51,10 +51,10 @@
                       avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!
                     </div>
                     <div class="logintextsmall" style="position: absolute; top:432px; width:586px;left:60px">
-                      A játék <b>Windows (7, 8, 10)</b> és <b>Android (5+)</b> operációs<br/>
-                      rendszereken futó <b>Chrome</b>, <b>Firefox</b> és <b>Opera</b> böngészőkre<br/>
-                      lett optimalizálva, ezért egyéb környezeteken sajnos<br/>
-                      könnyen előfordulhat, hogy nem működik megfelelően.
+                      A játék <b>Windows (7+)</b> vagy <b>Android (5+)</b> operációs<br/>
+                      rendszeren futó <b>Chrome</b>, <b>Firefox</b>, illetve <b>Opera</b><br/>
+                      böngészőkre lett optimalizálva, egyéb környezetben<br/>
+                      előfordulhat, hogy nem működik megfelelően.
                     </div>
                   </div>  
                 </td>
@@ -70,7 +70,7 @@
           <p align="center">  
             <table align="center" width="940px">
               <tr style="height:627px;" valign="top">
-                <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/images/bpbg3.jpg);background-repeat: no-repeat;">
+                <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/resources/images/bpbg3.jpg);background-repeat: no-repeat;">
                   <div style="position: relative; top:85px; left: 30px">
                     <h:panelGroup id="pg_main" class="mainpg">
                       <h:panelGroup id="pg_lobby" class="text" rendered="#{gameManager.isInGameState(0)}">
@@ -94,8 +94,8 @@
                                     <h:panelGrid id="gr_lobbyrowheader" class="lobbyrowheader" columns="3" columnClasses="lobbyrowheadercol1,lobbyrowheadercol2">
                                       <h:panelGroup style="text-align: center; vertical-align: middle;">
                                         <h:outputText class="lobbyrowgamename" style="margin-left: 5px; position: relative; top: 3px" value="&gt;&gt; #{game.name}"/>  
-                                        <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/images/opening.png" rendered="#{game.endDate eq null}"/>
-                                        <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/images/ending.png" rendered="#{game.endDate ne null}"/>
+                                        <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/resources/images/opening.png" rendered="#{game.endDate eq null}"/>
+                                        <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/resources/images/ending.png" rendered="#{game.endDate ne null}"/>
                                         <h:outputText class="lobbyrowdateinfo" style="margin-left: 7px; position: relative; top: 3px" value="#{game.dateInfo}"/>  
                                       </h:panelGroup>
                                       <h:panelGroup style="display:inline-block">
@@ -129,34 +129,34 @@
                                     <h:panelGrid id="gr_lobbyrowplayers" class="lobbyrowplayers" columns="4">
                                       <h:panelGroup id="pg_lobbyrowplayer1" style="vertical-align: middle">
                                         <h:panelGroup class="lobbyrowplayer">
-                                          <h:graphicImage class="lobbyrowimage" url="/images/player1.png" rendered="#{game.getPlayerPosState(0) eq 1}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{game.getPlayerPosState(0) eq 5}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player1.png" rendered="#{game.getPlayerPosState(0) eq 1}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(0) eq 5}"/>
                                           <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(0, true)}"/>       
                                         </h:panelGroup>
                                       </h:panelGroup>
                                       <h:panelGroup id="pg_lobbyrowplayer2" style="vertical-align: middle">
                                         <h:panelGroup class="lobbyrowplayer">
-                                          <h:graphicImage class="lobbyrowimage" url="/images/player2.png" rendered="#{game.getPlayerPosState(1) eq 2}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{game.getPlayerPosState(1) eq 5}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/images/playerm.png" rendered="#{game.getPlayerPosState(1) eq 6}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player2.png" rendered="#{game.getPlayerPosState(1) eq 2}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(1) eq 5}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(1) eq 6}"/>
                                           <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(1, true)}"/>       
                                         </h:panelGroup>
                                       </h:panelGroup>
                                       <h:panelGroup id="pg_lobbyrowplayer3" style="vertical-align: middle">
                                         <h:panelGroup class="lobbyrowplayer" rendered="#{!game.getPlayerName(2, true).isEmpty()}">
-                                          <h:graphicImage class="lobbyrowimage" url="/images/player3.png" rendered="#{game.getPlayerPosState(2) eq 3}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{game.getPlayerPosState(2) eq 5}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/images/playerm.png" rendered="#{game.getPlayerPosState(2) eq 6}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/images/player.png"  rendered="#{game.getPlayerPosState(2) eq 7}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player3.png" rendered="#{game.getPlayerPosState(2) eq 3}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(2) eq 5}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(2) eq 6}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{game.getPlayerPosState(2) eq 7}"/>
                                           <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(2, true)}"/>       
                                         </h:panelGroup>
                                       </h:panelGroup>
                                       <h:panelGroup id="pg_lobbyrowplayer4" style="vertical-align: middle">
                                         <h:panelGroup class="lobbyrowplayer" rendered="#{!game.getPlayerName(3, true).isEmpty()}">
-                                          <h:graphicImage class="lobbyrowimage" url="/images/player4.png" rendered="#{game.getPlayerPosState(3) eq 4}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{game.getPlayerPosState(3) eq 5}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/images/playerm.png" rendered="#{game.getPlayerPosState(3) eq 6}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/images/player.png"  rendered="#{game.getPlayerPosState(3) eq 7}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player4.png" rendered="#{game.getPlayerPosState(3) eq 4}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(3) eq 5}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(3) eq 6}"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{game.getPlayerPosState(3) eq 7}"/>
                                           <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(3, true)}"/>       
                                         </h:panelGroup>
                                       </h:panelGroup>
@@ -165,15 +165,15 @@
                                     <h:panelGrid id="gr_lobbyrowrules" class="lobbyrowrules" columns="1" columnClasses="lobbyrowrulescol1">
                                       <h:panelGroup id="pg_rowtimelimit">
                                         <div class="lobbyrowrule" style="margin-left: 3px;">
-                                          <h:graphicImage class="lobbyrowimage" url="/images/clock.png"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/clock.png"/>
                                           <h:outputText style="margin-left: 5px; position:relative; top: 2px;" value="#{game.timeLimit} mp"/>       
                                         </div>
                                         <div class="lobbyrowrule">
-                                          <h:graphicImage class="lobbyrowimage" url="/images/az.png"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/az.png"/>
                                           <h:outputText style="margin-left: 7px; position:relative; top: 2px;font-size: 12px;" value="#{game.alphabetSettingsString}" />       
                                         </div>
                                         <div class="lobbyrowrule">
-                                          <h:graphicImage class="lobbyrowimage" url="/images/scoring.png"/>
+                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/scoring.png"/>
                                           <h:outputText style="margin-left: 7px; position:relative; top: 2px;font-size: 12px;" value="#{game.scoringMode.valueLabel}" />       
                                         </div>
                                       </h:panelGroup>
@@ -229,13 +229,13 @@
                               <div style="position: absolute; top: 33px; left: 30px;">
                                 Asztal elnevezése:
                               </div>
-                              <h:inputText class="inputtextsmall" style="position: absolute; top: 28px; left: 215px; width: 230px" maxlength="22" value="#{gameManager.game.name}"/>
+                              <h:inputText class="inputtextmedium" style="position: absolute; top: 28px; left: 215px; width: 230px" maxlength="22" value="#{gameManager.game.name}"/>
 
                               <h:outputLabel id="ol_gamepwd" style="position: absolute; top: 64px; left: 30px">
                                 Jelszó (opcionális):
                               </h:outputLabel>
                               <div style="position: absolute; top: 59px; left: 215px;">
-                                <h:inputText id="it_gamepwd" class="inputtextsmalluc" style="width:230px" value="#{gameManager.game.password}"/>
+                                <h:inputText id="it_gamepwd" class="inputtextmediumuc" style="width:230px" value="#{gameManager.game.password}"/>
                                 <p:tooltip id="tip_gamepwd" for="ol_gamepwd" escape="false" class="tooltiptext">
                                   <div class="tooltiptext2">
                                     Az asztalhoz csatlakozni kívánó játékosok által megadandó jelszó.<br/>
@@ -287,11 +287,11 @@
                               <h:panelGroup id="pg_players">
                                 <h:panelGroup id="pg_player1" rendered="#{gameManager.game.maxPlayers > 0}">
                                   <div class="gamesetupplayer" style="position: absolute; top: 26px; left: 212px;">
-                                    <h:graphicImage class="lobbyrowimage" url="/images/player1.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 1}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 5}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player1.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 1}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 5}"/>
                                     <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
                                       <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(0, false)}"/>       
-                                      <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px;" rendered="#{gameManager.game.adminPlayerPos == 0}"/>
+                                      <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px;" rendered="#{gameManager.game.adminPlayerPos == 0}"/>
                                     </div>
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 31px; left: 466px; display: inline-block" 
@@ -304,12 +304,12 @@
                                 </h:panelGroup>
                                 <h:panelGroup id="pg_player2" rendered="#{gameManager.game.maxPlayers > 1}">
                                   <div class="gamesetupplayer" style="position: absolute; top: 57px; left: 212px;">
-                                    <h:graphicImage class="lobbyrowimage" url="/images/player2.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 2}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 5}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 6}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player2.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 2}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 5}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 6}"/>
                                     <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
                                       <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(1, false)}"/>       
-                                      <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 1}"/>
+                                      <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 1}"/>
                                     </div>
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 62px; left: 466px; display: inline-block; margin-right: 15px" 
@@ -326,13 +326,13 @@
                                 </h:panelGroup>
                                 <h:panelGroup id="pg_player3" rendered="#{gameManager.game.maxPlayers gt 2 and !(gameManager.game.startDate ne null and gameManager.game.numberOfPlayers lt 3)}">
                                   <div class="gamesetupplayer" style="position: absolute; top: 88px; left: 212px;">
-                                    <h:graphicImage class="lobbyrowimage" url="/images/player3.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 3}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 5}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 6}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(2) eq 7}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player3.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 3}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 5}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 6}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(2) eq 7}"/>
                                     <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
                                       <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(2, false)}"/>       
-                                      <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 2}"/>
+                                      <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 2}"/>
                                     </div>
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 93px; left: 466px; display: inline-block" 
@@ -349,13 +349,13 @@
                                 </h:panelGroup>
                                 <h:panelGroup id="pg_player4" rendered="#{gameManager.game.maxPlayers gt 3 and !(gameManager.game.startDate ne null and gameManager.game.numberOfPlayers lt 4)}">
                                   <div class="gamesetupplayer" style="position: absolute; top: 119px; left: 212px;">
-                                    <h:graphicImage class="lobbyrowimage" url="/images/player4.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 4}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 5}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 6}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(3) eq 7}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player4.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 4}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 5}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 6}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(3) eq 7}"/>
                                     <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
                                       <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(3, false)}"/>       
-                                      <h:graphicImage class="adminplimage" url="/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 3}"/>
+                                      <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 3}"/>
                                     </div>  
                                   </div>
                                   <h:panelGroup style="position: absolute; top: 123px; left: 466px; display: inline-block" 
@@ -444,8 +444,6 @@
                                   #{gameManager.game.rndLetterMode.label}
                                 </div>
                               </h:panelGroup>
-                              
-                              
                               
                               <h:outputLabel id="ol_timelimit" style="position: absolute; top: 314px; left: 30px">
                                 Gondolkodási idő:
@@ -567,7 +565,7 @@
 
                             <div class="gamesetupframe" style="position: absolute; top: 14px; left: 295px; width: 237px; height: 237px;">
                             </div>
-                            <h:graphicImage style="position: absolute; top: 53px; left: 333px;" url="/images/bp6x6.jpg" />
+                            <h:graphicImage style="position: absolute; top: 53px; left: 333px;" url="/resources/images/bp6x6.jpg" />
                             <h:panelGroup id="pg_gameboard" class="gameboard">
 
                               <h:outputLabel style="position: absolute; top: 31px; left: 346px">1</h:outputLabel>
@@ -603,13 +601,13 @@
                                 <h:panelGroup id="pg_gameplayerscell">
                                   <h:panelGrid class="#{gameManager.getGamePlayersRowClass(boa.position)}" columns="3" columnClasses="gameplayersrowcol1,gameplayersrowcol2,gameplayersrowcol3">
                                     <h:panelGroup>
-                                      <h:graphicImage class="curplayerimage" url="/images/curplayer.png" 
+                                      <h:graphicImage class="curplayerimage" url="/resources/images/curplayer.png" 
                                                       rendered="#{gameManager.canPlayerSelectLetterInTurn(boa.position)}"/>
-                                      <h:graphicImage class="curplayerimage" url="/images/medal-1.png" 
+                                      <h:graphicImage class="curplayerimage" url="/resources/images/medal-1.png" 
                                                       rendered="#{boa.place eq 1}"/>
-                                      <h:graphicImage class="curplayerimage" url="/images/medal-2.png" 
+                                      <h:graphicImage class="curplayerimage" url="/resources/images/medal-2.png" 
                                                       rendered="#{boa.place eq 2}"/>
-                                      <h:graphicImage class="curplayerimage" url="/images/medal-3.png" 
+                                      <h:graphicImage class="curplayerimage" url="/resources/images/medal-3.png" 
                                                       rendered="#{boa.place eq 3}"/>
                                     </h:panelGroup>
                                     <p:commandButton id="btn_gameplayername" class="gameplayerbutton" style="margin-left: 5px" value="#{boa.player.name}" 
@@ -620,11 +618,11 @@
                                         #{boa.score} p
                                       </h:panelGroup>
                                       <h:panelGroup rendered="#{boa.place eq 0}">
-                                        <h:graphicImage class="curplayerimage" url="/images/inactive.png" style="margin-right: 3px;"
+                                        <h:graphicImage class="curplayerimage" url="/resources/images/inactive.png" style="margin-right: 3px;"
                                                         rendered="#{boa.quitDate != null}"/>
-                                        <h:graphicImage class="curplayerimage" url="/images/thinking.gif" style="margin-right: 3px;"
+                                        <h:graphicImage class="curplayerimage" url="/resources/images/thinking.gif" style="margin-right: 3px;"
                                                         rendered="#{boa.quitDate == null and gameManager.isPlayerTurnOn(boa.position)}"/>
-                                        <h:graphicImage class="curplayerimage" url="/images/check.png" style="margin-right: 3px;"
+                                        <h:graphicImage class="curplayerimage" url="/resources/images/check.png" style="margin-right: 3px;"
                                                         rendered="#{boa.quitDate == null and gameManager.isPlayerTurnFinished(boa.position)}"/>
                                       </h:panelGroup>
                                     </h:panelGroup>
@@ -659,9 +657,9 @@
                               <p:defaultCommand target="btn_checkword" scope="pg_testword" />          
 
                               <h:panelGroup id="pg_testresult" style="position: absolute; top: 370px; left: 464px;">
-                                <h:graphicImage class="wordtestimage" url="/images/wordok.png" style="margin-right: 3px;"
+                                <h:graphicImage class="wordtestimage" url="/resources/images/wordok.png" style="margin-right: 3px;"
                                                 rendered="#{gameManager.testResult == 1}"/>
-                                <h:graphicImage class="wordtestimage" url="/images/wordnok.png" style="margin-right: 3px;"
+                                <h:graphicImage class="wordtestimage" url="/resources/images/wordnok.png" style="margin-right: 3px;"
                                                 rendered="#{gameManager.testResult == 2}"/>
                               </h:panelGroup>
 

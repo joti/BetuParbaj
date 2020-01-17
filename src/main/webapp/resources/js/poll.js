@@ -102,7 +102,7 @@ function setMessages(xhr, status, args) {
     if (ot_prevturnsec !== null) {
       if (ot_prevturnsec.innerHTML !== ot_newturnsec.innerHTML) {
         ot_prevturnsec.innerHTML = ot_newturnsec.innerHTML;
-        if (ot_playerstate.innerHTML < 1) {
+        if ((ot_playerstate.innerHTML < 1) || (ot_prevturnsec.innerHTML > 999)) {
           ot_prevturnsec.style.display = "none";
         } else {
           ot_prevturnsec.style.display = "block";

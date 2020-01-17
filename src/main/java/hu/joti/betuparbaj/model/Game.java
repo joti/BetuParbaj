@@ -32,6 +32,7 @@ public class Game implements Serializable {
   public static final Integer[] TIMELIMITS = {15, 20, 30, 45, 60, 90, 120};
   public static final int TURN0_TIMELIMIT = 15;
   public static final int TURN_INTERMISSION = 3;
+  public static final int WELCOMEMSG_TIME = 5;
   public static final int PLAYER_DRAW = 1;
   public static final int RANDOM_DRAW = 2;
 
@@ -93,10 +94,11 @@ public class Game implements Serializable {
   private int turn; // Forduló sorszáma (egy forduló a kiválasztott betű lehelyezésére és a soron következő játékos 
   // betűjének kiválasztására rendelkezésre álló, legfeljebb timelimit mp hosszú időtartam)
   // A "0. forduló" csonka: itt a kezdő játékosnak legfeljebb TURN0_TIMELIMIT mp-e van az első betű kijelölésére
-  // A forduló véget ér, ha letelik a timelimit mp, vagy ha minden játékos lerakta a betűt, 
+  // A forduló véget ér, ha letelik a timelimit mp, vagy ha minden (még aktív) játékos lerakta a betűt, 
   // és a következő betű is kiválasztásra került.
   // Ha valamelyik játékos kifut az időből, akkor a következő kör csak TURN_INTERMISSION mp-nyi szünetet követően indul el.
   // (Ezalatt ezen játékos üzenetet kap arról, hogy hová került lehelyezésre a betűje, ill. melyik betűt sorsolta a gép helyette.)
+  // A "-1. forduló" a játék kezdetét megelőző üzenet megjelenítésére szolgáló idő, ez WELCOMEMSG_TIME ideig tart.
   private Date turnStart; // Az aktuális forduló pontos kezdő időpontja                   
   private Date intermissionStart; // Fordulók közötti szünet kezdő időpontja (csak ha valamelyik játékos kifutott az időből)
   private int currentPlayer;
@@ -314,14 +316,20 @@ public class Game implements Serializable {
     startDate = new Date();
     numberOfActivePlayers = numberOfPlayers;
     currentPlayer = 0;
-    turn = 0;
+    
+    if (WELCOMEMSG_TIME == 0){
+      turn = 0;
 
-    if (canPlayerSelectLetter()) {
-      turnStart = new Date();
+      if (canPlayerSelectLetter()) {
+        turnStart = new Date();
+      } else {
+        endTurn();
+        nextTurn();
+      }
     } else {
-      endTurn();
-      nextTurn();
-    }
+      turn = -1;
+      turnStart = new Date();
+    } 
   }
 
   public boolean isPlayerActive(String name) {
@@ -426,6 +434,9 @@ public class Game implements Serializable {
       gameHist += (board.getPlayer().isActive() ? "." : "?");
     }
     gameHist += ":";
+    if (turn >= 0)
+      gameHist += ":";
+      
     for (int i = 0; i < turn; i++) {
       if (i > 0)
         gameHist += ",";
@@ -433,7 +444,7 @@ public class Game implements Serializable {
         gameHist += selectedLetters[i];
       }
     }
-    if (turn < 36 && selectedLetters[turn] != null && !selectedLetters[turn].isEmpty()) {
+    if (turn >= 0 && turn < 36 && selectedLetters[turn] != null && !selectedLetters[turn].isEmpty()) {
       gameHist += "*";
     }
     if (endDate != null)
@@ -469,10 +480,14 @@ public class Game implements Serializable {
   }
 
   public int getTurnTimeLimit() {
-    if (turn == 0)
-      return TURN0_TIMELIMIT;
-    else
-      return timeLimit;
+    switch (turn) {
+      case -1:
+        return WELCOMEMSG_TIME;
+      case 0:
+        return TURN0_TIMELIMIT;
+      default:
+        return timeLimit;
+    }
   }
 
   public void endTurn() {
@@ -497,7 +512,7 @@ public class Game implements Serializable {
       }
     }
 
-    if (turn < 36) {
+    if (turn >= 0 && turn < 36) {
       // Ha még nem lett kiválasztva a következő betű, akkor most kisorsoljuk
       if (selectedLetters[turn].equals("")) {
         selectedLetters[turn] = drawLetter();
@@ -515,7 +530,6 @@ public class Game implements Serializable {
 
     if (needIntermission)
       intermissionStart = new Date();
-
   }
 
   public void nextTurn() {
@@ -527,10 +541,17 @@ public class Game implements Serializable {
       LOGGER.info("Game #" + id + " ends");
       endDate = new Date();
     } else {
-      currentPlayer = (currentPlayer + 1) % numberOfPlayers;
+      if (turn >= 0){
+        currentPlayer = (currentPlayer + 1) % numberOfPlayers;
+      }  
       turn++;
       turnStart = new Date();
       intermissionStart = null;
+      
+      if (turn == 0 && getRndLetterNumLimit() > 0){
+        endTurn();
+        turn++;
+      }
     }
   }
 
@@ -562,12 +583,17 @@ public class Game implements Serializable {
     if (startDate == null)
       return false;
     
+    return (turn >= getRndLetterNumLimit());
+  }
+
+  public int getRndLetterNumLimit(){
     int roundLimit = rndLetterMode.getRoundLimit();
     int letterNumLimit = rndLetterMode.getLetterNumLimit();
     if (letterNumLimit == 0 && roundLimit > 0){
       letterNumLimit = roundLimit * boards.size();
     }          
-    return (turn >= letterNumLimit);
+
+    return letterNumLimit;
   }
   
   public String drawLetter() {

@@ -122,6 +122,17 @@ public class Board implements Serializable {
       score += hit.getScore();
     }
   }
+
+  public String getTurnPlaceCellName(int turn){
+    for (int i = 0; i < BOARD_SIZE; i++) {
+      for (int j = 0; j < BOARD_SIZE; j++) {
+        if (Math.abs(turnPlaces[i][j]) == turn){
+          return ROW_CODES[i] + COLUMN_CODES[j];
+        }
+      }
+    }
+    return "";
+  }
   
   public String getHitsString(){
     String hitsString = "";
