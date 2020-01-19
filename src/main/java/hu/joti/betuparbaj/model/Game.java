@@ -16,8 +16,6 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author Joti
  */
-
-
 //public RndLetterMode getRndLetterMode(){
 //  return rndLetterMode;
 //}
@@ -49,8 +47,9 @@ public class Game implements Serializable {
 
   // Alapértelmezett beállítások
   public static final int DEF_TIMELIMIT = 30;
-  public static final boolean DEF_EASYVOWELRULE = true;
-  public static final boolean DEF_NODIGRAPH = true;
+
+  public static final boolean DEF_INCLUDELONGVOWELS = false;
+  public static final boolean DEF_INCLUDEDIGRAPHS = false;
   public static final boolean DEF_INCLUDEX = true;
   public static final boolean DEF_INCLUDEY = true;
   public static final RndLetterMode DEF_RNDLETTERMODE = RndLetterMode.NORNDLETTER;
@@ -60,7 +59,7 @@ public class Game implements Serializable {
   public static final boolean DEF_RANDOMPLACE = true;
 
   private static final Logger LOGGER = LogManager.getLogger(Game.class.getName());
-  private static final int ALPHABETSETTINGSSTRING_MODE = 2;
+  private static final int ALPHABETSETTINGSSTRING_MODE = 3;
   private static final DateFormat SDF = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
   private int id;
@@ -68,8 +67,9 @@ public class Game implements Serializable {
 
   private String name;
   private String password;
-  private boolean easyVowelRule;
-  private boolean noDigraph;
+
+  private boolean includeLongVowels;
+  private boolean includeDigraphs;
   private boolean includeX;
   private boolean includeY;
   private RndLetterMode rndLetterMode;
@@ -107,12 +107,12 @@ public class Game implements Serializable {
     init();
   }
 
-  public Game(int id, String name, boolean easyVowelRule, boolean noDigraph, boolean includeX, boolean includeY,
+  public Game(int id, String name, boolean includeLongVowels, boolean includeDigraphs, boolean includeX, boolean includeY,
           boolean randomPlace, RndLetterMode rndLetterMode, int minPlayers, int maxPlayers, int timeLimit, ScoringMode scoringMode) {
     this.id = id;
     this.name = name;
-    this.easyVowelRule = easyVowelRule;
-    this.noDigraph = noDigraph;
+    this.includeLongVowels = includeLongVowels;
+    this.includeDigraphs = includeDigraphs;
     this.includeX = includeX;
     this.includeY = includeY;
     this.rndLetterMode = rndLetterMode;
@@ -124,11 +124,11 @@ public class Game implements Serializable {
     init();
   }
 
-  public Game(String name, boolean easyVowelRule, boolean noDigraph, boolean includeX, boolean includeY,
+  public Game(String name, boolean includeLongVowels, boolean includeDigraphs, boolean includeX, boolean includeY,
           boolean randomPlace, RndLetterMode rndLetterMode, int minPlayers, int maxPlayers, int timeLimit, ScoringMode scoringMode) {
     this.name = name;
-    this.easyVowelRule = easyVowelRule;
-    this.noDigraph = noDigraph;
+    this.includeLongVowels = includeLongVowels;
+    this.includeDigraphs = includeDigraphs;
     this.includeX = includeX;
     this.includeY = includeY;
     this.rndLetterMode = rndLetterMode;
@@ -294,7 +294,7 @@ public class Game implements Serializable {
   public void start() {
     // betűkészlet összeállítása
     for (int i = 0; i < ALPHABET.length; i++) {
-      if (!((ALPHABET[i].length() == 2 && noDigraph) || (ALPHABET[i].equals("Y") && !includeY) || (ALPHABET[i].equals("X") && !includeX) || (VOWELTYPES[i] == 2 && easyVowelRule))) {
+      if (!((ALPHABET[i].length() == 2 && !includeDigraphs) || (ALPHABET[i].equals("Y") && !includeY) || (ALPHABET[i].equals("X") && !includeX) || (VOWELTYPES[i] == 2 && !includeLongVowels))) {
         availableLetters.put(ALPHABET[i], LETTERSET[i]);
       }
     }
@@ -316,8 +316,8 @@ public class Game implements Serializable {
     startDate = new Date();
     numberOfActivePlayers = numberOfPlayers;
     currentPlayer = 0;
-    
-    if (WELCOMEMSG_TIME == 0){
+
+    if (WELCOMEMSG_TIME == 0) {
       turn = 0;
 
       if (canPlayerSelectLetter()) {
@@ -329,7 +329,7 @@ public class Game implements Serializable {
     } else {
       turn = -1;
       turnStart = new Date();
-    } 
+    }
   }
 
   public boolean isPlayerActive(String name) {
@@ -342,7 +342,7 @@ public class Game implements Serializable {
 
   public String getSettingsString() {
     String settings = "mgh: ";
-    if (easyVowelRule) {
+    if (!includeLongVowels) {
       settings += "Ü";
     } else {
       settings += "Ű";
@@ -351,47 +351,67 @@ public class Game implements Serializable {
   }
 
   public String getAlphabetSettingsString() {
-    String settings;
-    if (ALPHABETSETTINGSSTRING_MODE == 1) {
-      settings = "A,Á,B,C,D," + "\u2026" + " ";
-      if (!easyVowelRule) {
-        settings += "+Í,Ó," + "\u2026" + " ";
-      }
-      if (!noDigraph) {
-        settings += "+CS,GY," + "\u2026" + " ";
-      }
-      if (includeX) {
-        settings += "+X ";
-      }
-      if (includeY) {
-        settings += "+Y ";
-      }
-    } else {
-      settings = "A,Á,B,C,";
-      if (!noDigraph) {
-        settings += "CS,";
-      } else {
-        settings += "D,";
-      }
-      settings += "...,";
-      if (easyVowelRule) {
-        settings += "U,Ü,";
-      } else {
-        settings += "U,Ú,Ü,Ű,";
-      }
-      settings += "V,";
-      if (includeX) {
-        settings += "X,";
-      }
-      if (includeY) {
-        settings += "Y,";
-      }
-      if (!noDigraph) {
-        settings += "Z,ZS";
-      } else {
-        settings += "Z";
-      }
+    String settings = "";
+
+    switch (ALPHABETSETTINGSSTRING_MODE) {
+      case 1:
+        settings = "A,Á,B,C,D," + "\u2026" + " ";
+        if (includeLongVowels) {
+          settings += "+Í,Ó," + "\u2026" + " ";
+        }
+        if (includeDigraphs) {
+          settings += "+CS,GY," + "\u2026" + " ";
+        }
+        if (includeX) {
+          settings += "+X ";
+        }
+        if (includeY) {
+          settings += "+Y ";
+        }
+        break;
+      case 2:
+        settings = "A,Á,B,C,";
+        if (includeDigraphs) {
+          settings += "CS,";
+        } else {
+          settings += "D,";
+        }
+        settings += "...,";
+        if (!includeLongVowels) {
+          settings += "U,Ü,";
+        } else {
+          settings += "U,Ú,Ü,Ű,";
+        }
+        settings += "V,";
+        if (includeX) {
+          settings += "X,";
+        }
+        if (includeY) {
+          settings += "Y,";
+        }
+        if (includeDigraphs) {
+          settings += "Z,ZS";
+        } else {
+          settings += "Z";
+        }
+        break;
+      case 3:
+        settings = "A\u2009Á\u2009B\u2009" + "\u2026";
+        if (includeDigraphs) {
+          settings += " \uFE62\u2009CS\u2009GY\u2009" + "\u2026";
+        }
+        if (includeLongVowels) {
+          settings += " \uFE62\u2009Ó\u2009Ő\u2009" + "\u2026";
+        }
+        if (includeX) {
+          settings += " \uFE62\u2009X";
+        }
+        if (includeY) {
+          settings += " \uFE62\u2009Y";
+        }
+        break;
     }
+
     return settings;
   }
 
@@ -436,7 +456,7 @@ public class Game implements Serializable {
     gameHist += ":";
     if (turn >= 0)
       gameHist += ":";
-      
+
     for (int i = 0; i < turn; i++) {
       if (i > 0)
         gameHist += ",";
@@ -518,11 +538,11 @@ public class Game implements Serializable {
         selectedLetters[turn] = drawLetter();
         randomLetters[turn] = true;
 
-        if (canPlayerSelectLetter()){
+        if (canPlayerSelectLetter()) {
           Board board = boards.get(currentPlayer);
           if (board.getQuitDate() == null)
             needIntermission = true;
-        }  
+        }
       }
       int count = availableLetters.get(selectedLetters[turn]);
       availableLetters.put(selectedLetters[turn], count - 1);
@@ -541,14 +561,14 @@ public class Game implements Serializable {
       LOGGER.info("Game #" + id + " ends");
       endDate = new Date();
     } else {
-      if (turn >= 0){
+      if (turn >= 0) {
         currentPlayer = (currentPlayer + 1) % numberOfPlayers;
-      }  
+      }
       turn++;
       turnStart = new Date();
       intermissionStart = null;
-      
-      if (turn == 0 && getRndLetterNumLimit() > 0){
+
+      if (turn == 0 && getRndLetterNumLimit() > 0) {
         endTurn();
         turn++;
       }
@@ -579,23 +599,23 @@ public class Game implements Serializable {
     return availableLetters.containsKey(letter);
   }
 
-  public boolean canPlayerSelectLetter(){
+  public boolean canPlayerSelectLetter() {
     if (startDate == null)
       return false;
-    
+
     return (turn >= getRndLetterNumLimit());
   }
 
-  public int getRndLetterNumLimit(){
+  public int getRndLetterNumLimit() {
     int roundLimit = rndLetterMode.getRoundLimit();
     int letterNumLimit = rndLetterMode.getLetterNumLimit();
-    if (letterNumLimit == 0 && roundLimit > 0){
+    if (letterNumLimit == 0 && roundLimit > 0) {
       letterNumLimit = roundLimit * boards.size();
-    }          
+    }
 
     return letterNumLimit;
   }
-  
+
   public String drawLetter() {
     int letterCount = 0;
     String selectedLetter = "";
@@ -711,20 +731,20 @@ public class Game implements Serializable {
     this.numberOfPlayers = boards.size();
   }
 
-  public boolean isEasyVowelRule() {
-    return easyVowelRule;
+  public boolean isIncludeLongVowels() {
+    return includeLongVowels;
   }
 
-  public void setEasyVowelRule(boolean easyVowelRule) {
-    this.easyVowelRule = easyVowelRule;
+  public void setIncludeLongVowels(boolean includeLongVowels) {
+    this.includeLongVowels = includeLongVowels;
   }
 
-  public boolean isNoDigraph() {
-    return noDigraph;
+  public boolean isIncludeDigraphs() {
+    return includeDigraphs;
   }
 
-  public void setNoDigraph(boolean noDigraph) {
-    this.noDigraph = noDigraph;
+  public void setIncludeDigraphs(boolean includeDigraphs) {
+    this.includeDigraphs = includeDigraphs;
   }
 
   public boolean isIncludeX() {
@@ -930,5 +950,5 @@ public class Game implements Serializable {
   public void setRndLetterMode(RndLetterMode rndLetterMode) {
     this.rndLetterMode = rndLetterMode;
   }
-  
+
 }

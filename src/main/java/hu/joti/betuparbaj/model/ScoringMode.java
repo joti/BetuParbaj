@@ -31,6 +31,10 @@ public enum ScoringMode {
     this.label = name + " (" + valueLabel + ")";
   }
 
+  public int getMaxValue(){
+    return lenValues[lenValues.length - 1];
+  }
+  
   public String getLabel() {
     return label; 
   }

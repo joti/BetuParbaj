@@ -1031,6 +1031,7 @@ textarea{
   width: 100% ;  
   border-collapse: collapse;
   vertical-align: middle;
+  margin-left: 4px;
 }
 
 .lobbyrowrulescol1{
@@ -1059,7 +1060,7 @@ textarea{
   margin-right: 0px;
   margin-bottom: 2px;
   height: 20px;
-  font-size: 12px;
+  font-size: 13px;
   border-radius: 2px;
   border: 1px solid #ced4a9;
   background-color: rgba(249,250,238,0.5);

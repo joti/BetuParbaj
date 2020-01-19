@@ -25,6 +25,15 @@ public enum RndLetterMode {
     this.letterNumLimit = letterNumLimit;
   }
 
+  public String getValueLabel(){
+    String valueLabel = "";
+    if (roundLimit > 0)
+      valueLabel = roundLimit + "\u00D7\u21BB";
+    else if (letterNumLimit > 0)
+      valueLabel = letterNumLimit + "";
+    return valueLabel;
+  }
+  
   public RndLetterMode getValue(){
     return this;
   }

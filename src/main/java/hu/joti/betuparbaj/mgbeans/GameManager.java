@@ -208,7 +208,7 @@ public class GameManager implements Serializable {
             else
               streak[col] = letters[row][col];
           }
-          Hit hit = glossaryManager.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
+          Hit hit = glossaryManager.findHit(streak, !game.isIncludeLongVowels(), game.getScoringMode());
           if (hit != null) {
             LOGGER.info(board.getPlayer().getName() + "'s word: " + hit.getWord());
             hit.setHorizontal(true);
@@ -225,7 +225,7 @@ public class GameManager implements Serializable {
             else
               streak[row] = letters[row][col];
           }
-          Hit hit = glossaryManager.findHit(streak, game.isEasyVowelRule(), game.getScoringMode());
+          Hit hit = glossaryManager.findHit(streak, !game.isIncludeLongVowels(), game.getScoringMode());
           if (hit != null) {
             LOGGER.info(board.getPlayer().getName() + "'s word: " + hit.getWord());
             hit.setHorizontal(false);
@@ -317,10 +317,10 @@ public class GameManager implements Serializable {
 
     /* A játékos legutóbbi asztalának beállításaival indítunk */
     if (prevGame != null) {
-      game = new Game(gameId, name, prevGame.isEasyVowelRule(), prevGame.isNoDigraph(), prevGame.isIncludeX(), prevGame.isIncludeY(), prevGame.isRandomPlace(), prevGame.getRndLetterMode(),
+      game = new Game(gameId, name, prevGame.isIncludeLongVowels(), prevGame.isIncludeDigraphs(), prevGame.isIncludeX(), prevGame.isIncludeY(), prevGame.isRandomPlace(), prevGame.getRndLetterMode(),
               prevGame.getMinPlayers(), prevGame.getMaxPlayers(), prevGame.getTimeLimit(), prevGame.getScoringMode());
     } else {
-      game = new Game(gameId, name, Game.DEF_EASYVOWELRULE, Game.DEF_NODIGRAPH, Game.DEF_INCLUDEX, Game.DEF_INCLUDEY, Game.DEF_RANDOMPLACE, Game.DEF_RNDLETTERMODE,
+      game = new Game(gameId, name, Game.DEF_INCLUDELONGVOWELS, Game.DEF_INCLUDEDIGRAPHS, Game.DEF_INCLUDEX, Game.DEF_INCLUDEY, Game.DEF_RANDOMPLACE, Game.DEF_RNDLETTERMODE,
               Game.DEF_MINPLAYERS, Game.DEF_MAXPLAYERS, Game.DEF_TIMELIMIT, Game.DEF_SCORING_MODE);
     }
 
@@ -996,7 +996,7 @@ public class GameManager implements Serializable {
 
   public void checkWord() {
     if (game != null && game.getStartDate() != null && !testWord.isEmpty()) {
-      if (glossaryManager.includes(testWord, game.isEasyVowelRule()))
+      if (glossaryManager.includes(testWord, !game.isIncludeLongVowels()))
         testResult = 1;
       else
         testResult = 2;
