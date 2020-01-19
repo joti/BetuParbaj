@@ -396,18 +396,19 @@ public class Game implements Serializable {
         }
         break;
       case 3:
+        // 2009: short space, FF0B: fullwidth plus, 2026: small 3 dots
         settings = "A\u2009Á\u2009B\u2009" + "\u2026";
         if (includeDigraphs) {
-          settings += " \uFE62\u2009CS\u2009GY\u2009" + "\u2026";
+          settings += "\u2009\uFF0BCS\u2009GY\u2009" + "\u2026";
         }
         if (includeLongVowels) {
-          settings += " \uFE62\u2009Ó\u2009Ő\u2009" + "\u2026";
+          settings += "\u2009\uFF0BÓ\u2009Ő\u2009" + "\u2026";
         }
         if (includeX) {
-          settings += " \uFE62\u2009X";
+          settings += "\u2009\uFF0BX";
         }
         if (includeY) {
-          settings += " \uFE62\u2009Y";
+          settings += "\u2009\uFF0BY";
         }
         break;
     }
