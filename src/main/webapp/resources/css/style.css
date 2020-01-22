@@ -1054,8 +1054,8 @@ textarea{
 .lobbyrowrule{
   display: inline-block;
   padding: 2px;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 4px;
+  padding-right: 4px;
   margin-left: 0px;
   margin-right: 0px;
   margin-bottom: 2px;
@@ -1065,6 +1065,11 @@ textarea{
   border: 1px solid #ced4a9;
   background-color: rgba(249,250,238,0.5);
   vertical-align: middle;
+}
+
+.lobbyrowrule2{
+  font-family: "Calisto MT", "Bookman Old Style", Bookman, "Goudy Old Style", Garamond, serif;
+  font-size: 12px;
 }
 
 .lobbyrowimage{
