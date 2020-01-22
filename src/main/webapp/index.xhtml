@@ -211,7 +211,7 @@
                           <h:commandButton id="btn_gamesfinished" class="gamebutton" style="width: 114px" value="Eredmények" action="#{gameManager.setLobbyMode(3)}" rendered="#{gameManager.lobbyMode ne 3}">
                             <f:ajax execute="" render="pg_main"/>
                           </h:commandButton>
-                          <p:commandButton id="btn_lobbyrefresh" style="display:none" action="#{gameManager.debugGame('lobbyrefresh')}" update="dt_lobby"/>
+                          <p:commandButton id="btn_lobbyrefresh" style="display:none" action="#{gameManager.debugGame('setuprefresh')}" update="dt_lobby"/>
                         </div>
                       </h:panelGroup> <!--pg_lobby-->
 

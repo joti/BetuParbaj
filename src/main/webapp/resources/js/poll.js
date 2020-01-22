@@ -48,7 +48,8 @@ function setMessages(xhr, status, args) {
 
       btn = document.getElementById("pageform:btn_lobbyrefresh");
       if (btn !== null) {
-        btn.dispatchEvent(new Event("click"));
+//        btn.dispatchEvent(new Event("click"));
+        btn.click();
       }
 
     }
@@ -68,7 +69,8 @@ function setMessages(xhr, status, args) {
       {
         btn = document.getElementById("pageform:btn_mainrefresh");
         if (btn !== null) {
-          btn.dispatchEvent(new Event("click"));
+//          btn.dispatchEvent(new Event("click"));
+          btn.click();
         }
       }
     }
@@ -89,7 +91,8 @@ function setMessages(xhr, status, args) {
     if (needsetuprefresh) {
       btn = document.getElementById("pageform:btn_setuprefresh");
       if (btn !== null) {
-        btn.dispatchEvent(new Event("click"));
+//        btn.dispatchEvent(new Event("click"));
+        btn.click();
       }
     }
   }
@@ -144,7 +147,8 @@ function setMessages(xhr, status, args) {
       }
 
       if (btn !== null) {
-        btn.dispatchEvent(new Event("click"));
+//        btn.dispatchEvent(new Event("click"));
+        btn.click();
       }
     }
   }
