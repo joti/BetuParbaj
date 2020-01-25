@@ -61,10 +61,10 @@ public class ChatRoom implements Serializable {
   @PostConstruct
   public void init() {
     // teszteléshez felvehetünk pár kamu usert
-    // addTestPlayers();
+//    addTestPlayers();
     
     // és velük néhány dummy asztalt is
-    // addTestGamesToLobby(2,1);
+//    addTestGamesToLobby(3,1);
     
     scheduler = Executors.newSingleThreadScheduledExecutor();
     scheduler.scheduleAtFixedRate(new Runnable(){

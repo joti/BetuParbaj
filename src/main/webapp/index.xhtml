@@ -15,9 +15,11 @@
     </h:head>
     <h:body style="background-color:#F9FAEE;">
       <h:outputStylesheet library="css" name="style.css" />
+      <h:outputStylesheet library="css" name="simple-scrollbar.css" />
       <h:outputScript library="js" name="poll.js" />
       <h:outputScript library="js" name="jquery.dataTables.min.js" />
       <h:outputScript library="js" name="jquery.nicescroll.min.js" />
+      <h:outputScript library="js" name="simple-scrollbar.min.js" />
 
       <h:form id="pageform" acceptcharset="UTF-8">
         <h:panelGroup id="pg_login" rendered="#{loginData.entered == false}">
@@ -162,7 +164,7 @@
                                       </h:panelGroup>
                                     </h:panelGrid>
 
-                                    <h:panelGrid id="gr_lobbyrowrules" class="lobbyrowrules" columns="1" columnClasses="lobbyrowrulescol1">
+                                    <h:panelGrid id="gr_lobbyrowrules" class="lobbyrowrules" columns="1" columnClasses="lobbyrowrulescol1" rendered="#{game.startDate eq null}">
                                       <h:panelGroup id="pg_rowtimelimit">
                                         <div class="lobbyrowrule">
                                           <h:graphicImage class="lobbyrowimage" url="/resources/images/az.png"/>
@@ -194,7 +196,8 @@
                             </h:dataTable>
                           </div>
                           <script>
-                            $(".lobbyscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave'});
+                            var el = document.querySelector('.lobbyscroll');
+                            SimpleScrollbar.initEl(el);
                           </script>
                         </div>
 
@@ -767,7 +770,9 @@
                           <h:inputTextarea id="ita_names" class="inputtextareasmall namesscroll" rows="100" cols="20" style="width:287px;height:81px;" 
                                            readonly="true" value="#{loginData.nameList}"/>
                           <script>
-                            $(".namesscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave'});
+                            $(".namesscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.1, cursoropacitymax: 0.4, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave'});
+//                            var el = document.querySelector('.namesscroll');
+//                            SimpleScrollbar.initEl(el);
                           </script>
                         </div>
                         <div style="position: absolute; top:125px; left:0px">
@@ -775,8 +780,10 @@
                           <h:inputTextarea id="ita_messages" class="inputtextchatsmall chatscroll" rows="100" cols="20" 
                                            style="width:360px;height:365px" readonly="true"/>
                           <script>
-                            $(".chatscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.2, cursorwidth: 6, cursorborderradius: 0,
+                            $(".chatscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.1, cursoropacitymax: 0.4, cursorwidth: 6, cursorborderradius: 0,
                               railpadding: {top: 0, right: 73, left: 0, bottom: 0}, autohidemode: 'leave'});
+//                            var el = document.querySelector('.chatscroll');
+//                            SimpleScrollbar.initEl(el);
                           </script>
                         </div>
                         <div style="position: absolute; top:523px; left:0px">
