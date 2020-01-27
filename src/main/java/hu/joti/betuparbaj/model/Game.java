@@ -102,6 +102,7 @@ public class Game implements Serializable {
   private Date turnStart; // Az aktuális forduló pontos kezdő időpontja                   
   private Date intermissionStart; // Fordulók közötti szünet kezdő időpontja (csak ha valamelyik játékos kifutott az időből)
   private int currentPlayer;
+  private String preselectedLetter; // Kiválasztásra megjelölt betű
 
   public Game() {
     init();
@@ -313,6 +314,7 @@ public class Game implements Serializable {
       boards.get(i).setPosition(i);
     }
 
+    preselectedLetter = "";
     startDate = new Date();
     numberOfActivePlayers = numberOfPlayers;
     currentPlayer = 0;
@@ -522,13 +524,17 @@ public class Game implements Serializable {
       for (Board board : boards) {
         int letterCount = board.getTotalLetterCount();
         if (letterCount < turn) {
-          if (randomPlace)
-            board.setLetterRandom(selectedLetters[turn - 1]);
-          else
-            board.getUnplacedLetters().put(turn, selectedLetters[turn - 1]);
+          if (board.getMarkedRow() >= 0){
+            board.setMarkedLetter(selectedLetters[turn - 1], turn);  
+          } else {
+            if (randomPlace)
+              board.setLetterRandom(selectedLetters[turn - 1]);
+            else
+              board.getUnplacedLetters().put(turn, selectedLetters[turn - 1]);
 
-          if (board.getQuitDate() == null)
-            needIntermission = true;
+            if (board.getQuitDate() == null)
+              needIntermission = true;
+          }  
         }
       }
     }
@@ -536,14 +542,18 @@ public class Game implements Serializable {
     if (turn >= 0 && turn < 36) {
       // Ha még nem lett kiválasztva a következő betű, akkor most kisorsoljuk
       if (selectedLetters[turn].equals("")) {
-        selectedLetters[turn] = drawLetter();
-        randomLetters[turn] = true;
+        if (!preselectedLetter.isEmpty()){
+          selectLetter(preselectedLetter);
+        } else {
+          selectedLetters[turn] = drawLetter();
+          randomLetters[turn] = true;
 
-        if (canPlayerSelectLetter()) {
-          Board board = boards.get(currentPlayer);
-          if (board.getQuitDate() == null)
-            needIntermission = true;
-        }
+          if (canPlayerSelectLetter()) {
+            Board board = boards.get(currentPlayer);
+            if (board.getQuitDate() == null)
+              needIntermission = true;
+          }
+        }  
       }
       int count = availableLetters.get(selectedLetters[turn]);
       availableLetters.put(selectedLetters[turn], count - 1);
@@ -568,6 +578,7 @@ public class Game implements Serializable {
       turn++;
       turnStart = new Date();
       intermissionStart = null;
+      preselectedLetter = "";
 
       if (turn == 0 && getRndLetterNumLimit() > 0) {
         endTurn();
@@ -579,16 +590,32 @@ public class Game implements Serializable {
   public void selectLetter(String letter) {
     selectedVowelTypes[turn] = getLetterVowelType(letter);
     selectedLetters[turn] = letter;
+    preselectedLetter = "";
   }
 
   public void selectLetter(int letterIndex) {
     if (letterIndex > ALPHABET.length)
       letterIndex = 0;
     String letter = ALPHABET[letterIndex];
-    selectedVowelTypes[turn] = getLetterVowelType(letter);
-    selectedLetters[turn] = letter;
+    selectLetter(letter);
   }
 
+  public void preselectLetter(int letterIndex) {
+    if (letterIndex > ALPHABET.length)
+      letterIndex = 0;
+    preselectedLetter = ALPHABET[letterIndex];
+  }
+
+  public void confirmLetter(){
+    if (!preselectedLetter.isEmpty())
+      selectLetter(preselectedLetter);
+  }
+
+  public void revokeLetter(){
+    if (!preselectedLetter.isEmpty())
+      preselectedLetter = "";
+  }
+  
   public boolean isLetterAvailable(String letter) {
     return availableLetters.containsKey(letter);
   }
@@ -674,10 +701,24 @@ public class Game implements Serializable {
     return -1;
   }
 
-  public void placeLetter(int playerPos, int row, int column) {
+  public void placeLetter(int playerPos, int row, int column, boolean finePointer) {
     if (startDate != null && endDate == null) {
       String letter = getSelectedLetter();
-      boards.get(playerPos).setLetter(letter, row, column, turn);
+      boolean doSet = finePointer;
+      
+      if (!finePointer){
+        int markedRow = boards.get(playerPos).getMarkedRow();
+        int markedCol = boards.get(playerPos).getMarkedCol();
+        if (markedRow == row && markedCol == column){
+          doSet = true;
+        }
+      }  
+      
+      if (doSet){
+        boards.get(playerPos).setLetter(letter, row, column, turn);
+      } else {
+        boards.get(playerPos).markCell(row, column);
+      }
     }
   }
 
@@ -950,6 +991,14 @@ public class Game implements Serializable {
 
   public void setRndLetterMode(RndLetterMode rndLetterMode) {
     this.rndLetterMode = rndLetterMode;
+  }
+
+  public String getPreselectedLetter() {
+    return preselectedLetter;
+  }
+
+  public void setPreselectedLetter(String preselectedLetter) {
+    this.preselectedLetter = preselectedLetter;
   }
 
 }

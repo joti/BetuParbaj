@@ -569,12 +569,22 @@
                                                readonly="true" value="#{gameManager.gameMsg}"/>
                               <h:outputLabel class="selectedlettertext" style="position: absolute; top: 111px; left: 24px; width: 240px"
                                              rendered="#{gameManager.canPlayerPlaceLetter()}">#{gameManager.selectedLetter}</h:outputLabel>
+                              <h:outputLabel class="selectedlettertext" style="position: absolute; top: 111px; left: 24px; width: 240px"
+                                             rendered="#{gameManager.needPlayerConfirmLetter()}">#{gameManager.preselectedLetter}</h:outputLabel>
+                              <h:panelGroup id="pg_confirmletter" style="position: absolute; top: 173px; left: 33px; width: 230px; text-align: center" 
+                                            rendered="#{gameManager.needPlayerConfirmLetter()}">
+                                <p:commandButton id="btn_revokeletter" class="letterbutton" style="width: 80px" value="Vissza" action="#{gameManager.revokeSelectedLetter()}"
+                                                 update=":pageform:pg_gamemsg"/>
+                                <p:commandButton id="btn_confirmletter" class="letterbutton" style="width: 80px; margin-left: 15px" value="Kész" action="#{gameManager.confirmSelectedLetter()}"
+                                                 update=":pageform:pg_gamemsg"/>
+                              </h:panelGroup>
                               <h:panelGroup id="pg_letters" style="position: absolute; top: 92px; left: 33px; width: 230px; text-align: center" 
                                             rendered="#{gameManager.canPlayerSelectLetter()}">
                                 <ui:repeat value="#{gameManager.letterIndices}" var="let">
-                                  <h:commandButton id="btn_let0" class="letterbutton" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let)}" rendered="#{gameManager.canSelectLetter(let)}">
-                                    <f:ajax render="pg_gamemsg"/>
-                                  </h:commandButton>
+                                  <p:commandButton id="btn_let0" class="letterbutton pointer-none" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let, false)}" rendered="#{gameManager.canSelectLetter(let)}"
+                                                   update=":pageform:pg_gamemsg"/>
+                                  <p:commandButton id="btn_let1" class="letterbutton pointer-fine" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let, true)}" rendered="#{gameManager.canSelectLetter(let)}"
+                                                   update=":pageform:pg_gamemsg"/>
                                 </ui:repeat>  
                               </h:panelGroup>
                             </h:panelGroup>
@@ -601,8 +611,11 @@
                               <canvas id="cv_board" style="position: absolute; top: 55px; left: 336px; width: 186px; height: 186px;"/>
                               <h:panelGroup id="pg_boardbuttons" class="boardbuttonarea" style="position: absolute; top: 53px; left: 333px; width: 188px; height: 185px; text-align: center">
                                 <ui:repeat value="#{gameManager.cellIndices}" var="cell">
-                                  <p:commandButton class="#{gameManager.getBoardLetterClass(cell)}" value="#{gameManager.getBoardLetter(cell)}" 
-                                                   action="#{gameManager.placeLetter(cell)}" disabled="#{!gameManager.canPlaceBoardLetter(cell)}"
+                                  <p:commandButton class="#{gameManager.getBoardLetterClass(cell, false)} pointer-none" value="#{gameManager.getBoardLetter(cell)}" 
+                                                   action="#{gameManager.placeLetter(cell, false)}" disabled="#{!gameManager.canPlaceBoardLetter(cell)}"
+                                                   update=":pageform:pg_boardbuttons"/>
+                                  <p:commandButton class="#{gameManager.getBoardLetterClass(cell, true)} pointer-fine" value="#{gameManager.getBoardLetter(cell)}" 
+                                                   action="#{gameManager.placeLetter(cell, true)}" disabled="#{!gameManager.canPlaceBoardLetter(cell)}"
                                                    update=":pageform:pg_boardbuttons"/>
                                 </ui:repeat>  
                               </h:panelGroup>

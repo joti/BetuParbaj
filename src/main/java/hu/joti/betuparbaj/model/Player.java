@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public class Player implements Comparable<Player>, Serializable {
 
-  public static final int INACTIVITY_SEC = 10;
+  public static final int INACTIVITY_SEC = 60;
   
   private int id;
   private String name;

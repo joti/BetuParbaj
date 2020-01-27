@@ -189,21 +189,27 @@ function setMessages(xhr, status, args) {
 }
 
 function drawHitRect(ctx, horizontal, line, startpos, length) {
-  const cornerx = 4;
-  const cornery = 4;
+  const cornerx = 2;
+  const cornery = 2;
 
   var startx = cornerx + 31 * startpos;
   var starty = cornerx + 31 * line;
-  var widthx = 31 * length - 8;
+  var widthx = 31 * length - 4;
   var widthy = 23;
 
   ctx.beginPath();
-  ctx.setLineDash([2, 2]);
+  ctx.lineWidth = 1.5;
   if (horizontal === true) {
-    ctx.strokeStyle = "rgb(255, 0, 0)";
+    starty = starty + 2;
+    ctx.setLineDash([4, 2]);
+//    ctx.strokeStyle = "rgb(255, 0, 0)";
+    ctx.strokeStyle = "rgb(219, 50, 50)";
     ctx.rect(startx, starty, widthx, widthy);
   } else {
-    ctx.strokeStyle = "rgb(102, 150, 83)";
+    starty = starty + 2;
+    ctx.setLineDash([0, 2, 4, 0]);
+//    ctx.strokeStyle = "rgb(102, 150, 83)";
+    ctx.strokeStyle = "rgb(108, 168, 83)";
     ctx.rect(starty, startx, widthy, widthx);
   }
   ctx.stroke();

@@ -584,7 +584,7 @@ textarea{
   font-weight: bold;
   border: 1px solid;
   border-color: transparent;
-  color: #808571;
+  color: #707561;
   background: transparent;  
   outline: 0;
   padding: 0px;
@@ -603,7 +603,7 @@ textarea{
 }
 
 .boardbutton:disabled {
-  color: #A0A591;
+  color: #707561;
   border-color: transparent;
   background: transparent;
 }
@@ -625,6 +625,62 @@ textarea{
   margin-right: 2px;
   margin-left: 1px;
   box-shadow: none;
+}
+
+.boardbutton_noptr {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: bold;
+  border: 1px solid;
+  border-color: transparent;
+  color: #747965;
+  background: transparent;  
+  outline: 0;
+  padding: 0px;
+  margin: 3px;
+  width: 28px;
+  height: 25px;
+  vertical-align: top;
+  margin-right: 2px;
+  margin-left: 1px;
+  box-shadow: none;
+}
+
+.boardbutton_noptr:hover {
+  border-color: #dee4b9;
+  background-color: #c6ce92;
+}
+
+.boardbutton_noptr:disabled {
+  color: #747965;
+  border-color: transparent;
+  background: transparent;
+}
+
+.markedletterbutton {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;	
+  font-weight: bolder;
+  border: 1px solid;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #707561;
+  background: transparent;  
+  outline: 0;
+  padding: 0px;
+  margin: 3px;
+  width: 28px;
+  height: 25px;
+  vertical-align: top;
+  margin-right: 2px;
+  margin-left: 1px;
+  box-shadow: none;
+}
+
+.markedletterbutton:hover {
+  background-color: #c6ce92;
 }
 
 .letterbutton {
@@ -1574,3 +1630,21 @@ span.ui-confirm-dialog-message {
   padding: 1px 1px 1px 1px;
 }
 
+@media (pointer: none) {
+  .pointer-fine {
+    display: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .pointer-fine {
+    display: none;
+  }
+}
+
+@media (pointer: fine) {
+  .pointer-none {
+  /*.pointer-fine {*/
+    display: none;
+  }
+}

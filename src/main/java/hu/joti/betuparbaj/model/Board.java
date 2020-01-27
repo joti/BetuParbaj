@@ -16,6 +16,8 @@ public class Board implements Serializable {
   public static final int BOARD_SIZE = 6;
   public static final String[] ROW_CODES = {"A","B","C","D","E","F"};
   public static final String[] COLUMN_CODES = {"1","2","3","4","5","6"};
+  // Betű megjelölt, de nem véglegesített helyén megjelenítendő "pipa" kakakter
+  public static final String MARKCHAR = "\u2713";
 
   // játékos helye az asztalon
   private int position;
@@ -67,7 +69,7 @@ public class Board implements Serializable {
     int letterCount = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
       for (int j = 0; j < BOARD_SIZE; j++) {
-        if (!letters[i][j].isEmpty()) {
+        if (!letters[i][j].isEmpty() && !letters[i][j].equals(MARKCHAR)) {
           letterCount++;
         }
       }
@@ -84,6 +86,52 @@ public class Board implements Serializable {
     turnPlaces[row][column] = turn;
   }
 
+  public void markCell(int row, int column) {
+    for (int i = 0; i < BOARD_SIZE; i++) {
+      for (int j = 0; j < BOARD_SIZE; j++) {
+        if (letters[i][j].isEmpty() || letters[i][j].equals(MARKCHAR)) {
+          if (row == i && column == j)
+            letters[i][j] = MARKCHAR;
+          else
+            letters[i][j] = "";
+        }
+      }
+    }
+  }
+
+  public int getMarkedRow() {
+    for (int i = 0; i < BOARD_SIZE; i++) {
+      for (int j = 0; j < BOARD_SIZE; j++) {
+        if (letters[i][j].equals(MARKCHAR))
+          return i;
+      }
+    }
+
+    return -1;
+  }
+
+  public int getMarkedCol() {
+    for (int i = 0; i < BOARD_SIZE; i++) {
+      for (int j = 0; j < BOARD_SIZE; j++) {
+        if (letters[i][j].equals(MARKCHAR))
+          return j;
+      }
+    }
+
+    return -1;
+  }
+
+  public void setMarkedLetter(String letter, int turn){
+    for (int i = 0; i < BOARD_SIZE; i++) {
+      for (int j = 0; j < BOARD_SIZE; j++) {
+        if (letters[i][j].equals(MARKCHAR)) {
+          setLetter(letter, i, j, turn);
+          return;
+        }
+      }
+    }
+  }
+  
   public void setLetterRandom(String letter) {
     Random rnd = new Random();
     int letterPos;
@@ -240,5 +288,5 @@ public class Board implements Serializable {
   public void setTurnPlaces(int[][] turnPlaces) {
     this.turnPlaces = turnPlaces;
   }
-
+  
 }
