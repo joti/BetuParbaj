@@ -744,7 +744,7 @@ public class GameManager implements Serializable {
 
       } else if (turn == 0 && myPosition == currentPlayerPos && !intermission && rndLetterNumLimit == 0) {
         // A 0. körben a játékos választ betűt
-        if (rndLetterNumLimit == 0) {
+        if (rndLetterNumLimit == 0 && playerState == 2) {
           if (game.getPreselectedLetter().isEmpty())
             msg = "\n\nKérlek, válaszd ki\naz első betűt!";
           else
