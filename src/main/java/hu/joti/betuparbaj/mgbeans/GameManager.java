@@ -328,6 +328,7 @@ public class GameManager implements Serializable {
     myPosition = -1;
     gameViewMode = 0;
     password = "";
+    clearWord();
     lobby.getGamesInPrep().add(game);
   }
 
@@ -420,7 +421,6 @@ public class GameManager implements Serializable {
       game.setOpenDate(new Date());
       lobby.getGamesInPrep().remove(game);
       lobby.getGamesInLobby().add(game);
-      clearWord();
       password = password.trim();
     }
   }
@@ -483,8 +483,14 @@ public class GameManager implements Serializable {
 
   public void startGame() {
     if (game != null) {
+      if (game.getOpenDate() == null){
+        game.setOpenDate(new Date());
+        lobby.getGamesInPrep().remove(game);
+      } else {
+        lobby.getGamesInLobby().remove(game);
+      }
+      
       game.start();
-      lobby.getGamesInLobby().remove(game);
       lobby.getGamesInProgress().add(game);
       fillMyPosition();
     }
@@ -710,8 +716,10 @@ public class GameManager implements Serializable {
       }
       if (count > 1 && count == game.getBoards().size()) {
         msg = "\n\n\n\nA játék véget ért.\n\nAz eredmény döntetlen.";
-      } else {
+      } else if (game.getNumberOfPlayers() > 1) {
         msg = String.format("\n\n\n\nA játék véget ért.\n\nA győztes:\n\n%s", name);
+      } else {
+        msg = "\n\n\n\n\n\nA játék véget ért.";
       }
     } else {
       int turn = game.getTurn();
@@ -728,18 +736,23 @@ public class GameManager implements Serializable {
         switch (remSec) {
           case 1000:
           case 1001:
-            msg = "\n\nJó játékot!";
+            if (game.getNumberOfPlayers() > 1)
+              msg = "\n\nJó játékot!";
           case 1002:
+            if (game.getNumberOfPlayers() == 1)
+              msg = "\n\nJó játékot!";
           case 1003:
             if (rndLetterNumLimit == 36) {
               msg = "\n\nA betűket ezúttal\na számítógép fogja\nkisorsolni." + msg;
             } else if (rndLetterNumLimit > 0) {
               msg = String.format("\n\nAz első %d betűt\na számítógép fogja\nkisorsolni.", rndLetterNumLimit) + msg;
-            } else {
+            } else if (game.getNumberOfPlayers() > 1){
               msg = String.format("\n\nAz első betűt\n%s\nválasztja ki.", name) + msg;
             }
           default:
             msg = "\n\n\nA játék hamarosan\nkezdődik!" + msg;
+            if (game.getNumberOfPlayers() == 1)
+              msg = "\n\n" + msg;
         }
 
       } else if (turn == 0 && myPosition == currentPlayerPos && !intermission && rndLetterNumLimit == 0) {
@@ -784,10 +797,10 @@ public class GameManager implements Serializable {
           } // A következő betű kiválasztása nem sikerült időben
           else if (turn < 36 && myPosition == currentPlayerPos && game.getRandomLetters()[turn] && game.canPlayerSelectLetter()) {
             msg = "\n\n\n\n\n\nLejárt az idő.";
-          } else {
+          } else if (game.getNumberOfPlayers() > 1) {
             msg = "\n\n\n\n\nVárakozás\na többi játékosra...";
           }
-        } else {
+        } else if (game.getNumberOfPlayers() > 1) {
           msg = "\n\n\n\n\nVárakozás\na többi játékosra...";
         }
 

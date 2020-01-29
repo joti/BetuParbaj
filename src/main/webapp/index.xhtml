@@ -141,7 +141,7 @@
                                         </h:panelGroup>
                                       </h:panelGroup>
                                       <h:panelGroup id="pg_lobbyrowplayer2" style="vertical-align: middle">
-                                        <h:panelGroup class="lobbyrowplayer">
+                                        <h:panelGroup class="lobbyrowplayer" rendered="#{!game.getPlayerName(1, true).isEmpty()}">
                                           <h:graphicImage class="lobbyrowimage" url="/resources/images/player2.png" rendered="#{game.getPlayerPosState(1) eq 2}"/>
                                           <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(1) eq 5}"/>
                                           <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(1) eq 6}"/>
@@ -324,6 +324,7 @@
                                     <h:graphicImage class="lobbyrowimage" url="/resources/images/player2.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 2}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 5}"/>
                                     <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 6}"/>
+                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(1) eq 7}"/>
                                     <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
                                       <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(1, false)}"/>       
                                       <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 1}"/>
@@ -538,7 +539,7 @@
                                              rendered="#{gameManager.game.openDate == null}"
                                              update="pg_main"/>
                             <p:commandButton class="gamebutton" style="width: 185px;" value="Játék indítása" action="#{gameManager.startGame()}" 
-                                             rendered="#{gameManager.game.openDate != null and gameManager.game.startDate == null}" 
+                                             rendered="#{(gameManager.game.openDate != null or gameManager.game.minPlayers eq 1) and gameManager.game.startDate == null}" 
                                              disabled="#{gameManager.game.numberOfPlayers lt gameManager.game.minPlayers or gameManager.myGamePos ne gameManager.game.adminPlayerPos}"
                                              update="pg_main"/>
                             <p:commandButton class="gamebutton" style="width: 185px" value="Asztal bezárása" action="#{gameManager.quitGame()}"

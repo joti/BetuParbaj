@@ -263,7 +263,7 @@ public class Game implements Serializable {
   }
 
   public void decMinPlayers() {
-    if (minPlayers > 2) {
+    if (minPlayers > 1) {
       minPlayers--;
     }
   }
