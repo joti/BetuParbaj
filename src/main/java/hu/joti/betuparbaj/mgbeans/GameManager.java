@@ -736,22 +736,25 @@ public class GameManager implements Serializable {
         switch (remSec) {
           case 1000:
           case 1001:
-            if (game.getNumberOfPlayers() > 1)
+            if (game.getNumberOfPlayers() > 1 || rndLetterNumLimit > 0)
               msg = "\n\nJó játékot!";
           case 1002:
-            if (game.getNumberOfPlayers() == 1)
+            if (game.getNumberOfPlayers() == 1 && rndLetterNumLimit == 0)
               msg = "\n\nJó játékot!";
           case 1003:
             if (rndLetterNumLimit == 36) {
               msg = "\n\nA betűket ezúttal\na számítógép fogja\nkisorsolni." + msg;
             } else if (rndLetterNumLimit > 0) {
-              msg = String.format("\n\nAz első %d betűt\na számítógép fogja\nkisorsolni.", rndLetterNumLimit) + msg;
+              if (rndLetterNumLimit > 1) 
+                msg = String.format("\n\nAz első %d betűt\na számítógép fogja\nkisorsolni.", rndLetterNumLimit) + msg;
+              else
+                msg = "\n\nAz első betűt\na számítógép fogja\nkisorsolni." + msg;
             } else if (game.getNumberOfPlayers() > 1){
               msg = String.format("\n\nAz első betűt\n%s\nválasztja ki.", name) + msg;
             }
           default:
             msg = "\n\n\nA játék hamarosan\nkezdődik!" + msg;
-            if (game.getNumberOfPlayers() == 1)
+            if (game.getNumberOfPlayers() == 1 && rndLetterNumLimit == 0)
               msg = "\n\n" + msg;
         }
 
