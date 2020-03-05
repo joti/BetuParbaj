@@ -77,8 +77,6 @@ textarea{
   font-weight: normal;
   color: #808571;
   line-height: 2.1;
-  transform:scale(0.95,1.0);
-  transform-origin: left center;
 }
 
 .logintextsmall2 {
@@ -502,6 +500,10 @@ textarea{
   border: 0px;
   width: 0px;
   height: 0px;
+}
+
+.threecellbutton{
+  width: 85px;
 }
 
 .fourcellbutton{

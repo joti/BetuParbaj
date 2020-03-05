@@ -73,7 +73,7 @@ public class ChatRoom implements Serializable {
         schedCount++;
         
         String msg = "Inactivity check #" + schedCount + " - " + players.size() + " players";
-        if (schedCount % 1 == 0) // félóránként 
+        if (schedCount % 180 == 0) // félóránként 
           LOGGER.info(msg);
         else
           LOGGER.debug(msg);

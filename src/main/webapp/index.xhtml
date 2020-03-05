@@ -31,37 +31,34 @@
             <table align="center" class="logintext" width="940px">
               <tr style="height:630px;" valign="top">
                 <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/resources/images/bpbg.jpg);background-repeat: no-repeat;">
-                  <div style="position: relative;">
-                    <div id="gameloginbg" class="gamebg" style="position: absolute; left: 30px; top: 90px; width: 547px; height: 485px">
+                  <div style="position: relative; text-align: center; width:100%; height: 100%; top: 60px;">
+                    <div id="gameloginbg" class="gamebg" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
                     </div>
-                    <div id="gameloginarea" class="gamearea" style="position: absolute; left: 30px; top: 90px; width: 547px; height: 485px">
+                    <div id="gameloginarea" class="gamearea" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
                     </div>
-                    <div class="gamesetupframe" style='position: absolute; top: 104px; left: 44px; width: 519px; height: 456px;'>
+                    <div class="gamesetupframe" style='position: absolute; top: 44px; left: 44px; width: 519px; height: 456px;'>
                     </div>
-                    <div style="position: absolute; top:120px; width:470px;left:60px">Üdvözöllek a betűpárbaj játékban!</div>
-                    <div style="position: absolute; top:182px; width:530px;left:60px">Kérlek, belépés előtt add meg,<br/> 
+                    <div style="position: relative; display: inline-block; top: 88px">Üdvözöllek a BETŰPÁRBAJ játékban!</div>
+                    <div style="position: relative; top:117px;">Kérlek, belépés előtt add meg,<br/> 
                       hogy milyen névvel szeretnél játszani!</div>
-                    <div style="position: absolute; top:242px;left:60px">
-                      <h:inputText id ="it_name" class="inputname" style="width:328px" value="#{loginData.name}" maxlength="20" a:autofocus="true" disabled="#{loginData.entered == true}"/>
-                    </div>
-                    <div style="position: absolute; top:241px; left: 402px;">
-                      <h:commandButton id="btn_login" class="loginbutton" value="Belépés" action="#{gameManager.login()}" disabled="#{loginData.entered == true}">
+                    <div style="position: relative; top:146px; display: inline-block">
+                      <h:inputText id ="it_name" class="inputname" style="width: 200px" value="#{loginData.name}" maxlength="20" a:autofocus="true" disabled="#{loginData.entered == true}"/>
+                      <h:commandButton id="btn_login" class="loginbutton threecellbutton" style="margin-left: 10px" value="Belépés" action="#{gameManager.login()}" disabled="#{loginData.entered == true}">
                         <f:ajax execute="it_name" render="pageform"/>
                       </h:commandButton>
                     </div>
-                    <div style="position: absolute; top:277px;left:60px">
+                    <div style="position: relative; top:145px; left: -45px;">
                       <h:outputText id="ot_error" value="#{loginData.error}" class="errortext"/>
                     </div>
-                    <div class="logintextsmall" style="position: absolute; top:339px; width:586px;left:60px">
-                      Amennyiben észrevételed van a játékkal kapcsolatban,<br/>vagy hibát találtál (elnézést érte!), akkor kérlek,<br/>hogy írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> 
-                      avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!
+                    <div class="logintextsmall" style="position: relative; top:240px;">
+                      Amennyiben észrevételed van a játékkal kapcsolatban,<br/>vagy hibát találtál (elnézést érte!), akkor kérlek,<br/> 
+                      írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!
                     </div>
-                    <div class="logintextsmall" style="position: absolute; top:432px; width:586px;left:60px">
-                      A játék <b>Windows (7+)</b> vagy <b>Android (5+)</b> operációs<br/>
-                      rendszeren futó <b>Chrome</b>, <b>Firefox</b>, illetve <b>Opera</b><br/>
-                      böngészőkre lett optimalizálva, egyéb környezetben<br/>
-                      előfordulhat, hogy nem működik megfelelően.
-                    </div>
+<!--                    <div class="logintextsmall" style="position: relative; top:207px;">
+                      Javasolt futtató környezet:
+                      <b>Windows (7+)</b> vagy <b>Android (5+)</b> operációs rendszer,<br/>
+                      <b>Chrome</b>, <b>Firefox</b>, vagy <b>Opera</b> böngésző.
+                    </div>-->
                   </div>  
                 </td>
                 <td style="width:290px;padding:10px">

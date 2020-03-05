@@ -157,7 +157,6 @@ public class LoginData implements Serializable {
     } else if (entered) {
       entered = false;
       seconds = 0;
-//      name = "";
     }
   }
 

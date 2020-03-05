@@ -96,7 +96,6 @@ public class GameManager implements Serializable {
   public void refresh() {
     boolean wasEntered = loginData.isEntered();
     loginData.refresh();
-    LOGGER.info("Name: " + loginData.getName() + ", wasEntered = " + wasEntered + ", isEntered = " + loginData.isEntered());
 
     if (!loginData.isEntered()) {
       quitGame(false);
