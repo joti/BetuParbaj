@@ -39,6 +39,8 @@ public class Board implements Serializable {
   private Date joinDate;
   // folyamatban lévő játékból való kilépés időpontja
   private Date quitDate;
+  // szándékos kilépés
+  private boolean quitByPlayer;
   
   public Board() {
     letters = new String[BOARD_SIZE][BOARD_SIZE];
@@ -288,5 +290,13 @@ public class Board implements Serializable {
   public void setTurnPlaces(int[][] turnPlaces) {
     this.turnPlaces = turnPlaces;
   }
-  
+
+  public boolean isQuitByPlayer() {
+    return quitByPlayer;
+  }
+
+  public void setQuitByPlayer(boolean quitByPlayer) {
+    this.quitByPlayer = quitByPlayer;
+  }
+
 }

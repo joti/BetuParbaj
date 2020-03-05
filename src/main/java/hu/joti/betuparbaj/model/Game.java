@@ -168,16 +168,17 @@ public class Game implements Serializable {
       board = boards.get(pos);
       board.setPlayer(player);
       board.setQuitDate(null);
+      board.setQuitByPlayer(false);
 
       numberOfActivePlayers++;
     }
   }
 
   public void removePlayer(Player player) {
-    removePlayer(player.getName());
+    removePlayer(player.getName(), false);
   }
 
-  public void removePlayer(String name) {
+  public void removePlayer(String name, boolean quitByPlayer) {
     Iterator iter = boards.iterator();
     boolean needSetAdminPlayer = false;
 
@@ -191,6 +192,7 @@ public class Game implements Serializable {
             needSetAdminPlayer = true;
         } else {
           board.setQuitDate(new Date());
+          board.setQuitByPlayer(quitByPlayer);
           numberOfActivePlayers--;
         }
         break;
@@ -217,14 +219,14 @@ public class Game implements Serializable {
         return "";
       else if (playerPos >= minPlayers) {
         if (inLobby)
-          return "...........";
+          return ". . . . . . . . . . .";
         else
-          return "...........................";
+          return ". . . . . . . . . . . . . . . . . . . . . . . . . . .";
       } else {
         if (inLobby)
-          return "...........";
+          return ". . . . . . . . . . .";
         else
-          return "...........................";
+          return ". . . . . . . . . . . . . . . . . . . . . . . . . . .";
       }
     } else
       return "";

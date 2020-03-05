@@ -69,7 +69,6 @@ function setMessages(xhr, status, args) {
       {
         btn = document.getElementById("pageform:btn_mainrefresh");
         if (btn !== null) {
-//          btn.dispatchEvent(new Event("click"));
           btn.click();
         }
       }
@@ -91,9 +90,29 @@ function setMessages(xhr, status, args) {
     if (needsetuprefresh) {
       btn = document.getElementById("pageform:btn_setuprefresh");
       if (btn !== null) {
-//        btn.dispatchEvent(new Event("click"));
         btn.click();
       }
+    }
+  }
+
+  btn = document.getElementById("pageform:btn_pagerefresh");
+  if (btn !== null) {
+    var needpagerefresh = false;
+    var ot_newsec = document.getElementById("pageform:ot_seconds2");
+    if (ot_newsec !== null) {
+      var ot_prevsec = document.getElementById("pageform:ot_seconds");
+      if (ot_prevsec !== null) {
+        if (ot_prevsec.innerHTML !== ot_newsec.innerHTML) {
+          if (parseInt(ot_prevsec.innerHTML,10) > parseInt(ot_newsec.innerHTML,10)){
+            needpagerefresh = true;
+          }
+          ot_prevsec.innerHTML = ot_newsec.innerHTML;
+        }
+      }  
+    }  
+
+    if (needpagerefresh) {
+      btn.click();
     }
   }
 
@@ -147,7 +166,6 @@ function setMessages(xhr, status, args) {
       }
 
       if (btn !== null) {
-//        btn.dispatchEvent(new Event("click"));
         btn.click();
       }
     }

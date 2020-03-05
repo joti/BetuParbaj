@@ -73,7 +73,7 @@ public class ChatRoom implements Serializable {
         schedCount++;
         
         String msg = "Inactivity check #" + schedCount + " - " + players.size() + " players";
-        if (schedCount % 180 == 0) // félóránként 
+        if (schedCount % 1 == 0) // félóránként 
           LOGGER.info(msg);
         else
           LOGGER.debug(msg);
@@ -169,18 +169,32 @@ public class ChatRoom implements Serializable {
 
       Message m = new Message(player.getName(), "$EXIT");
       m.setTime(new Date());
-      getMessages().add(m);
-      Collections.sort(getMessages());
+      messages.add(m);
+      Collections.sort(messages);
 
       LOGGER.info(player.getName() + " removed");
     }
+  }
+  
+  public void removeLastPlayer(){
+    Player lastPlayer = null;
+    for (Player player : players) {
+      if (lastPlayer == null || player.getLoginTime().after(lastPlayer.getLoginTime())){
+        lastPlayer = player;
+      }
+    }
+    if (lastPlayer != null)
+      removePlayer(lastPlayer);
   }
   
   public void removeInactivePlayers() {
     Set<Player> playersToRemove = new HashSet<>();
     
     for (Player player : players) {
-      if (!player.isActive()) {
+      boolean isActive = player.isActive();
+      LOGGER.info(player.getName() + " active: " + isActive);
+      
+      if (!isActive) {
         // Minden játékból kiléptetjük
         lobby.removePlayer(player);
         

@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+  <head>
+    <title>Hiba történt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <h:body style="background-color:#F9FAEE;">
+    <h2>Hiba történt</h2>
+
+    <h4>Hibaüzenet:</h4>
+    #{requestScope['error-message']}
+
+    <h4>Stack trace:</h4>
+    <ul>
+      <ui:repeat value="#{requestScope['error-stack']}" var="stack">
+        <li>#{stack.className} - #{stack.methodName} - #{stack.fileName} (#{stack.lineNumber})</li>
+      </ui:repeat>
+    </ul>
+
+    <br/>
+    <h:button value="Vissza a játékhoz" outcome="index"/>
+  </h:body>
+</html>

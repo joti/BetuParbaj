@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import javax.faces.context.FacesContext;
 import javax.xml.bind.DatatypeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 public class LoginData implements Serializable {
 
   @ManagedProperty("#{chatRoom}")
-  ChatRoom chatroom;
+  ChatRoom chatRoom;
 
   private String name;
   private String error;
@@ -61,13 +62,12 @@ public class LoginData implements Serializable {
   }
 
   public void doLogin() {
-    LOGGER.info("New Player: " + name);
     error = "";
     admin = false;
 
     if (name.isEmpty()) {
       error = "Adj meg egy nevet!";
-    } else if (chatroom.getPlayerNames().contains(name)) {
+    } else if (chatRoom.getPlayerNames().contains(name)) {
       error = "Ez a név már foglalt.";
     } else {
       if (name.contains("::")){
@@ -82,16 +82,17 @@ public class LoginData implements Serializable {
     }
     
     if (error.isEmpty()){
+      LOGGER.info("New Player: " + name);
       entered = true;
       rulemode = false;
       time = new Date();
       seconds = 0;
-      chatroom.addPlayer(name, time);
+      chatRoom.addPlayer(name, time);
     }
   }
 
   public void doLogout() {
-    chatroom.removePlayer(name);
+    chatRoom.removePlayer(name);
     
     entered = false;
     name = "";
@@ -99,7 +100,7 @@ public class LoginData implements Serializable {
 
   public Player getPlayer() {
     if (!name.isEmpty()) {
-      return chatroom.getPlayer(name);
+      return chatRoom.getPlayer(name);
     }
     return null;
   }
@@ -125,14 +126,14 @@ public class LoginData implements Serializable {
     if (!message.isEmpty()) {
       Message m = new Message(name, message);
       m.setTime(new Date());
-      chatroom.getMessages().add(m);
-      Collections.sort(chatroom.getMessages());
+      chatRoom.getMessages().add(m);
+      Collections.sort(chatRoom.getMessages());
       message = "";
     }
   }
   
   public String getChatMessageList() {
-    return chatroom.getMessageList(time);
+    return chatRoom.getMessageList(time);
   }
 
   public void showRules() {
@@ -143,18 +144,29 @@ public class LoginData implements Serializable {
     rulemode = false;
   }
 
+  public String refreshPage() {
+    FacesContext context = FacesContext.getCurrentInstance();
+    LOGGER.info("[" + name + "] reloads page");
+    return context.getViewRoot().getViewId() + "?faces-redirect=true";
+  }  
+  
   public void refresh() {
-    if (chatroom.getPlayer(name) != null)
-      chatroom.playerAccess(name);
-    else {
-      entered = false;
-      name = "";
-    }
     seconds++;
+    if (chatRoom.getPlayer(name) != null) {
+      chatRoom.playerAccess(name);
+    } else if (entered) {
+      entered = false;
+      seconds = 0;
+//      name = "";
+    }
+  }
+
+  public void removeLastPlayer() {
+    chatRoom.removeLastPlayer();
   }
 
   public String getNameList() {
-    return chatroom.getNameList(name);
+    return chatRoom.getNameList(name);
   }
 
   public String getName() {
@@ -165,8 +177,8 @@ public class LoginData implements Serializable {
     this.name = name;
   }
 
-  public void setChatroom(ChatRoom chatroom) {
-    this.chatroom = chatroom;
+  public void setChatRoom(ChatRoom chatRoom) {
+    this.chatRoom = chatRoom;
   }
 
   public String getError() {

@@ -3,5 +3,32 @@
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
-
+    <factory>
+        <exception-handler-factory>hu.joti.betuparbaj.exception.CustomExceptionHandlerFactory</exception-handler-factory>
+    </factory>
+    <navigation-rule>
+        <from-view-id>/viewExpired.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>index</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/error.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>index</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/index.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>viewExpired</from-outcome>
+            <to-view-id>/viewExpired.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>error</from-outcome>
+            <to-view-id>/error.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>
