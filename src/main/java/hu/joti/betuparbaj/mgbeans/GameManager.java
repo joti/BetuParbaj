@@ -49,8 +49,8 @@ public class GameManager implements Serializable {
   private String password;
   private int myPosition;
 
-  // játékok listázásának módjai: 1 - megnyitott játékok, 2 - folyamatban lévő játékok, 3 - befejeződött játékok
-  private int lobbyMode;
+  // menü: 0 - főmenü, 1 - megnyitott játékok, 2 - folyamatban lévő játékok, 3 - befejeződött játékok, 4 - játékszabályok, 5 - chat, 6 - szótár, 7 - admin oldal
+  private int menu;
   // befejeződött játék lekérdezésének módja: 1 - eredmény, 2 - setup
   private int gameViewMode;
 
@@ -65,9 +65,9 @@ public class GameManager implements Serializable {
     fadingGames = new HashSet<>();
     fadedGames = new HashSet<>();
     myPosition = -1;
-    lobbyMode = 1;
     gameViewMode = 0;
     password = "";
+    menu = 0;
 
     letterIndices = new ArrayList<>();
     for (int i = 0; i < Game.ALPHABET.length; i++) {
@@ -92,7 +92,7 @@ public class GameManager implements Serializable {
       quitGame(false);
     }
   }
-  
+
   public void refresh() {
     boolean wasEntered = loginData.isEntered();
     loginData.refresh();
@@ -264,7 +264,7 @@ public class GameManager implements Serializable {
   }
 
   public List<Game> getGamesFromLobby() {
-    switch (lobbyMode) {
+    switch (getLobbyMode()) {
       case 1:
         return lobby.getGamesInLobby();
       case 2:
@@ -278,10 +278,12 @@ public class GameManager implements Serializable {
   public String getGamesInLobbyString() {
     String gamesString = ":";
     List<Game> games = getGamesFromLobby();
-    for (Game g : games) {
-      gamesString += g.getGameSetupString() + ";";
+    if (games != null) {
+      for (Game g : games) {
+        gamesString += g.getGameSetupString() + ";";
+      }
+      gamesString += (loginData.getSeconds() / 60) + "";
     }
-    gamesString += (loginData.getSeconds() / 60) + "";
     return gamesString;
   }
 
@@ -380,27 +382,28 @@ public class GameManager implements Serializable {
       password = "";
     }
   }
-  
-  public void rejoinGame(){
+
+  public void rejoinGame() {
     // Ha van olyan játék, amelyik még zajlik, és a játékos helye úgy betöltetlen, hogy szándékosan nem lépett ki, akkor újra beléptetjük
     Game gameToJoin = null;
     Date maxQuitDate = null;
-    
-    games: for (Game game : lobby.getGamesInProgress()) {
-      if (game.getStartDate() != null && game.getEndDate() == null){
+
+    games:
+    for (Game game : lobby.getGamesInProgress()) {
+      if (game.getStartDate() != null && game.getEndDate() == null) {
         for (Board board : game.getBoards()) {
-          if (board.getPlayer().getName().equals(loginData.getName()) && board.getQuitDate() != null && !board.isQuitByPlayer()) {  
-            if (maxQuitDate == null || board.getQuitDate().after(maxQuitDate)){
+          if (board.getPlayer().getName().equals(loginData.getName()) && board.getQuitDate() != null && !board.isQuitByPlayer()) {
+            if (maxQuitDate == null || board.getQuitDate().after(maxQuitDate)) {
               gameToJoin = game;
               maxQuitDate = board.getQuitDate();
               continue games;
-            }  
-          }  
+            }
+          }
         }
-      }  
+      }
     }
-    
-    if (gameToJoin != null){
+
+    if (gameToJoin != null) {
       joinGame(gameToJoin);
     }
   }
@@ -1153,11 +1156,16 @@ public class GameManager implements Serializable {
   }
 
   public int getLobbyMode() {
-    return lobbyMode;
-  }
-
-  public void setLobbyMode(int lobbyMode) {
-    this.lobbyMode = lobbyMode;
+    switch (menu) {
+      case 1:
+        return 1;
+      case 2:
+        return 2;
+      case 3:
+        return 3;
+      default:
+        return 0;
+    }
   }
 
   public Game getGame() {
@@ -1246,6 +1254,14 @@ public class GameManager implements Serializable {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public int getMenu() {
+    return menu;
+  }
+
+  public void setMenu(int menu) {
+    this.menu = menu;
   }
 
 }

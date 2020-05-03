@@ -34,6 +34,10 @@ public enum RndLetterMode {
     return valueLabel;
   }
   
+  public int getOrdinal(){
+    return ordinal();
+  }
+  
   public RndLetterMode getValue(){
     return this;
   }

@@ -43,7 +43,7 @@ public class ChatRoom implements Serializable {
   private static final Logger LOGGER = LogManager.getLogger(ChatRoom.class.getName());
   
   public static final boolean ONE_NAME_PER_ROW = true;
-  public static final String[] TESTPLAYERS = {"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm"};
+  public static final String[] TESTPLAYERS = {"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm", "Ló Szerafin", "Zordonbordon", "Szörnyeteg Lajos"};
   public static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm");
 
   private Set<Player> players;
@@ -61,7 +61,7 @@ public class ChatRoom implements Serializable {
   @PostConstruct
   public void init() {
     // teszteléshez felvehetünk pár kamu usert
-//    addTestPlayers();
+    addTestPlayers();
     
     // és velük néhány dummy asztalt is
 //    addTestGamesToLobby(3,1);
@@ -192,7 +192,7 @@ public class ChatRoom implements Serializable {
     
     for (Player player : players) {
       boolean isActive = player.isActive();
-      LOGGER.info(player.getName() + " active: " + isActive);
+      LOGGER.debug(player.getName() + " active: " + isActive);
       
       if (!isActive) {
         // Minden játékból kiléptetjük
@@ -234,15 +234,24 @@ public class ChatRoom implements Serializable {
     return null;    
   }
   
-  public String getNameList(String myName) {
-    String namesString = "";
+  public List<String> getNameList(String myName) {
     List<String> namesList = new ArrayList<>();
 
     for (Player player : players) {
-      namesList.add(player.getName());
+      String name = player.getName();
+      if (name.equals(myName))
+        name += " (én)";
+
+      namesList.add(name);
     }
 
     Collections.sort(namesList, Collator.getInstance(new Locale("hu", "HU")));
+    return namesList;
+  }
+
+  public String getNameListString(String myName) {
+    String namesString = "";
+    List<String> namesList = getNameList(myName);
 
     for (String name : namesList) {
       if (!namesString.isEmpty()) {
@@ -253,8 +262,6 @@ public class ChatRoom implements Serializable {
         }
       }
       namesString += name;
-      if (name.equals(myName))
-        namesString += " (én)";
     }
     return namesString;
   }

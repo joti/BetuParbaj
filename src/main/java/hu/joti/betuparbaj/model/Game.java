@@ -16,14 +16,6 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author Joti
  */
-//public RndLetterMode getRndLetterMode(){
-//  return rndLetterMode;
-//}
-//
-//public void setRndLetterMode(RndLetterMode rndLetterMode){
-//  this.rndLetterMode = rndLetterMode;
-//}
-//}
 public class Game implements Serializable {
 
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};

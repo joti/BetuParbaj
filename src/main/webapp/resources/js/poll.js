@@ -1,26 +1,25 @@
-function setMessages(xhr, status, args) {
-  var scrollPos;
-  var scrollHgt;
-  var prevVal;
-  var newVal;
-  var btn;
-
+function menuPoll(xhr, status, args) {
   var ita_prevnames = document.getElementById("pageform:ita_names");
   if (ita_prevnames !== null) {
     var ita_newnames = document.getElementById("pageform:ita_names2");
 
     if (ita_prevnames.value !== ita_newnames.value) {
-      scrollPos = ita_prevnames.scrollTop;
-      scrollHgt = ita_prevnames.scrollHeight;
-
       ita_prevnames.value = ita_newnames.value;
 
-      ita_prevnames.scrollTop = scrollPos + ita_prevnames.scrollHeight - scrollHgt;
-      if ($(".namesscroll").getNiceScroll() !== null) {
-        $(".namesscroll").getNiceScroll().resize();
+      btn = document.getElementById("pageform:btn_menurefresh");
+      if (btn !== null) {
+        btn.click();
       }
     }
   }
+}
+
+function mainPoll(xhr, status, args) {
+  var scrollPos;
+  var scrollHgt;
+  var prevVal;
+  var newVal;
+  var btn;
 
   var ita_prevmsg = document.getElementById("pageform:ita_messages");
   if (ita_prevmsg !== null) {
@@ -48,7 +47,6 @@ function setMessages(xhr, status, args) {
 
       btn = document.getElementById("pageform:btn_lobbyrefresh");
       if (btn !== null) {
-//        btn.dispatchEvent(new Event("click"));
         btn.click();
       }
 
@@ -220,13 +218,11 @@ function drawHitRect(ctx, horizontal, line, startpos, length) {
   if (horizontal === true) {
     starty = starty + 2;
     ctx.setLineDash([4, 2]);
-//    ctx.strokeStyle = "rgb(255, 0, 0)";
     ctx.strokeStyle = "rgb(219, 50, 50)";
     ctx.rect(startx, starty, widthx, widthy);
   } else {
     starty = starty + 2;
     ctx.setLineDash([0, 2, 4, 0]);
-//    ctx.strokeStyle = "rgb(102, 150, 83)";
     ctx.strokeStyle = "rgb(108, 168, 83)";
     ctx.rect(starty, startx, widthy, widthx);
   }

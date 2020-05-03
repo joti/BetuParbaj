@@ -11,11 +11,12 @@
   <f:view locale="#{chatRoom.locale}" encoding="UTF-8" contentType="text/html"> 
     <h:head>
       <title>Betűpárbaj</title>
-      <link rel="icon" type="image/png" href="favicon.png" />
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <meta name="description" content="Webes betűpárbaj játék"/>
       <meta name="keywords" content="betuparbaj,betűpárbaj"/>
       <meta name="author" content="Tihon József"/>      
+      <link rel="icon" type="image/png" href="favicon.png" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
     </h:head>
     <h:body style="background-color:#F9FAEE;">
       <h:outputStylesheet library="css" name="style.css" />
@@ -26,876 +27,864 @@
       <h:outputScript library="js" name="simple-scrollbar.min.js" />
 
       <h:form id="pageform" acceptcharset="UTF-8">
-        <h:panelGroup id="pg_login" rendered="#{loginData.entered == false}">
-          <p align="center">
-            <table align="center" class="logintext" width="940px">
-              <tr style="height:630px;" valign="top">
-                <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/resources/images/bpbg.jpg);background-repeat: no-repeat;">
-                  <div style="position: relative; text-align: center; width:100%; height: 100%; top: 60px;">
-                    <div id="gameloginbg" class="gamebg" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
-                    </div>
-                    <div id="gameloginarea" class="gamearea" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
-                    </div>
-                    <div class="gamesetupframe" style='position: absolute; top: 44px; left: 44px; width: 519px; height: 456px;'>
-                    </div>
-                    <div style="position: relative; display: inline-block; top: 88px">Üdvözöllek a BETŰPÁRBAJ játékban!</div>
-                    <div style="position: relative; top:117px;">Kérlek, belépés előtt add meg,<br/> 
-                      hogy milyen névvel szeretnél játszani!</div>
-                    <div style="position: relative; top:146px; display: inline-block">
-                      <h:inputText id ="it_name" class="inputname" style="width: 200px" value="#{loginData.name}" maxlength="20" a:autofocus="true" disabled="#{loginData.entered == true}"/>
-                      <h:commandButton id="btn_login" class="loginbutton threecellbutton" style="margin-left: 10px" value="Belépés" action="#{gameManager.login()}" disabled="#{loginData.entered == true}">
-                        <f:ajax execute="it_name" render="pageform"/>
-                      </h:commandButton>
-                    </div>
-                    <div style="position: relative; top:145px; left: -45px;">
-                      <h:outputText id="ot_error" value="#{loginData.error}" class="errortext"/>
-                    </div>
-                    <div class="logintextsmall" style="position: relative; top:240px;">
-                      Amennyiben észrevételed van a játékkal kapcsolatban,<br/>vagy hibát találtál (elnézést érte!), akkor kérlek,<br/> 
-                      írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!
-                    </div>
-<!--                    <div class="logintextsmall" style="position: relative; top:207px;">
-                      Javasolt futtató környezet:
-                      <b>Windows (7+)</b> vagy <b>Android (5+)</b> operációs rendszer,<br/>
-                      <b>Chrome</b>, <b>Firefox</b>, vagy <b>Opera</b> böngésző.
-                    </div>-->
-                  </div>  
-                </td>
-                <td style="width:290px;padding:10px">
+        <p align="center">
+          <table align="center" style="border-width:3px ;border-color: black" width="640px">
+            <tr style="height:722px" valign="top">
+              <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/resources/images/bpbg.jpg);background-repeat: no-repeat;">
+                <div style="position: relative; text-align: center; width:100%; height: 100%; top: 61px;">
+                  <h:panelGroup id="pg_menu">
 
-                </td>
-              </tr>
-            </table>  
-          </p>  
-        </h:panelGroup> <!-- pg_login -->
+                    <h:panelGroup id="pg_login" class="logintext" rendered="#{loginData.entered == false}">
+                      <div id="gameloginbg" class="gamebg" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
+                      </div>
+                      <div id="gameloginarea" class="gamearea" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
+                      </div>
 
-        <h:panelGroup id="pg_mainpage" rendered="#{loginData.entered == true}">
-          <p align="center">  
-            <table align="center" width="940px">
-              <tr style="height:627px;" valign="top">
-                <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/resources/images/bpbg.jpg);background-repeat: no-repeat;">
-                  <div style="position: relative; top:85px; left: 30px">
-                    <h:panelGroup id="pg_main" class="mainpg">
-                      <h:panelGroup id="pg_lobby" class="text" rendered="#{gameManager.isInGameState(0)}">
-                        <h:panelGroup id="lobbytitle1" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 1}">> Indításra váró asztalok</h:panelGroup>
-                        <h:panelGroup id="lobbytitle2" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 2}">>> Folyamatban lévő játékok</h:panelGroup>
-                        <h:panelGroup id="lobbytitle3" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 3}">>>> Befejeződött játékok</h:panelGroup>
+                      <div class="gamesetupframe" style="position: absolute; top: 44px; left: 44px; width: 519px; height: 456px;">
+                      </div>
+                      <div style="position: absolute; display: block; top: 88px; left:0; right:0">Üdvözöllek a BETŰPÁRBAJ játékban!</div>
+                      <div style="position: absolute; top:148px; left:0; right:0">Kérlek, belépés előtt add meg,<br/> 
+                        hogy milyen névvel szeretnél játszani!</div>
+                      <div style="position: absolute; top:241px; left:0; right:0; display: inline-block">
+                        <h:inputText id ="it_name" class="inputname" style="width: 200px" value="#{loginData.name}" maxlength="20" a:autofocus="true" disabled="#{loginData.entered == true}"/>
+                        <h:commandButton id="btn_login" class="loginbutton threecellbutton" style="margin-left: 10px" value="Belépés" action="#{gameManager.login()}" disabled="#{loginData.entered == true}">
+                          <f:ajax execute="it_name" render="pg_menu"/>
+                        </h:commandButton>
+                      </div>
+                      <div style="position: absolute; top:273px; left: 0px; right: 93px">
+                        <h:outputText id="ot_error" value="#{loginData.error}" class="errortext"/>
+                      </div>
+                      <div class="logintextsmall" style="position: absolute; top:367px; left:0; right:0">
+                        Amennyiben észrevételed van a játékkal kapcsolatban,<br/>vagy hibát találtál (elnézést érte!), akkor kérlek,<br/> 
+                        írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!
+                      </div>
+                    </h:panelGroup>                    
 
-                        <div id="gamesetupbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
+                    <h:panelGroup id="pg_mainmenu" class="logintext" rendered="#{loginData.entered == true and gameManager.menu eq 0 and gameManager.gameState eq 0}">
+                      <div id="mainmenubg" class="gamebg" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
+                      </div>
+                      <div id="mainmenuarea" class="gamearea" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
+                      </div>
+
+                      <div class="gamesetupframe" style="position: absolute; top: 44px; left: 44px; width: 330px; height: 456px;">
+                      </div>
+                      <div class="gamesetupframe" style="position: absolute; top: 44px; left: 388px; width: 175px; height: 237px;">
+                      </div>
+                      <div class="gamesetupframe" style="position: absolute; top: 293px; left: 388px; width: 175px; height: 207px;">
+                      </div>
+                      <div style="position: absolute; display: block; top: 0px; left:0; right:180px">
+                        <div style="position: absolute; display: block; top: 88px; left:0; right:0">
+                          <h:commandButton id="btn_madminpage" class="menubutton threecellbutton" value="Admin" rendered="#{loginData.admin == true}"
+                                           action="#{gameManager.setMenu(7)}">
+                            <f:ajax execute="" render="pg_menu"/>
+                          </h:commandButton>
                         </div>
-
-                        <div style="position: absolute; top:37px; left:0px; height: 428px; width: 327px; background: #dee4b9; opacity: 0.0; z-index: 999999"></div>
-
-                        <div id="lobby" class="gamearea" style='position: absolute; top: 37px; width: 547px'>
-                          <div id="lobbycontent" class="lobbyscroll" style='height:422px;overflow-y:auto;width:547px;'>
-                            <h:dataTable id="dt_lobby" class="lobbytable" style="width:100%;"
-                                         value="#{gameManager.getGamesFromLobby()}" var="game">
-                              <h:column>
-                                <div class="lobbyrowborder">
-
-                                  <h:panelGrid id="gr_lobbyrow" class="lobbytablerow" columns="1">
-                                    <h:panelGrid id="gr_lobbyrowheader" class="lobbyrowheader" columns="3" columnClasses="lobbyrowheadercol1,lobbyrowheadercol2">
-                                      <h:panelGroup style="text-align: center; vertical-align: middle;">
-                                        <h:outputText class="lobbyrowgamename" style="margin-left: 5px; position: relative; top: 3px" value="&gt;&gt; #{game.name}"/>  
-                                        <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/resources/images/opening.png" rendered="#{game.endDate eq null}"/>
-                                        <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/resources/images/ending.png" rendered="#{game.endDate ne null}"/>
-                                        <h:outputText class="lobbyrowdateinfo" style="margin-left: 7px; position: relative; top: 3px" value="#{game.dateInfo}"/>  
-                                      </h:panelGroup>
-                                      <h:panelGroup style="display:inline-block">
-                                        <h:panelGroup rendered="#{gameManager.canJoinGameWithPassword(game)}">
-                                          <h:panelGroup id="pg_joinpw">
-                                            <p:inputText id="it_joinpw" class="inputtextsmalluc #{pwValidator.getErrorStyle(game)}" binding="#{pwValidator.pwInput}" style="width:85px;"
-                                                         placeholder="Jelszó">
-                                              <f:validator validatorId="pwValidator"/>
-                                              <f:attribute name="gamePassword" value="#{game.password}"/>
-                                              <f:attribute name="gameId" value="#{game.id}"/>
-                                              <f:attribute name="btnId" value="#{param[joinbtn.clientId]}"/>
-                                            </p:inputText>
-                                          </h:panelGroup>
-                                          <p:defaultCommand target="btn_joingamewpw" scope="pg_joinpw" />          
-                                          <p:commandButton id="btn_joingamewpw" value="Csatlakozás" class="buttonsmall2" action="#{gameManager.joinGame(game)}" binding="#{joinbtn}"
-                                                           process="@parent"  update=":pageform:pg_main">
-                                            <f:param name="btnclick" value="1" />
-                                          </p:commandButton>
-                                        </h:panelGroup>
-                                        <p:commandButton id="btn_joingamenopw" value="Csatlakozás" class="buttonsmall2" action="#{gameManager.joinGame(game)}" 
-                                                         rendered="#{gameManager.canJoinGameWOPassword(game)}" process="@parent" update=":pageform:pg_main"/>
-                                        <p:commandButton value="Csatlakozás" class="buttonsmall2" rendered="#{gameManager.isGameFading(game)}">
-                                          <p:effect type="fade" event="load" delay="200">  
-                                            <f:param name="mode" value="'hide'"/>
-                                          </p:effect>                          
-                                        </p:commandButton>
-                                        <p:commandButton id="btn_viewgame" value="Eredmény" class="buttonsmall2" style="width: 90px;" action="#{gameManager.viewGame(game)}" 
-                                                         rendered="#{gameManager.canViewGame(game)}" update=":pageform:pg_main"/>
-                                      </h:panelGroup>
-                                    </h:panelGrid>
-                                    <h:panelGrid id="gr_lobbyrowplayers" class="lobbyrowplayers" columns="4">
-                                      <h:panelGroup id="pg_lobbyrowplayer1" style="vertical-align: middle">
-                                        <h:panelGroup class="lobbyrowplayer">
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player1.png" rendered="#{game.getPlayerPosState(0) eq 1}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(0) eq 5}"/>
-                                          <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(0, true)}"/>       
-                                        </h:panelGroup>
-                                      </h:panelGroup>
-                                      <h:panelGroup id="pg_lobbyrowplayer2" style="vertical-align: middle">
-                                        <h:panelGroup class="lobbyrowplayer" rendered="#{!game.getPlayerName(1, true).isEmpty()}">
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player2.png" rendered="#{game.getPlayerPosState(1) eq 2}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(1) eq 5}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(1) eq 6}"/>
-                                          <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(1, true)}"/>       
-                                        </h:panelGroup>
-                                      </h:panelGroup>
-                                      <h:panelGroup id="pg_lobbyrowplayer3" style="vertical-align: middle">
-                                        <h:panelGroup class="lobbyrowplayer" rendered="#{!game.getPlayerName(2, true).isEmpty()}">
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player3.png" rendered="#{game.getPlayerPosState(2) eq 3}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(2) eq 5}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(2) eq 6}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{game.getPlayerPosState(2) eq 7}"/>
-                                          <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(2, true)}"/>       
-                                        </h:panelGroup>
-                                      </h:panelGroup>
-                                      <h:panelGroup id="pg_lobbyrowplayer4" style="vertical-align: middle">
-                                        <h:panelGroup class="lobbyrowplayer" rendered="#{!game.getPlayerName(3, true).isEmpty()}">
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player4.png" rendered="#{game.getPlayerPosState(3) eq 4}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(3) eq 5}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(3) eq 6}"/>
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{game.getPlayerPosState(3) eq 7}"/>
-                                          <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(3, true)}"/>       
-                                        </h:panelGroup>
-                                      </h:panelGroup>
-                                    </h:panelGrid>
-
-                                    <h:panelGrid id="gr_lobbyrowrules" class="lobbyrowrules" columns="1" columnClasses="lobbyrowrulescol1" rendered="#{game.startDate eq null}">
-                                      <h:panelGroup id="pg_rowtimelimit">
-                                        <div class="lobbyrowrule">
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/az.png"/>
-                                          <h:outputText class="lobbyrowrule2" style="margin-left: 7px; position:relative; top: 2px;" value="#{game.alphabetSettingsString}" />       
-                                        </div>
-                                        <h:panelGroup rendered="#{game.rndLetterMode.ordinal() gt 0}">
-                                          <div class="lobbyrowrule">
-                                            <h:graphicImage class="lobbyrowimage" style="max-width:33px;" url="/resources/images/rndlet.png"/>
-                                            <h:outputText style="margin-left: 5px; position:relative; top: 2px;" value="#{game.rndLetterMode.valueLabel}"/>       
-                                          </div>
-                                        </h:panelGroup>
-                                        <div class="lobbyrowrule">
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/clock.png"/>
-                                          <h:outputText style="margin-left: 5px; position:relative; top: 2px;" value="#{game.timeLimit}"/>       
-                                        </div>
-                                        <div class="lobbyrowrule">
-                                          <h:graphicImage class="lobbyrowimage" url="/resources/images/rndplc.png" rendered="#{game.randomPlace}"/>
-                                          <h:graphicImage class="lobbyrowimage" style="max-width:22px;" url="/resources/images/norndplc.png" rendered="#{!game.randomPlace}"/>
-                                        </div>
-                                        <div class="lobbyrowrule">
-                                          <h:graphicImage class="lobbyrowimage" style="max-width:30px;" url="/resources/images/scoring6.png"/>
-                                          <h:outputText style="margin-left: 4px; position:relative; top: 2px;" value="#{game.scoringMode.maxValue}" />       
-                                        </div>
-                                      </h:panelGroup>
-                                    </h:panelGrid>
-                                  </h:panelGrid>
-                                </div>  
-                              </h:column>
-                            </h:dataTable>
-                          </div>
-                          <script>
-                            var el = document.querySelector('.lobbyscroll');
-                            SimpleScrollbar.initEl(el);
-                          </script>
-                        </div>
-
-                        <div id="lobbybuttons" style="position: absolute; top: 468px;">
-                          <h:commandButton id="btn_newgame" class="gamebutton fivecellbutton" value="Új asztal indítása" action="#{gameManager.createGame()}" rendered="#{gameManager.lobbyMode eq 1}">
-                            <f:ajax execute="" render="pg_main"/>
+                        <div style="position: absolute; display: block; top: 148px; left:60px; right:60px">
+                          <h:commandButton id="btn_mnewgame" class="menubutton eightcellbutton" value="Új játszma indítása" action="#{gameManager.createGame()}">
+                            <f:ajax execute="" render="pg_menu"/>
                           </h:commandButton>
-                          <h:commandButton id="btn_gamesinlobby" class="gamebutton fivecellbutton" value="Induló asztalok" action="#{gameManager.setLobbyMode(1)}" rendered="#{gameManager.lobbyMode ne 1}">
-                            <f:ajax execute="" render="pg_main"/>
+                          <h:commandButton id="btn_mjoingame" class="menubutton eightcellbutton" value="Játszma folytatása" action="#{gameManager.createGame()}">
+                            <f:ajax execute="" render="pg_menu"/>
                           </h:commandButton>
-                          <h:commandButton id="btn_gamesinprogress" class="gamebutton sevencellbutton" value="Folyamatban lévő játékok" action="#{gameManager.setLobbyMode(2)}" rendered="#{gameManager.lobbyMode ne 2}">
-                            <f:ajax execute="" render="pg_main"/>
+                          <h:commandButton id="btn_mgamesinlobby" class="menubutton eightcellbutton" value="Csatlakozás játszmához" action="#{gameManager.setMenu(1)}">
+                            <f:ajax execute="" render="pg_menu"/>
                           </h:commandButton>
-                          <h:commandButton id="btn_gamesfinished" class="gamebutton fourcellbutton" value="Eredmények" action="#{gameManager.setLobbyMode(3)}" rendered="#{gameManager.lobbyMode ne 3}">
-                            <f:ajax execute="" render="pg_main"/>
+                          <h:commandButton id="btn_mgamesinprogress" class="menubutton eightcellbutton" value="Folyamatban lévő játszmák" action="#{gameManager.setMenu(2)}">
+                            <f:ajax execute="" render="pg_menu"/>
                           </h:commandButton>
-                          <p:commandButton id="btn_lobbyrefresh" style="display:none" action="#{gameManager.debugGame('setuprefresh')}" update="dt_lobby"/>
-                        </div>
-                      </h:panelGroup> <!--pg_lobby-->
+                          <h:commandButton id="btn_mgamesfinished" class="menubutton eightcellbutton" value="Eredmények" action="#{gameManager.setMenu(3)}">
+                            <f:ajax execute="" render="pg_menu"/>
+                          </h:commandButton>
 
-                      <h:panelGroup id="pg_gamemain" class="gamemainpg">
+                          <p:commandButton id="btn_logout" class="menubutton eightcellbutton" value="Kijelentkezés" action="#{gameManager.quit()}">
+                            <p:confirm header="Megerősítés" message="Biztosan kilépsz?"/>
+                            <f:ajax render="pg_menu" delay="1000"/>
+                          </p:commandButton>
+                        </div>  
+                      </div>
+                      <div class="aboutareaheader" style="position: absolute; display: block; top: 54px; left:398px; right:61px; height: 31px;">
+                        JÁTÉKOSOK
+                      </div>
+                      <div class="playersarea" style="position: absolute; display: block; top: 85px; left:398px; right:61px; height: 186px;">
+                        <h:dataTable id="dt_players" class="playerstable" style="width:100%;"
+                                     value="#{loginData.nameList}" var="name">
+                          <h:column>
+                            #{name}
+                          </h:column>
+                        </h:dataTable>  
+                      </div>
+                      <script>
+                        var el = document.querySelector('.playersarea');
+                        SimpleScrollbar.initEl(el);
+                      </script>
 
-                        <h:panelGroup id="pg_gamesetup" class="text" rendered="#{gameManager.isInGameState(1, 2) or (gameManager.isInGameState(4) and gameManager.gameViewMode eq 2)}">
-                          <div id="gamesetuptitle" class="gameareatitle">
-                            <h:outputText rendered="#{gameManager.isInGameState(1)}" value=">> Asztal előkészítése"/>
-                            <h:outputText rendered="#{gameManager.isInGameState(2)}" value=">>> Várakozás a játékosokra"/>
-                            <h:outputText rendered="#{gameManager.isInGameState(4) and gameManager.gameViewMode eq 2}" value=">>>> Befejeződött játék"/>
-                          </div>
-                          <div id="gamesetupname" align="right" class="gameareatitle" 
-                               style="position: absolute; top: 0px; right: 62px; width: 240px; height: 30px; display: inline-block">
-                            <h:outputText rendered="#{gameManager.isInGameState(2,3,4)}" style="text-align:right;" value="#{gameManager.game.name}"/>
-                          </div>
+                      <div class="aboutareaheader" style="position: absolute; display: block; top: 303px; left:398px; right:61px; height: 31px;">
+                        NÉVJEGY
+                      </div>
+                      <div class="aboutarea" style="position: absolute; display: block; top: 334px; left:398px; right:61px; height: 154px;">
+                        v1.4.0
+                      </div>
+
+                      <p:commandButton id="btn_menurefresh" style="display:none" action="#{gameManager.debugGame('menurefresh')}" update="dt_players"/>
+
+                      <div style="display: block; position: absolute; top: 24px; left: 10px; width: 550px;">
+                        <div>
+                          <h:inputTextarea id="ita_names" class="inputtextsmall" rows="100" cols="20" style="width:287px;height:81px;float:left;display:none" 
+                                           readonly="true"/>
+                          <h:inputTextarea id="ita_names2" class="inputtextsmall" rows="100" cols="20" style="width:287px;height:81px;float:left;display:none" 
+                                           readonly="true" value="#{loginData.nameList}"/>
+                        </div>  
+                        <p:poll id="poll_1sm" interval="1" 
+                                process="@this" async="true" partialSubmit="true" widgetVar="poll"
+                                update="ita_names2" 
+                                oncomplete="menuPoll(xhr, status, args);"/>
+                      </div>
+                    </h:panelGroup> <!-- pg_mainmenu -->
+
+                    <h:panelGroup id="pg_mainpage" style="position: absolute; top:24px; left: 30px" rendered="#{loginData.entered == true and (gameManager.menu gt 0 or gameManager.gameState gt 0)}">
+                      <h:panelGroup id="pg_main" class="mainpg">
+                        <h:panelGroup id="pg_lobby" class="text" rendered="#{gameManager.isInGameState(0)}">
+                          <h:panelGroup id="lobbytitle1" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 1}">> Indításra váró játszmák</h:panelGroup>
+                          <h:panelGroup id="lobbytitle2" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 2}">>> Folyamatban lévő játszmák</h:panelGroup>
+                          <h:panelGroup id="lobbytitle3" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 3}">>>> Legutóbbi játszmák</h:panelGroup>
 
                           <div id="gamesetupbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
                           </div>
 
-                          <h:panelGroup id="pg_gamesetuparea" class="gamesetuparea" style='position: absolute; top: 37px; width: 547px; height: 422px'>
-                            <h:panelGroup rendered="#{gameManager.game.openDate eq null}">
-                              <div class="gamesetupframe" style='position: absolute; top: 13px; left: 13px; width: 519px; height: 143px;'>
-                              </div>
+                          <div style="position: absolute; top:37px; left:0px; height: 428px; width: 327px; background: #dee4b9; opacity: 0.0; z-index: 999999"></div>
 
-                              <div style="position: absolute; top: 31px; left: 30px;">
-                                Asztal elnevezése:
-                              </div>
-                              <h:inputText class="inputtextmedium" style="position: absolute; top: 28px; left: 215px; width: 230px" maxlength="22" value="#{gameManager.game.name}"/>
+                          <div id="lobby" class="gamearea" style="position: absolute; top: 37px; width: 547px">
+                            <div id="lobbycontent" class="lobbyscroll" style='height:422px;overflow-y:auto;width:547px;'>
+                              <h:dataTable id="dt_lobby" class="lobbytable" style="width:100%;"
+                                           value="#{gameManager.getGamesFromLobby()}" var="game">
+                                <h:column>
+                                  <div class="lobbyrowborder">
 
-                              <h:outputLabel id="ol_gamepwd" style="position: absolute; top: 62px; left: 30px">
-                                Jelszó (opcionális):
-                              </h:outputLabel>
-                              <div style="position: absolute; top: 59px; left: 215px;">
-                                <h:inputText id="it_gamepwd" class="inputtextmediumuc" style="width:230px" value="#{gameManager.game.password}"/>
-                                <p:tooltip id="tip_gamepwd" for="ol_gamepwd" escape="false" class="tooltiptext">
-                                  <div class="tooltiptext2">
-                                    Az asztalhoz csatlakozni kívánó játékosok által megadandó jelszó.<br/>
-                                    Üres érték esetén az asztalhoz bárki csatlakozhat.                            
-                                  </div>
-                                </p:tooltip>
-                              </div>
+                                    <h:panelGrid id="gr_lobbyrow" class="lobbytablerow" columns="1">
+                                      <h:panelGrid id="gr_lobbyrowheader" class="lobbyrowheader" columns="2" columnClasses="lobbyrowheadercol1,lobbyrowheadercol2">
+                                        <h:panelGroup style="vertical-align: middle;">
+                                          <h:outputText class="lobbyrowgamename" style="margin-left: 5px; position: relative; top: 3px;" value="&gt;&gt; #{game.name}"/>  
+                                          <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/resources/images/adminpl.png" rendered="#{game.endDate eq null}"/>
+                                          <h:graphicImage class="lobbyrowimage" style="margin-left: 35px; position: relative; top: 2px" url="/resources/images/ending.png" rendered="#{game.endDate ne null}"/>
+                                          <h:outputText class="lobbyrowdateinfo" style="margin-left: 7px; position: relative; top: 3px" value="#{game.dateInfo}"/>  
+                                        </h:panelGroup>
+                                        <h:panelGroup style="display:inline-block">
+                                          <h:panelGroup rendered="#{gameManager.canJoinGameWithPassword(game)}">
+                                            <h:panelGroup id="pg_joinpw">
+                                              <p:inputText id="it_joinpw" class="inputtextsmalluc #{pwValidator.getErrorStyle(game)}" binding="#{pwValidator.pwInput}" style="width:85px;"
+                                                           placeholder="Jelszó">
+                                                <f:validator validatorId="pwValidator"/>
+                                                <f:attribute name="gamePassword" value="#{game.password}"/>
+                                                <f:attribute name="gameId" value="#{game.id}"/>
+                                                <f:attribute name="btnId" value="#{param[joinbtn.clientId]}"/>
+                                              </p:inputText>
+                                            </h:panelGroup>
+                                            <p:defaultCommand target="btn_joingamewpw" scope="pg_joinpw" />          
+                                            <p:commandButton id="btn_joingamewpw" value="Csatlakozás" class="buttonsmall2" action="#{gameManager.joinGame(game)}" binding="#{joinbtn}"
+                                                             process="@parent"  update=":pageform:pg_main">
+                                              <f:param name="btnclick" value="1" />
+                                            </p:commandButton>
+                                          </h:panelGroup>
+                                          <p:commandButton id="btn_joingamenopw" value="Csatlakozás" class="buttonsmall2" action="#{gameManager.joinGame(game)}" 
+                                                           rendered="#{gameManager.canJoinGameWOPassword(game)}" process="@parent" update=":pageform:pg_main"/>
+                                          <p:commandButton value="Csatlakozás" class="buttonsmall2" rendered="#{gameManager.isGameFading(game)}">
+                                            <p:effect type="fade" event="load" delay="200">  
+                                              <f:param name="mode" value="'hide'"/>
+                                            </p:effect>                          
+                                          </p:commandButton>
+                                          <p:commandButton id="btn_viewgame" value="Eredmény" class="buttonsmall2" style="width: 90px;" action="#{gameManager.viewGame(game)}" 
+                                                           rendered="#{gameManager.canViewGame(game)}" update=":pageform:pg_main"/>
+                                        </h:panelGroup>
+                                      </h:panelGrid>
+                                      <h:panelGrid id="gr_lobbyrowplayers" class="lobbyrowplayers" columns="4">
+                                        <h:panelGroup id="pg_lobbyrowplayer1" style="vertical-align: middle">
+                                          <h:panelGroup class="lobbyrowplayer">
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/player1.png" rendered="#{game.getPlayerPosState(0) eq 1}"/>
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(0) eq 5}"/>
+                                            <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(0, true)}"/>       
+                                          </h:panelGroup>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pg_lobbyrowplayer2" style="vertical-align: middle">
+                                          <h:panelGroup class="lobbyrowplayer" rendered="#{!game.getPlayerName(1, true).isEmpty()}">
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/player2.png" rendered="#{game.getPlayerPosState(1) eq 2}"/>
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(1) eq 5}"/>
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(1) eq 6}"/>
+                                            <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(1, true)}"/>       
+                                          </h:panelGroup>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pg_lobbyrowplayer3" style="vertical-align: middle">
+                                          <h:panelGroup class="lobbyrowplayer" rendered="#{!game.getPlayerName(2, true).isEmpty()}">
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/player3.png" rendered="#{game.getPlayerPosState(2) eq 3}"/>
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(2) eq 5}"/>
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(2) eq 6}"/>
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{game.getPlayerPosState(2) eq 7}"/>
+                                            <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(2, true)}"/>       
+                                          </h:panelGroup>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pg_lobbyrowplayer4" style="vertical-align: middle">
+                                          <h:panelGroup class="lobbyrowplayer" rendered="#{!game.getPlayerName(3, true).isEmpty()}">
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/player4.png" rendered="#{game.getPlayerPosState(3) eq 4}"/>
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{game.getPlayerPosState(3) eq 5}"/>
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{game.getPlayerPosState(3) eq 6}"/>
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{game.getPlayerPosState(3) eq 7}"/>
+                                            <h:outputText class="lobbyplayernametext" value="#{game.getPlayerName(3, true)}"/>       
+                                          </h:panelGroup>
+                                        </h:panelGroup>
+                                      </h:panelGrid>
 
-                              <div style="position: absolute; top: 93px; left: 30px">
-                                Játékosok száma:
-                              </div>
-                              <h:panelGroup id="pg_selectplayernum" rendered="#{gameManager.isInGameState(1)}">
-                                <div id="selectplayernum" style="position: absolute; top: 93px; left: 212px; display: inline-block; margin-left: 5px">
-                                  <p:commandButton id="decminbutton" value="-" class="buttonsmall4" action="#{gameManager.decMinPlayers()}"
-                                                   update="pg_gamesetup"/>
-                                  <h:outputLabel id="minplayerslabel" style="margin-left: 5px">#{gameManager.game.minPlayers}</h:outputLabel>
-                                  <p:commandButton id="incminbutton" value="+" class="buttonsmall4" style="margin-left: 5px; margin-right: 3px" action="#{gameManager.incMinPlayers()}"
-                                                   update="pg_gamesetup"/>
-                                  és
-                                  <p:commandButton id="decmaxbutton" value="-" class="buttonsmall4" style="margin-left: 4px" action="#{gameManager.decMaxPlayers()}" update="pg_gamesetup"/>
-                                  <h:outputLabel id="maxplayerslabel" style="margin-left: 5px">#{gameManager.game.maxPlayers}</h:outputLabel>
-                                  <p:commandButton id="incmaxbutton" value="+" class="buttonsmall4" style="margin-left: 5px; margin-right: 3px" action="#{gameManager.incMaxPlayers()}" update="pg_gamesetup"/>
-                                  között
-                                </div>
-                              </h:panelGroup>  
+                                      <h:panelGrid id="gr_lobbyrowrules" class="lobbyrowrules" columns="1" columnClasses="lobbyrowrulescol1" rendered="#{game.startDate eq null}">
+                                        <h:panelGroup id="pg_rowtimelimit">
+                                          <div class="lobbyrowrule">
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/az.png"/>
+                                            <h:outputText class="lobbyrowrule2" style="margin-left: 7px; position:relative; top: 2px;" value="#{game.alphabetSettingsString}" />       
+                                          </div>
+                                          <h:panelGroup rendered="#{game.rndLetterMode.ordinal() gt 0}">
+                                            <div class="lobbyrowrule">
+                                              <h:graphicImage class="lobbyrowimage" style="max-width:33px;" url="/resources/images/rndlet.png"/>
+                                              <h:outputText style="margin-left: 5px; position:relative; top: 2px;" value="#{game.rndLetterMode.valueLabel}"/>       
+                                            </div>
+                                          </h:panelGroup>
+                                          <div class="lobbyrowrule">
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/clock.png"/>
+                                            <h:outputText style="margin-left: 5px; position:relative; top: 2px;" value="#{game.timeLimit}"/>       
+                                          </div>
+                                          <div class="lobbyrowrule">
+                                            <h:graphicImage class="lobbyrowimage" url="/resources/images/rndplc.png" rendered="#{game.randomPlace}"/>
+                                            <h:graphicImage class="lobbyrowimage" style="max-width:22px;" url="/resources/images/norndplc.png" rendered="#{!game.randomPlace}"/>
+                                          </div>
+                                          <div class="lobbyrowrule">
+                                            <h:graphicImage class="lobbyrowimage" style="max-width:30px;" url="/resources/images/scoring6.png"/>
+                                            <h:outputText style="margin-left: 4px; position:relative; top: 2px;" value="#{game.scoringMode.maxValue}" />       
+                                          </div>
+                                        </h:panelGroup>
+                                      </h:panelGrid>
+                                    </h:panelGrid>
+                                  </div>  
+                                </h:column>
+                              </h:dataTable>
+                            </div>
+                            <script>
+                              var el = document.querySelector('.lobbyscroll');
+                              SimpleScrollbar.initEl(el);
+                            </script>
+                          </div>
 
-                              <div style="position: absolute; top: 124px; left: 217px">
-                                <p:selectBooleanCheckbox id="chk_randomorder" class="select1" value="#{gameManager.game.randomOrder}" label="" disabled="#{gameManager.game.openDate != null}"/>              
-                              </div>
+                          <div id="lobbybuttons" style="position: absolute; top: 468px;">
+                            <h:commandButton id="btn_lobbytomenu" class="gamebutton fivecellbutton" value="Vissza a menübe" action="#{gameManager.setMenu(0)}">
+                              <f:ajax execute="" render="pg_menu"/>
+                            </h:commandButton>
 
-                              <div style="position: absolute; top: 124px; left: 245px">
-                                <h:outputLabel id="randomorderlabel">Véletlenszerű ülésrend</h:outputLabel>
-                                <p:tooltip id="tip_randomorder" for="randomorderlabel" escape="false" class="tooltiptext">
-                                  <div class="tooltiptext2">
-                                    A játékosok végleges sorrendjét a gép sorsolja.                            
-                                  </div>
-                                </p:tooltip>
-                              </div>
-                            </h:panelGroup>
+                            <p:commandButton id="btn_lobbyrefresh" style="display:none" action="#{gameManager.debugGame('setuprefresh')}" update="dt_lobby"/>
+                          </div>
+                        </h:panelGroup> <!--pg_lobby-->
 
-                            <h:panelGroup rendered="#{gameManager.game.openDate ne null}">
-                              <div class="gamesetupframe" style='position: absolute; top: 13px; left: 13px; width: 519px; height: 144px;'>
-                              </div>
+                        <h:panelGroup id="pg_gamemain" class="gamemainpg" style="position: absolute; top: 0px; width: 554px; text-align: left;">
 
-                              <div style="position: absolute; top: 31px; left: 30px">
-                                Résztvevők:
-                              </div>
-
-                              <h:panelGroup id="pg_players">
-                                <h:panelGroup id="pg_player1" rendered="#{gameManager.game.maxPlayers > 0}">
-                                  <div class="gamesetupplayer" style="position: absolute; top: 26px; left: 212px;">
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player1.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 1}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 5}"/>
-                                    <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
-                                      <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(0, false)}"/>       
-                                      <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px;" rendered="#{gameManager.game.adminPlayerPos == 0}"/>
-                                    </div>
-                                  </div>
-                                  <h:panelGroup style="position: absolute; top: 31px; left: 466px; display: inline-block" 
-                                                rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
-                                    <h:commandButton id="btn_p1down" value="" class="buttonsmall5" 
-                                                     action="#{gameManager.swapPlayers(0,1)}" rendered="#{gameManager.game.numberOfPlayers gt 1}">
-                                      <f:ajax execute="" render="pg_player1 pg_player2"/>
-                                    </h:commandButton>
-                                  </h:panelGroup>
-                                </h:panelGroup>
-                                <h:panelGroup id="pg_player2" rendered="#{gameManager.game.maxPlayers > 1}">
-                                  <div class="gamesetupplayer" style="position: absolute; top: 57px; left: 212px;">
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player2.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 2}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 5}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 6}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(1) eq 7}"/>
-                                    <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
-                                      <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(1, false)}"/>       
-                                      <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 1}"/>
-                                    </div>
-                                  </div>
-                                  <h:panelGroup style="position: absolute; top: 62px; left: 466px; display: inline-block; margin-right: 15px" 
-                                                rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
-                                    <h:commandButton id="btn_p2down" value="" class="buttonsmall5"
-                                                     action="#{gameManager.swapPlayers(1,2)}" rendered="#{gameManager.game.numberOfPlayers gt 2}">
-                                      <f:ajax execute="" render="pg_player2 pg_player3"/>
-                                    </h:commandButton>
-                                    <h:commandButton id="btn_p2up" value="" class="buttonsmall6" 
-                                                     action="#{gameManager.swapPlayers(0,1)}" rendered="#{gameManager.game.numberOfPlayers gt 1}">
-                                      <f:ajax execute="" render="pg_player1 pg_player2"/>
-                                    </h:commandButton>
-                                  </h:panelGroup>
-                                </h:panelGroup>
-                                <h:panelGroup id="pg_player3" rendered="#{gameManager.game.maxPlayers gt 2 and !(gameManager.game.startDate ne null and gameManager.game.numberOfPlayers lt 3)}">
-                                  <div class="gamesetupplayer" style="position: absolute; top: 88px; left: 212px;">
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player3.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 3}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 5}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 6}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(2) eq 7}"/>
-                                    <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
-                                      <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(2, false)}"/>       
-                                      <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 2}"/>
-                                    </div>
-                                  </div>
-                                  <h:panelGroup style="position: absolute; top: 93px; left: 466px; display: inline-block" 
-                                                rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
-                                    <h:commandButton id="btn_p3down" value="" class="buttonsmall5"
-                                                     action="#{gameManager.swapPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
-                                      <f:ajax execute="" render="pg_player3 pg_player4"/>
-                                    </h:commandButton>
-                                    <h:commandButton id="btn_p3up" value="" class="buttonsmall6"
-                                                     action="#{gameManager.swapPlayers(1,2)}" rendered="#{gameManager.game.numberOfPlayers gt 2}">
-                                      <f:ajax execute="" render="pg_player2 pg_player3"/>
-                                    </h:commandButton>
-                                  </h:panelGroup>
-                                </h:panelGroup>
-                                <h:panelGroup id="pg_player4" rendered="#{gameManager.game.maxPlayers gt 3 and !(gameManager.game.startDate ne null and gameManager.game.numberOfPlayers lt 4)}">
-                                  <div class="gamesetupplayer" style="position: absolute; top: 119px; left: 212px;">
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player4.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 4}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 5}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 6}"/>
-                                    <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(3) eq 7}"/>
-                                    <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
-                                      <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(3, false)}"/>       
-                                      <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 3}"/>
-                                    </div>  
-                                  </div>
-                                  <h:panelGroup style="position: absolute; top: 123px; left: 466px; display: inline-block" 
-                                                rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
-                                    <h:commandButton id="btn_p4up" value="" class="buttonsmall6" 
-                                                     action="#{gameManager.swapPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
-                                      <f:ajax execute="" render="pg_player3 pg_player4"/>
-                                    </h:commandButton>
-                                  </h:panelGroup>
-                                </h:panelGroup>
-                              </h:panelGroup> <!--pg_players-->
-                            </h:panelGroup>
-
-                            <div class="gamesetupframe" style='position: absolute; top: 169px; left: 13px; width: 519px; height: 238px;'>
+                          <h:panelGroup id="pg_gamesetup" class="text" rendered="#{gameManager.isInGameState(1, 2) or (gameManager.isInGameState(4) and gameManager.gameViewMode eq 2)}">
+                            <div id="gamesetuptitle" class="gameareatitle">
+                              <h:outputText rendered="#{gameManager.isInGameState(1)}" value=">> Játszma előkészítése"/>
+                              <h:outputText rendered="#{gameManager.isInGameState(2)}" value=">>> Várakozás a játékosokra"/>
+                              <h:outputText rendered="#{gameManager.isInGameState(4) and gameManager.gameViewMode eq 2}" value=">>>> Befejeződött játék"/>
+                            </div>
+                            <div id="gamesetupname" align="right" class="gameareatitle" 
+                                 style="position: absolute; top: 0px; right: 0px; width: 100%; height: 30px; display: inline-block">
+                              <h:outputText rendered="#{gameManager.isInGameState(2,3,4)}" style="text-align:right;" value="#{gameManager.game.name}"/>
                             </div>
 
-                            <h:panelGroup id="pg_gameoptions" class="gameoptionspg">
-                              <div style="position: absolute; top: 187px; left: 30px">
-                                Betűkészlet:
-                              </div>
-                              <div style="position: absolute; top: 186px; left: 217px">
-                                <p:selectBooleanCheckbox id="chk_includelongvowels" class="select1" value="#{gameManager.game.includeLongVowels}" label="" disabled="#{gameManager.game.openDate != null}"/>              
-                              </div>
-                              <div style="position: absolute; top: 187px; left: 245px">
-                                <h:outputLabel id="evrlabel">Hosszú magánhangzók is</h:outputLabel>
-                                <p:tooltip id="tip_evr" for="evrlabel" escape="false" class="tooltiptext">
-                                  <div class="tooltiptext2">
-                                    A betűkészletben szerepelnek-e a hosszú Í, Ó, Ő, Ú, Ű magánhangzók,<br/>
-                                    vagy helyettük is a rövid megfelelőjük használható?
-                                  </div>
-                                </p:tooltip>
-                              </div>
-                              <div style="position: absolute; top: 217px; left: 217px">
-                                <p:selectBooleanCheckbox id="chk_includedigraphs" class="select1" value="#{gameManager.game.includeDigraphs}" label="" disabled="#{gameManager.game.openDate != null}"/>              
-                              </div>
-                              <div style="position: absolute; top: 218px; left: 245px">
-                                <h:outputLabel id="digraphlabel">Kétjegyű mássalhangzók is</h:outputLabel>
-                                <p:tooltip id="tip_digraph" for="digraphlabel" escape="false" class="tooltiptext">
-                                  <div class="tooltiptext2">
-                                    A betűkészletben szerepelnek-e a CS, GY, LY, NY, SZ, TY, ZS betűk?
-                                  </div>
-                                </p:tooltip>
-                              </div>
-                              <div style="position: absolute; top: 248px; left: 217px">
-                                <p:selectBooleanCheckbox id="chk_includex" class="select1" value="#{gameManager.game.includeX}" label="" disabled="#{gameManager.game.openDate != null}"/>              
-                              </div>
-                              <div style="position: absolute; top: 249px; left: 245px">
-                                <h:outputLabel id="xlabel">X választható</h:outputLabel>
-                                <p:tooltip id="tip_x" for="xlabel" escape="false" class="tooltiptext">
-                                  <div class="tooltiptext2">
-                                    Az X betű is a készletbe kerül-e?                            
-                                  </div>
-                                </p:tooltip>
-                              </div>
-                              <div style="position: absolute; top: 248px; left: 374px">
-                                <p:selectBooleanCheckbox id="chk_includey" class="select1" value="#{gameManager.game.includeY}" label="" disabled="#{gameManager.game.openDate != null}"/>              
-                              </div>
-                              <div style="position: absolute; top: 249px; left: 402px">
-                                <h:outputLabel id="ylabel">Y önállóan is</h:outputLabel>
-                                <p:tooltip id="tip_y" for="ylabel" escape="false" class="tooltiptext">
-                                  <div class="tooltiptext2">
-                                    Az Y önálló betűként is a készletbe kerül-e?  
-                                  </div>
-                                </p:tooltip>
-                              </div>
+                            <div id="gamesetupbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
+                            </div>
 
-                              <h:panelGroup rendered="#{gameManager.isInGameState(1)}">
-                                <h:outputLabel id="ol_rndlettermode" style="position: absolute; top: 280px; left: 30px" value="Sorsolt betűk:" for="sel_rndlettermode"/>
-                                <div style="position: absolute; top: 276px; left: 217px">
-                                  <p:selectOneMenu id="sel_rndlettermode" class="select3" style="width:205px" value="#{gameManager.game.rndLetterMode}">
-                                    <f:selectItems value="#{gameManager.allRndLetterModes}" var="rndLetterMode" itemLabel="#{rndLetterMode.label}" itemValue="#{rndLetterMode.value}"/>
-                                  </p:selectOneMenu>
-                                  <p:tooltip id="tip_rndlettermode" for="ol_rndlettermode" class="tooltiptext" escape="false">
+                            <h:panelGroup id="pg_gamesetuparea" class="gamesetuparea" style='position: absolute; top: 37px; width: 547px; height: 422px'>
+                              <h:panelGroup rendered="#{gameManager.game.openDate eq null}">
+                                <div class="gamesetupframe" style='position: absolute; top: 13px; left: 13px; width: 519px; height: 143px;'>
+                                </div>
+
+                                <div style="position: absolute; top: 31px; left: 30px;">
+                                  Játszma elnevezése:
+                                </div>
+                                <h:inputText class="inputtextmedium" style="position: absolute; top: 28px; left: 215px; width: 230px" maxlength="22" value="#{gameManager.game.name}"/>
+
+                                <h:outputLabel id="ol_gamepwd" style="position: absolute; top: 62px; left: 30px">
+                                  Jelszó (opcionális):
+                                </h:outputLabel>
+                                <div style="position: absolute; top: 59px; left: 215px;">
+                                  <h:inputText id="it_gamepwd" class="inputtextmediumuc" style="width:230px" value="#{gameManager.game.password}"/>
+                                  <p:tooltip id="tip_gamepwd" for="ol_gamepwd" escape="false" class="tooltiptext">
                                     <div class="tooltiptext2">
-                                      A játék mely szakaszában történjen a betűk kiválasztása a játékosok helyett a számítógép által.
+                                      Az játszmahoz csatlakozni kívánó játékosok által megadandó jelszó.<br/>
+                                      Üres érték esetén az játszmahoz bárki csatlakozhat.                            
                                     </div>
                                   </p:tooltip>
                                 </div>
-                              </h:panelGroup>  
-                              <h:panelGroup rendered="#{gameManager.isInGameState(2,4)}">
-                                <div style="position: absolute; top: 280px; left: 30px">
-                                  Sorsolt betűk:
-                                </div>
-                                <div style="position: absolute; top: 280px; left:217px">
-                                  #{gameManager.game.rndLetterMode.label}
-                                </div>
-                              </h:panelGroup>
 
-                              <h:outputLabel id="ol_timelimit" style="position: absolute; top: 311px; left: 30px">
-                                Gondolkodási idő:
-                              </h:outputLabel>
-                              <p:tooltip id="tip_timelimit" for="ol_timelimit" class="tooltiptext" escape="false" showDelay="1000">
-                                <div class="tooltiptext2">
-                                  A játékosok számára egy betű lehelyezésére rendelkezésre álló idő. 
+                                <div style="position: absolute; top: 93px; left: 30px">
+                                  Játékosok száma:
                                 </div>
-                              </p:tooltip>
+                                <h:panelGroup id="pg_selectplayernum" rendered="#{gameManager.isInGameState(1)}">
+                                  <div id="selectplayernum" style="position: absolute; top: 93px; left: 212px; display: inline-block; margin-left: 5px">
+                                    <p:commandButton id="decminbutton" value="-" class="buttonsmall4" action="#{gameManager.decMinPlayers()}"
+                                                     update="pg_gamesetup"/>
+                                    <h:outputLabel id="minplayerslabel" style="margin-left: 5px">#{gameManager.game.minPlayers}</h:outputLabel>
+                                    <p:commandButton id="incminbutton" value="+" class="buttonsmall4" style="margin-left: 5px; margin-right: 3px" action="#{gameManager.incMinPlayers()}"
+                                                     update="pg_gamesetup"/>
+                                    és
+                                    <p:commandButton id="decmaxbutton" value="-" class="buttonsmall4" style="margin-left: 4px" action="#{gameManager.decMaxPlayers()}" update="pg_gamesetup"/>
+                                    <h:outputLabel id="maxplayerslabel" style="margin-left: 5px">#{gameManager.game.maxPlayers}</h:outputLabel>
+                                    <p:commandButton id="incmaxbutton" value="+" class="buttonsmall4" style="margin-left: 5px; margin-right: 3px" action="#{gameManager.incMaxPlayers()}" update="pg_gamesetup"/>
+                                    között
+                                  </div>
+                                </h:panelGroup>  
 
-                              <h:panelGroup rendered="#{gameManager.isInGameState(1)}">
-                                <div style="position: absolute; top: 307px; left: 217px">
-                                  <p:selectOneMenu class="select3" value="#{gameManager.game.timeLimit}" >
-                                    <f:selectItems value="#{gameManager.allTimeLimits}"/>
-                                  </p:selectOneMenu>
+                                <div style="position: absolute; top: 124px; left: 217px">
+                                  <p:selectBooleanCheckbox id="chk_randomorder" class="select1" value="#{gameManager.game.randomOrder}" label="" disabled="#{gameManager.game.openDate != null}"/>              
                                 </div>
-                                <div style="position: absolute; top: 311px; left: 281px">
-                                  mp
-                                </div>
-                              </h:panelGroup>  
-                              <h:panelGroup style="position: absolute; top: 311px; left:217px" rendered="#{gameManager.isInGameState(2,4)}">
-                                #{gameManager.game.timeLimit} mp
-                              </h:panelGroup>
 
-                              <h:panelGroup>
-                                <div style="position: absolute; top: 341px; left: 217px">
-                                  <p:selectBooleanCheckbox id="chk_randomplace" class="select1" value="#{gameManager.game.randomPlace}" label="" disabled="#{gameManager.game.openDate != null}"/>              
-                                </div>
-                                <div style="position: absolute; top: 342px; left: 245px">
-                                  <h:outputLabel id="randomplacelabel" for="chk_randomplace">Minden betű táblára kerül</h:outputLabel>
-                                  <p:tooltip id="tip_randomplacelabel" for="randomplacelabel" escape="false" class="tooltiptext">
+                                <div style="position: absolute; top: 124px; left: 245px">
+                                  <h:outputLabel id="randomorderlabel">Véletlenszerű ülésrend</h:outputLabel>
+                                  <p:tooltip id="tip_randomorder" for="randomorderlabel" escape="false" class="tooltiptext">
                                     <div class="tooltiptext2">
-                                      Az időben le nem helyezett betű is felkerül-e a táblára, <br/>
-                                      a még üresen álló mezők közül véletlenszerűen valamelyikbe?        
+                                      A játékosok végleges sorrendjét a gép sorsolja.                            
                                     </div>
                                   </p:tooltip>
                                 </div>
                               </h:panelGroup>
 
-                              <h:panelGroup rendered="#{gameManager.isInGameState(1)}">
-                                <h:outputLabel id="ol_scoringmode" style="position: absolute; top: 373px; left: 30px" value="Pontozási módszer:" for="sel_scoringmode"/>
-                                <div style="position: absolute; top: 370px; left: 217px">
-                                  <p:selectOneMenu id="sel_scoringmode" class="select3" style="width:205px" value="#{gameManager.game.scoringMode}">
-                                    <f:selectItems value="#{gameManager.allScoringModes}" var="scoringMode" itemLabel="#{scoringMode.label}" itemValue="#{scoringMode.value}"/>
-                                  </p:selectOneMenu>
-                                  <p:tooltip id="tip_scoringmode" for="ol_scoringmode" class="tooltiptext" escape="false">
-                                    <div class="tooltiptext2">
-                                      A 2,3,4,5,6 betűs szavak pontértéke.        
+                              <h:panelGroup rendered="#{gameManager.game.openDate ne null}">
+                                <div class="gamesetupframe" style='position: absolute; top: 13px; left: 13px; width: 519px; height: 144px;'>
+                                </div>
+
+                                <div style="position: absolute; top: 31px; left: 30px">
+                                  Résztvevők:
+                                </div>
+
+                                <h:panelGroup id="pg_players">
+                                  <h:panelGroup id="pg_player1" rendered="#{gameManager.game.maxPlayers > 0}">
+                                    <div class="gamesetupplayer" style="position: absolute; top: 26px; left: 212px;">
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/player1.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 1}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(0) eq 5}"/>
+                                      <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
+                                        <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(0, false)}"/>       
+                                        <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px;" rendered="#{gameManager.game.adminPlayerPos == 0}"/>
+                                      </div>
                                     </div>
-                                  </p:tooltip>
-                                </div>
-                              </h:panelGroup>  
-                              <h:panelGroup rendered="#{gameManager.isInGameState(2,4)}">
-                                <div style="position: absolute; top: 373px; left: 30px">
-                                  Pontozási módszer:
-                                </div>
-                                <div style="position: absolute; top: 373px; left:217px">
-                                  #{gameManager.game.scoringMode.label}
-                                </div>
-                              </h:panelGroup>
-                            </h:panelGroup>
-
-                            <p:commandButton id="btn_setuprefresh" style="display:none" action="#{gameManager.debugGame('setuprefresh')}" update="pg_players pg_gamesetupbuttons"/>
-                          </h:panelGroup> <!--pg_gamesetuparea-->
-
-                          <h:outputText id="ot_gamesetup" style="display:none"/>
-
-                          <h:panelGroup id="pg_gamesetupbuttons" style="position: absolute; top: 468px;">
-                            <p:commandButton class="gamebutton fivecellbutton" value="Asztal eldobása" action="#{gameManager.dropGame()}"
-                                             rendered="#{gameManager.game.boards.size() eq 1}" 
-                                             update="pg_main"/>
-                            <p:commandButton class="gamebutton fivecellbutton" value="Asztal elhagyása" action="#{gameManager.quitGame(true)}"
-                                             rendered="#{gameManager.game.boards.size() gt 1 and gameManager.game.startDate == null}" 
-                                             update="pg_main"/>
-                            <p:commandButton class="gamebutton fivecellbutton" value="Asztal megnyitása" action="#{gameManager.openGame()}"
-                                             rendered="#{gameManager.game.openDate == null}"
-                                             update="pg_main"/>
-                            <p:commandButton class="gamebutton fivecellbutton" value="Játék indítása" action="#{gameManager.startGame()}" 
-                                             rendered="#{(gameManager.game.openDate != null or gameManager.game.minPlayers eq 1) and gameManager.game.startDate == null}" 
-                                             disabled="#{gameManager.game.numberOfPlayers lt gameManager.game.minPlayers or gameManager.myGamePos ne gameManager.game.adminPlayerPos}"
-                                             update="pg_main"/>
-                            <p:commandButton class="gamebutton fivecellbutton" value="Asztal bezárása" action="#{gameManager.quitGame(true)}"
-                                             rendered="#{gameManager.game.endDate != null}" update="pg_main"/>
-                            <p:commandButton class="gamebutton fourcellbutton" value="Végeredmény" action="#{gameManager.switchGameViewMode()}" 
-                                             rendered="#{gameManager.game.endDate != null}" 
-                                             update="pg_main"/>
-                          </h:panelGroup>
-                        </h:panelGroup> <!-- pg_gamesetup -->
-
-                        <h:panelGroup id="pg_gameplay" class="text" rendered="#{gameManager.isInGameState(3,4) and gameManager.gameViewMode ne 2}">
-                          <div id="gameplaytitle" class="gameareatitle">
-                            <h:outputText value=">>>> Játék folyamatban" rendered="#{gameManager.isInGameState(3)}"/>
-                            <h:outputText value=">>>> Befejeződött játék" rendered="#{gameManager.isInGameState(4)}"/>
-                          </div>
-
-                          <div id="gameplayname" align="right" class="gameareatitle" 
-                               style="position: absolute; top: 0px; right: 62px; width: 240px; height: 30px; display: inline-block">
-                            <h:outputText style="text-align:right;" value="#{gameManager.game.name}"/>
-                          </div>
-
-                          <div id="gameplaybg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
-                          </div>
-
-                          <h:panelGroup id="pg_gameplayarea" class="gameplayarea" style='position: absolute; top: 37px; width: 547px; height: 422px'>
-
-                            <div class="gamesetupframe" style="position: absolute; top: 14px; left: 14px; width: 268px; height: 237px;">
-                            </div>
-                            <h:panelGroup id="pg_gamemsg">
-                              <h:inputTextarea id="ita_gamemsg" class="inputtextplay" rows="7" cols="20" 
-                                               style="position: absolute; top: 24px; left: 24px; width:240px; height:201px;" 
-                                               readonly="true" value="#{gameManager.gameMsg}"/>
-                              <h:outputLabel class="selectedlettertext" style="position: absolute; top: 100px; left: 24px; width: 240px"
-                                             rendered="#{gameManager.canPlayerPlaceLetter()}">#{gameManager.selectedLetter}</h:outputLabel>
-                              <h:outputLabel class="selectedlettertext" style="position: absolute; top: 100px; left: 24px; width: 240px"
-                                             rendered="#{gameManager.needPlayerConfirmLetter()}">#{gameManager.preselectedLetter}</h:outputLabel>
-                              <h:panelGroup id="pg_confirmletter" style="position: absolute; top: 173px; left: 33px; width: 230px; text-align: center" 
-                                            rendered="#{gameManager.needPlayerConfirmLetter()}">
-                                <p:commandButton id="btn_revokeletter" class="letterbutton" style="width: 80px" value="Vissza" action="#{gameManager.revokeSelectedLetter()}"
-                                                 update=":pageform:pg_gamemsg"/>
-                                <p:commandButton id="btn_confirmletter" class="letterbutton" style="width: 80px; margin-left: 15px" value="Kész" action="#{gameManager.confirmSelectedLetter()}"
-                                                 update=":pageform:pg_gamemsg"/>
-                              </h:panelGroup>
-                              <h:panelGroup id="pg_letters" style="position: absolute; top: 89px; left: 33px; width: 230px; text-align: center" 
-                                            rendered="#{gameManager.canPlayerSelectLetter()}">
-                                <ui:repeat value="#{gameManager.letterIndices}" var="let">
-                                  <p:commandButton id="btn_let0" class="letterbutton pointer-none" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let, false)}" rendered="#{gameManager.canSelectLetter(let)}"
-                                                   update=":pageform:pg_gamemsg"/>
-                                  <p:commandButton id="btn_let1" class="letterbutton pointer-fine" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let, true)}" rendered="#{gameManager.canSelectLetter(let)}"
-                                                   update=":pageform:pg_gamemsg"/>
-                                </ui:repeat>  
-                              </h:panelGroup>
-                            </h:panelGroup>
-
-                            <div class="gamesetupframe" style="position: absolute; top: 14px; left: 295px; width: 237px; height: 237px;">
-                            </div>
-                            <h:graphicImage style="position: absolute; top: 53px; left: 333px;" url="/resources/images/bp6x6.jpg" />
-                            <h:panelGroup id="pg_gameboard" class="gameboard">
-
-                              <h:outputLabel style="position: absolute; top: 30px; left: 346px">1</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 30px; left: 377px">2</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 30px; left: 408px">3</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 30px; left: 439px">4</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 30px; left: 470px">5</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 30px; left: 501px">6</h:outputLabel>
-
-                              <h:outputLabel style="position: absolute; top: 61px; left: 315px">A</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 92px; left: 315px">B</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 123px; left: 315px">C</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 154px; left: 315px">D</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 185px; left: 315px">E</h:outputLabel>
-                              <h:outputLabel style="position: absolute; top: 216px; left: 315px">F</h:outputLabel>
-
-                              <canvas id="cv_board" style="position: absolute; top: 55px; left: 336px; width: 186px; height: 186px;"/>
-                              <h:panelGroup id="pg_boardbuttons" class="boardbuttonarea" style="position: absolute; top: 53px; left: 333px; width: 188px; height: 185px; text-align: center">
-                                <ui:repeat value="#{gameManager.cellIndices}" var="cell">
-                                  <p:commandButton class="#{gameManager.getBoardLetterClass(cell, false)} pointer-none" value="#{gameManager.getBoardLetter(cell)}" 
-                                                   action="#{gameManager.placeLetter(cell, false)}" disabled="#{!gameManager.canPlaceBoardLetter(cell)}"
-                                                   update=":pageform:pg_boardbuttons"/>
-                                  <p:commandButton class="#{gameManager.getBoardLetterClass(cell, true)} pointer-fine" value="#{gameManager.getBoardLetter(cell)}" 
-                                                   action="#{gameManager.placeLetter(cell, true)}" disabled="#{!gameManager.canPlaceBoardLetter(cell)}"
-                                                   update=":pageform:pg_boardbuttons"/>
-                                </ui:repeat>  
-                              </h:panelGroup>
-                            </h:panelGroup>
-
-                            <div class="gamesetupframe" style='position: absolute; top: 263px; left: 14px; width: 268px; height: 143px;'>
-                            </div>
-
-                            <h:dataTable id="dt_gameplayers" class="gameplayerstable" style="position: absolute; top: 272px; left: 23px; width: 251px;"
-                                         value="#{gameManager.game.boards}" var="boa" columnClasses="gameplayerstablecol">
-                              <h:column>
-                                <h:panelGroup id="pg_gameplayerscell">
-                                  <h:panelGrid class="#{gameManager.getGamePlayersRowClass(boa.position)}" columns="3" columnClasses="gameplayersrowcol1,gameplayersrowcol2,gameplayersrowcol3">
-                                    <h:panelGroup>
-                                      <h:graphicImage class="curplayerimage" url="/resources/images/curplayer.png" 
-                                                      rendered="#{gameManager.canPlayerSelectLetterInTurn(boa.position)}"/>
-                                      <h:graphicImage class="curplayerimage" url="/resources/images/medal-1.png" 
-                                                      rendered="#{boa.place eq 1}"/>
-                                      <h:graphicImage class="curplayerimage" url="/resources/images/medal-2.png" 
-                                                      rendered="#{boa.place eq 2}"/>
-                                      <h:graphicImage class="curplayerimage" url="/resources/images/medal-3.png" 
-                                                      rendered="#{boa.place eq 3}"/>
+                                    <h:panelGroup style="position: absolute; top: 31px; left: 466px; display: inline-block" 
+                                                  rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
+                                      <h:commandButton id="btn_p1down" value="" class="buttonsmall5" 
+                                                       action="#{gameManager.swapPlayers(0,1)}" rendered="#{gameManager.game.numberOfPlayers gt 1}">
+                                        <f:ajax execute="" render="pg_player1 pg_player2"/>
+                                      </h:commandButton>
                                     </h:panelGroup>
-                                    <p:commandButton id="btn_gameplayername" class="gameplayerbutton" style="margin-left: 3px" value="#{boa.player.name}" 
-                                                     action="#{gameManager.changeMyPosition(boa.position)}" disabled="#{gameManager.gameState lt 4}" 
-                                                     update=":pageform:pg_gameplayarea"/>
-                                    <h:panelGroup>
-                                      <h:panelGroup style="margin-right: 3px;" rendered="#{boa.place gt 0}">
-                                        #{boa.score} p
-                                      </h:panelGroup>
-                                      <h:panelGroup rendered="#{boa.place eq 0}">
-                                        <h:graphicImage class="curplayerimage" url="/resources/images/inactive.png" style="margin-right: 3px;"
-                                                        rendered="#{boa.quitDate != null}"/>
-                                        <h:graphicImage class="curplayerimage" url="/resources/images/thinking.gif" style="margin-right: 3px;"
-                                                        rendered="#{boa.quitDate == null and gameManager.isPlayerTurnOn(boa.position)}"/>
-                                        <h:graphicImage class="curplayerimage" url="/resources/images/check.png" style="margin-right: 3px;"
-                                                        rendered="#{boa.quitDate == null and gameManager.isPlayerTurnFinished(boa.position)}"/>
-                                      </h:panelGroup>
+                                  </h:panelGroup>
+                                  <h:panelGroup id="pg_player2" rendered="#{gameManager.game.maxPlayers > 1}">
+                                    <div class="gamesetupplayer" style="position: absolute; top: 57px; left: 212px;">
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/player2.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 2}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 5}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(1) eq 6}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(1) eq 7}"/>
+                                      <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
+                                        <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(1, false)}"/>       
+                                        <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 1}"/>
+                                      </div>
+                                    </div>
+                                    <h:panelGroup style="position: absolute; top: 62px; left: 466px; display: inline-block; margin-right: 15px" 
+                                                  rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
+                                      <h:commandButton id="btn_p2down" value="" class="buttonsmall5"
+                                                       action="#{gameManager.swapPlayers(1,2)}" rendered="#{gameManager.game.numberOfPlayers gt 2}">
+                                        <f:ajax execute="" render="pg_player2 pg_player3"/>
+                                      </h:commandButton>
+                                      <h:commandButton id="btn_p2up" value="" class="buttonsmall6" 
+                                                       action="#{gameManager.swapPlayers(0,1)}" rendered="#{gameManager.game.numberOfPlayers gt 1}">
+                                        <f:ajax execute="" render="pg_player1 pg_player2"/>
+                                      </h:commandButton>
                                     </h:panelGroup>
-                                  </h:panelGrid>
-                                </h:panelGroup>
-                              </h:column>
-                            </h:dataTable>
+                                  </h:panelGroup>
+                                  <h:panelGroup id="pg_player3" rendered="#{gameManager.game.maxPlayers gt 2 and !(gameManager.game.startDate ne null and gameManager.game.numberOfPlayers lt 3)}">
+                                    <div class="gamesetupplayer" style="position: absolute; top: 88px; left: 212px;">
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/player3.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 3}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 5}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(2) eq 6}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(2) eq 7}"/>
+                                      <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
+                                        <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(2, false)}"/>       
+                                        <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 2}"/>
+                                      </div>
+                                    </div>
+                                    <h:panelGroup style="position: absolute; top: 93px; left: 466px; display: inline-block" 
+                                                  rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
+                                      <h:commandButton id="btn_p3down" value="" class="buttonsmall5"
+                                                       action="#{gameManager.swapPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
+                                        <f:ajax execute="" render="pg_player3 pg_player4"/>
+                                      </h:commandButton>
+                                      <h:commandButton id="btn_p3up" value="" class="buttonsmall6"
+                                                       action="#{gameManager.swapPlayers(1,2)}" rendered="#{gameManager.game.numberOfPlayers gt 2}">
+                                        <f:ajax execute="" render="pg_player2 pg_player3"/>
+                                      </h:commandButton>
+                                    </h:panelGroup>
+                                  </h:panelGroup>
+                                  <h:panelGroup id="pg_player4" rendered="#{gameManager.game.maxPlayers gt 3 and !(gameManager.game.startDate ne null and gameManager.game.numberOfPlayers lt 4)}">
+                                    <div class="gamesetupplayer" style="position: absolute; top: 119px; left: 212px;">
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/player4.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 4}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/playerx.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 5}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/playerm.png" rendered="#{gameManager.game.getPlayerPosState(3) eq 6}"/>
+                                      <h:graphicImage class="lobbyrowimage" url="/resources/images/player.png"  rendered="#{gameManager.game.getPlayerPosState(3) eq 7}"/>
+                                      <div class="gamesetupnamearea" style="position: absolute; top: 0px; left: 28px;">
+                                        <h:outputText class="gamesetupnametext" style="margin-left: 5px" value="#{gameManager.game.getPlayerName(3, false)}"/>       
+                                        <h:graphicImage class="adminplimage" url="/resources/images/adminpl.png" style="margin-left:8px" rendered="#{gameManager.game.adminPlayerPos == 3}"/>
+                                      </div>  
+                                    </div>
+                                    <h:panelGroup style="position: absolute; top: 123px; left: 466px; display: inline-block" 
+                                                  rendered="#{!gameManager.game.randomOrder and gameManager.game.startDate eq null and gameManager.myGamePos eq gameManager.game.adminPlayerPos}">
+                                      <h:commandButton id="btn_p4up" value="" class="buttonsmall6" 
+                                                       action="#{gameManager.swapPlayers(2,3)}" rendered="#{gameManager.game.numberOfPlayers gt 3}">
+                                        <f:ajax execute="" render="pg_player3 pg_player4"/>
+                                      </h:commandButton>
+                                    </h:panelGroup>
+                                  </h:panelGroup>
+                                </h:panelGroup> <!--pg_players-->
+                              </h:panelGroup>
 
-                            <h:panelGroup class="gamesetupframe" style='position: absolute; top: 263px; left: 295px; width: 237px; height: 47px;'
-                                          rendered="#{gameManager.gameState lt 4}"/>
-
-                            <h:panelGroup id="pg_turntime" class="turntimepg" rendered="#{gameManager.gameState lt 4}">
-                              <h:outputLabel style="position: absolute; top: 282px; left: 311px" rendered="#{gameManager.game.endDate eq null}">
-                                Gondolkodási idő:
-                              </h:outputLabel>
-                              <div  style="position: absolute; top: 278px; left: 470px; width: 50px; float: right">
-                                <h:outputText id="ot_turnsec" class="turnsec" rendered="#{gameManager.game.endDate eq null}"/>
+                              <div class="gamesetupframe" style='position: absolute; top: 169px; left: 13px; width: 519px; height: 238px;'>
                               </div>
-                            </h:panelGroup>  
 
-                            <h:panelGroup class="gamesetupframe" style='position: absolute; top: 325px; left: 295px; width: 237px; height: 81px;'
-                                          rendered="#{gameManager.gameState lt 4}"/>
+                              <h:panelGroup id="pg_gameoptions" class="gameoptionspg">
+                                <div style="position: absolute; top: 187px; left: 30px">
+                                  Betűkészlet:
+                                </div>
+                                <div style="position: absolute; top: 186px; left: 217px">
+                                  <p:selectBooleanCheckbox id="chk_includelongvowels" class="select1" value="#{gameManager.game.includeLongVowels}" label="" disabled="#{gameManager.game.openDate != null}"/>              
+                                </div>
+                                <div style="position: absolute; top: 187px; left: 245px">
+                                  <h:outputLabel id="evrlabel">Hosszú magánhangzók is</h:outputLabel>
+                                  <p:tooltip id="tip_evr" for="evrlabel" escape="false" class="tooltiptext">
+                                    <div class="tooltiptext2">
+                                      A betűkészletben szerepelnek-e a hosszú Í, Ó, Ő, Ú, Ű magánhangzók,<br/>
+                                      vagy helyettük is a rövid megfelelőjük használható?
+                                    </div>
+                                  </p:tooltip>
+                                </div>
+                                <div style="position: absolute; top: 217px; left: 217px">
+                                  <p:selectBooleanCheckbox id="chk_includedigraphs" class="select1" value="#{gameManager.game.includeDigraphs}" label="" disabled="#{gameManager.game.openDate != null}"/>              
+                                </div>
+                                <div style="position: absolute; top: 218px; left: 245px">
+                                  <h:outputLabel id="digraphlabel">Kétjegyű mássalhangzók is</h:outputLabel>
+                                  <p:tooltip id="tip_digraph" for="digraphlabel" escape="false" class="tooltiptext">
+                                    <div class="tooltiptext2">
+                                      A betűkészletben szerepelnek-e a CS, GY, LY, NY, SZ, TY, ZS betűk?
+                                    </div>
+                                  </p:tooltip>
+                                </div>
+                                <div style="position: absolute; top: 248px; left: 217px">
+                                  <p:selectBooleanCheckbox id="chk_includex" class="select1" value="#{gameManager.game.includeX}" label="" disabled="#{gameManager.game.openDate != null}"/>              
+                                </div>
+                                <div style="position: absolute; top: 249px; left: 245px">
+                                  <h:outputLabel id="xlabel">X választható</h:outputLabel>
+                                  <p:tooltip id="tip_x" for="xlabel" escape="false" class="tooltiptext">
+                                    <div class="tooltiptext2">
+                                      Az X betű is a készletbe kerül-e?                            
+                                    </div>
+                                  </p:tooltip>
+                                </div>
+                                <div style="position: absolute; top: 248px; left: 374px">
+                                  <p:selectBooleanCheckbox id="chk_includey" class="select1" value="#{gameManager.game.includeY}" label="" disabled="#{gameManager.game.openDate != null}"/>              
+                                </div>
+                                <div style="position: absolute; top: 249px; left: 402px">
+                                  <h:outputLabel id="ylabel">Y önállóan is</h:outputLabel>
+                                  <p:tooltip id="tip_y" for="ylabel" escape="false" class="tooltiptext">
+                                    <div class="tooltiptext2">
+                                      Az Y önálló betűként is a készletbe kerül-e?  
+                                    </div>
+                                  </p:tooltip>
+                                </div>
 
-                            <h:panelGroup id="pg_glossary" class="glossarypg" rendered="#{gameManager.gameState lt 4}">
-                              <h:outputLabel style="position: absolute; top: 344px; left: 311px" >
-                                Szótár ellenőrzése:
-                              </h:outputLabel>
-                              <h:panelGroup id="pg_testword">
-                                <h:inputText id="it_testword" class="inputtextcheckword" maxlength="10" style="position: absolute; top: 369px; left: 309px; width:172px;height:20px" a:autofocus="true" 
-                                             value="#{gameManager.testWord}"/>
+                                <h:panelGroup rendered="#{gameManager.isInGameState(1)}">
+                                  <h:outputLabel id="ol_rndlettermode" style="position: absolute; top: 280px; left: 30px" value="Sorsolt betűk:" for="sel_rndlettermode"/>
+                                  <div style="position: absolute; top: 276px; left: 217px">
+                                    <p:selectOneMenu id="sel_rndlettermode" class="select3" style="width:205px" value="#{gameManager.game.rndLetterMode}">
+                                      <f:selectItems value="#{gameManager.allRndLetterModes}" var="rndLetterMode" itemLabel="#{rndLetterMode.label}" itemValue="#{rndLetterMode.value}"/>
+                                    </p:selectOneMenu>
+                                    <p:tooltip id="tip_rndlettermode" for="ol_rndlettermode" class="tooltiptext" escape="false">
+                                      <div class="tooltiptext2">
+                                        A játék mely szakaszában történjen a betűk kiválasztása a játékosok helyett a számítógép által.
+                                      </div>
+                                    </p:tooltip>
+                                  </div>
+                                </h:panelGroup>  
+                                <h:panelGroup rendered="#{gameManager.isInGameState(2,4)}">
+                                  <div style="position: absolute; top: 280px; left: 30px">
+                                    Sorsolt betűk:
+                                  </div>
+                                  <div style="position: absolute; top: 280px; left:217px">
+                                    #{gameManager.game.rndLetterMode.label}
+                                  </div>
+                                </h:panelGroup>
+
+                                <h:outputLabel id="ol_timelimit" style="position: absolute; top: 311px; left: 30px">
+                                  Gondolkodási idő:
+                                </h:outputLabel>
+                                <p:tooltip id="tip_timelimit" for="ol_timelimit" class="tooltiptext" escape="false" showDelay="1000">
+                                  <div class="tooltiptext2">
+                                    A játékosok számára egy betű lehelyezésére rendelkezésre álló idő. 
+                                  </div>
+                                </p:tooltip>
+
+                                <h:panelGroup rendered="#{gameManager.isInGameState(1)}">
+                                  <div style="position: absolute; top: 307px; left: 217px">
+                                    <p:selectOneMenu class="select3" value="#{gameManager.game.timeLimit}" >
+                                      <f:selectItems value="#{gameManager.allTimeLimits}"/>
+                                    </p:selectOneMenu>
+                                  </div>
+                                  <div style="position: absolute; top: 311px; left: 281px">
+                                    mp
+                                  </div>
+                                </h:panelGroup>  
+                                <h:panelGroup style="position: absolute; top: 311px; left:217px" rendered="#{gameManager.isInGameState(2,4)}">
+                                  #{gameManager.game.timeLimit} mp
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                  <div style="position: absolute; top: 341px; left: 217px">
+                                    <p:selectBooleanCheckbox id="chk_randomplace" class="select1" value="#{gameManager.game.randomPlace}" label="" disabled="#{gameManager.game.openDate != null}"/>              
+                                  </div>
+                                  <div style="position: absolute; top: 342px; left: 245px">
+                                    <h:outputLabel id="randomplacelabel" for="chk_randomplace">Minden betű táblára kerül</h:outputLabel>
+                                    <p:tooltip id="tip_randomplacelabel" for="randomplacelabel" escape="false" class="tooltiptext">
+                                      <div class="tooltiptext2">
+                                        Az időben le nem helyezett betű is felkerül-e a táblára, <br/>
+                                        a még üresen álló mezők közül véletlenszerűen valamelyikbe?        
+                                      </div>
+                                    </p:tooltip>
+                                  </div>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{gameManager.isInGameState(1)}">
+                                  <h:outputLabel id="ol_scoringmode" style="position: absolute; top: 373px; left: 30px" value="Pontozási módszer:" for="sel_scoringmode"/>
+                                  <div style="position: absolute; top: 370px; left: 217px">
+                                    <p:selectOneMenu id="sel_scoringmode" class="select3" style="width:205px" value="#{gameManager.game.scoringMode}">
+                                      <f:selectItems value="#{gameManager.allScoringModes}" var="scoringMode" itemLabel="#{scoringMode.label}" itemValue="#{scoringMode.value}"/>
+                                    </p:selectOneMenu>
+                                    <p:tooltip id="tip_scoringmode" for="ol_scoringmode" class="tooltiptext" escape="false">
+                                      <div class="tooltiptext2">
+                                        A 2,3,4,5,6 betűs szavak pontértéke.        
+                                      </div>
+                                    </p:tooltip>
+                                  </div>
+                                </h:panelGroup>  
+                                <h:panelGroup rendered="#{gameManager.isInGameState(2,4)}">
+                                  <div style="position: absolute; top: 373px; left: 30px">
+                                    Pontozási módszer:
+                                  </div>
+                                  <div style="position: absolute; top: 373px; left:217px">
+                                    #{gameManager.game.scoringMode.label}
+                                  </div>
+                                </h:panelGroup>
                               </h:panelGroup>
-                              <p:defaultCommand target="btn_checkword" scope="pg_testword" />          
 
-                              <h:panelGroup id="pg_testresult" style="position: absolute; top: 370px; left: 464px;">
-                                <h:graphicImage class="wordtestimage" url="/resources/images/wordok.png" style="margin-right: 3px;"
-                                                rendered="#{gameManager.testResult == 1}"/>
-                                <h:graphicImage class="wordtestimage" url="/resources/images/wordnok.png" style="margin-right: 3px;"
-                                                rendered="#{gameManager.testResult == 2}"/>
-                              </h:panelGroup>
+                              <p:commandButton id="btn_setuprefresh" style="display:none" action="#{gameManager.debugGame('setuprefresh')}" update="pg_players pg_gamesetupbuttons"/>
+                            </h:panelGroup> <!--pg_gamesetuparea-->
 
-                              <p:commandButton id="btn_checkword" class="buttonsmall3" style="position: absolute; top: 369px; left: 495px; text-align: center"
-                                               value="" action="#{gameManager.checkWord()}" update="pg_testresult"/>  
+                            <h:outputText id="ot_gamesetup" style="display:none"/>
+
+                            <h:panelGroup id="pg_gamesetupbuttons" style="position: absolute; top: 468px; text-align: left;">
+                              <p:commandButton class="gamebutton fivecellbutton" value="Játszma eldobása" action="#{gameManager.dropGame()}"
+                                               rendered="#{gameManager.game.boards.size() eq 1}" 
+                                               update="pg_menu"/>
+                              <p:commandButton class="gamebutton sixcellbutton" value="Játszma elhagyása" action="#{gameManager.quitGame(true)}"
+                                               rendered="#{gameManager.game.boards.size() gt 1 and gameManager.game.startDate == null}" 
+                                               update="pg_menu"/>
+                              <p:commandButton class="gamebutton sixcellbutton" value="Játszma megnyitása" action="#{gameManager.openGame()}"
+                                               rendered="#{gameManager.game.openDate == null}"
+                                               update="pg_main"/>
+                              <p:commandButton class="gamebutton fivecellbutton" value="Játék indítása" action="#{gameManager.startGame()}" 
+                                               rendered="#{(gameManager.game.openDate != null or gameManager.game.minPlayers eq 1) and gameManager.game.startDate == null}" 
+                                               disabled="#{gameManager.game.numberOfPlayers lt gameManager.game.minPlayers or gameManager.myGamePos ne gameManager.game.adminPlayerPos}"
+                                               update="pg_main"/>
+                              <p:commandButton class="gamebutton fivecellbutton" value="Játszma bezárása" action="#{gameManager.quitGame(true)}"
+                                               rendered="#{gameManager.game.endDate != null}" update="pg_menu"/>
+                              <p:commandButton class="gamebutton fourcellbutton" value="Végeredmény" action="#{gameManager.switchGameViewMode()}" 
+                                               rendered="#{gameManager.game.endDate != null}" 
+                                               update="pg_menu"/>
                             </h:panelGroup>
+                          </h:panelGroup> <!-- pg_gamesetup -->
 
-                            <h:panelGroup class="gamesetupframe" style="position: absolute; top: 263px; left: 295px; width: 237px; height: 143px;"
-                                          rendered="#{gameManager.gameState eq 4}"/>
-                            <h:panelGroup id="pg_playerhits" style="position: absolute; top: 270px; left: 305px; width: 237px; height: 130px; border: 1px transparent;"
-                                          rendered="#{gameManager.gameState eq 4}">
+                          <h:panelGroup id="pg_gameplay" class="text" rendered="#{gameManager.isInGameState(3,4) and gameManager.gameViewMode ne 2}">
+                            <div id="gameplaytitle" class="gameareatitle">
+                              <h:outputText value=">>>> Játék folyamatban" rendered="#{gameManager.isInGameState(3)}"/>
+                              <h:outputText value=">>>> Befejeződött játék" rendered="#{gameManager.isInGameState(4)}"/>
+                            </div>
 
-                              <h:panelGroup id="pg_hplayerhitsdata" style="position: absolute; top: 5px; left: 5px; width: 120px; height: 123px;border:1px transparent">
-                                <ui:repeat value="#{gameManager.getHits(true,false)}" var="hit">
-                                  <div class="hitdataarea">
-                                    <h:outputText id="ot_hhitpos" value="#{hit.posString}:" class="hitpostext"/>
-                                    <h:outputText id="ot_hhitword" value="#{hit.word}" class="hitwordtext"/>
-                                    <h:outputText id="ot_hhitscore" value="#{hit.scoreString}" class="hitpostext"/>
-                                  </div><br/>
-                                </ui:repeat>  
+                            <div id="gameplayname" align="right" class="gameareatitle" 
+                                 style="position: absolute; top: 0px; right: 6px; width: 240px; height: 30px; display: inline-block">
+                              <h:outputText style="text-align:right;" value="#{gameManager.game.name}"/>
+                            </div>
+
+                            <div id="gameplaybg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
+                            </div>
+
+                            <h:panelGroup id="pg_gameplayarea" class="gameplayarea" style='position: absolute; top: 37px; width: 547px; height: 422px'>
+
+                              <div class="gamesetupframe" style="position: absolute; top: 14px; left: 14px; width: 268px; height: 237px;">
+                              </div>
+                              <h:panelGroup id="pg_gamemsg">
+                                <h:inputTextarea id="ita_gamemsg" class="inputtextplay" rows="7" cols="20" 
+                                                 style="position: absolute; top: 24px; left: 24px; width:240px; height:201px;" 
+                                                 readonly="true" value="#{gameManager.gameMsg}"/>
+                                <h:outputLabel class="selectedlettertext" style="position: absolute; top: 100px; left: 24px; width: 240px"
+                                               rendered="#{gameManager.canPlayerPlaceLetter()}">#{gameManager.selectedLetter}</h:outputLabel>
+                                <h:outputLabel class="selectedlettertext" style="position: absolute; top: 100px; left: 24px; width: 240px"
+                                               rendered="#{gameManager.needPlayerConfirmLetter()}">#{gameManager.preselectedLetter}</h:outputLabel>
+                                <h:panelGroup id="pg_confirmletter" style="position: absolute; top: 173px; left: 33px; width: 230px; text-align: center" 
+                                              rendered="#{gameManager.needPlayerConfirmLetter()}">
+                                  <p:commandButton id="btn_revokeletter" class="letterbutton" style="width: 80px" value="Vissza" action="#{gameManager.revokeSelectedLetter()}"
+                                                   update=":pageform:pg_gamemsg"/>
+                                  <p:commandButton id="btn_confirmletter" class="letterbutton" style="width: 80px; margin-left: 15px" value="Kész" action="#{gameManager.confirmSelectedLetter()}"
+                                                   update=":pageform:pg_gamemsg"/>
+                                </h:panelGroup>
+                                <h:panelGroup id="pg_letters" style="position: absolute; top: 89px; left: 33px; width: 230px; text-align: center" 
+                                              rendered="#{gameManager.canPlayerSelectLetter()}">
+                                  <ui:repeat value="#{gameManager.letterIndices}" var="let">
+                                    <p:commandButton id="btn_let0" class="letterbutton pointer-none" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let, false)}" rendered="#{gameManager.canSelectLetter(let)}"
+                                                     update=":pageform:pg_gamemsg"/>
+                                    <p:commandButton id="btn_let1" class="letterbutton pointer-fine" value="#{gameManager.getLetterByIndex(let)}" action="#{gameManager.selectLetter(let, true)}" rendered="#{gameManager.canSelectLetter(let)}"
+                                                     update=":pageform:pg_gamemsg"/>
+                                  </ui:repeat>  
+                                </h:panelGroup>
                               </h:panelGroup>
-                              <h:panelGroup id="pg_vplayerhitsdata" style="position: absolute; top: 5px; left: 129px; width: 110px; height: 123px;border:1px transparent">
-                                <ui:repeat value="#{gameManager.getHits(false,true)}" var="hit">
-                                  <div class="hitdataarea">
-                                    <h:outputText id="ot_vhitpos" value="#{hit.posString}:" class="hitpostext"/>
-                                    <h:outputText id="ot_vhitword" value="#{hit.word}" class="hitwordtext"/>
-                                    <h:outputText id="ot_vhitscore" value="#{hit.scoreString}" class="hitpostext"/>
-                                  </div><br/>
-                                </ui:repeat>  
+
+                              <div class="gamesetupframe" style="position: absolute; top: 14px; left: 295px; width: 237px; height: 237px;">
+                              </div>
+                              <h:graphicImage style="position: absolute; top: 53px; left: 333px;" url="/resources/images/bp6x6.jpg" />
+                              <h:panelGroup id="pg_gameboard" class="gameboard">
+
+                                <h:outputLabel style="position: absolute; top: 30px; left: 346px">1</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 30px; left: 377px">2</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 30px; left: 408px">3</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 30px; left: 439px">4</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 30px; left: 470px">5</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 30px; left: 501px">6</h:outputLabel>
+
+                                <h:outputLabel style="position: absolute; top: 61px; left: 315px">A</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 92px; left: 315px">B</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 123px; left: 315px">C</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 154px; left: 315px">D</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 185px; left: 315px">E</h:outputLabel>
+                                <h:outputLabel style="position: absolute; top: 216px; left: 315px">F</h:outputLabel>
+
+                                <canvas id="cv_board" style="position: absolute; top: 55px; left: 336px; width: 186px; height: 186px;"/>
+                                <h:panelGroup id="pg_boardbuttons" class="boardbuttonarea" style="position: absolute; top: 53px; left: 333px; width: 188px; height: 185px; text-align: center">
+                                  <ui:repeat value="#{gameManager.cellIndices}" var="cell">
+                                    <p:commandButton class="#{gameManager.getBoardLetterClass(cell, false)} pointer-none" value="#{gameManager.getBoardLetter(cell)}" 
+                                                     action="#{gameManager.placeLetter(cell, false)}" disabled="#{!gameManager.canPlaceBoardLetter(cell)}"
+                                                     update=":pageform:pg_boardbuttons"/>
+                                    <p:commandButton class="#{gameManager.getBoardLetterClass(cell, true)} pointer-fine" value="#{gameManager.getBoardLetter(cell)}" 
+                                                     action="#{gameManager.placeLetter(cell, true)}" disabled="#{!gameManager.canPlaceBoardLetter(cell)}"
+                                                     update=":pageform:pg_boardbuttons"/>
+                                  </ui:repeat>  
+                                </h:panelGroup>
                               </h:panelGroup>
+
+                              <div class="gamesetupframe" style='position: absolute; top: 263px; left: 14px; width: 268px; height: 143px;'>
+                              </div>
+
+                              <h:dataTable id="dt_gameplayers" class="gameplayerstable" style="position: absolute; top: 272px; left: 23px; width: 251px;"
+                                           value="#{gameManager.game.boards}" var="boa" columnClasses="gameplayerstablecol">
+                                <h:column>
+                                  <h:panelGroup id="pg_gameplayerscell">
+                                    <h:panelGrid class="#{gameManager.getGamePlayersRowClass(boa.position)}" columns="3" columnClasses="gameplayersrowcol1,gameplayersrowcol2,gameplayersrowcol3">
+                                      <h:panelGroup>
+                                        <h:graphicImage class="curplayerimage" url="/resources/images/curplayer.png" 
+                                                        rendered="#{gameManager.canPlayerSelectLetterInTurn(boa.position)}"/>
+                                        <h:graphicImage class="curplayerimage" url="/resources/images/medal-1.png" 
+                                                        rendered="#{boa.place eq 1}"/>
+                                        <h:graphicImage class="curplayerimage" url="/resources/images/medal-2.png" 
+                                                        rendered="#{boa.place eq 2}"/>
+                                        <h:graphicImage class="curplayerimage" url="/resources/images/medal-3.png" 
+                                                        rendered="#{boa.place eq 3}"/>
+                                      </h:panelGroup>
+                                      <p:commandButton id="btn_gameplayername" class="gameplayerbutton" style="margin-left: 3px" value="#{boa.player.name}" 
+                                                       action="#{gameManager.changeMyPosition(boa.position)}" disabled="#{gameManager.gameState lt 4}" 
+                                                       update=":pageform:pg_gameplayarea"/>
+                                      <h:panelGroup>
+                                        <h:panelGroup style="margin-right: 3px;" rendered="#{boa.place gt 0}">
+                                          #{boa.score} p
+                                        </h:panelGroup>
+                                        <h:panelGroup rendered="#{boa.place eq 0}">
+                                          <h:graphicImage class="curplayerimage" url="/resources/images/inactive.png" style="margin-right: 3px;"
+                                                          rendered="#{boa.quitDate != null}"/>
+                                          <h:graphicImage class="curplayerimage" url="/resources/images/thinking.gif" style="margin-right: 3px;"
+                                                          rendered="#{boa.quitDate == null and gameManager.isPlayerTurnOn(boa.position)}"/>
+                                          <h:graphicImage class="curplayerimage" url="/resources/images/check.png" style="margin-right: 3px;"
+                                                          rendered="#{boa.quitDate == null and gameManager.isPlayerTurnFinished(boa.position)}"/>
+                                        </h:panelGroup>
+                                      </h:panelGroup>
+                                    </h:panelGrid>
+                                  </h:panelGroup>
+                                </h:column>
+                              </h:dataTable>
+
+                              <h:panelGroup class="gamesetupframe" style='position: absolute; top: 263px; left: 295px; width: 237px; height: 47px;'
+                                            rendered="#{gameManager.gameState lt 4}"/>
+
+                              <h:panelGroup id="pg_turntime" class="turntimepg" rendered="#{gameManager.gameState lt 4}">
+                                <h:outputLabel style="position: absolute; top: 282px; left: 311px" rendered="#{gameManager.game.endDate eq null}">
+                                  Gondolkodási idő:
+                                </h:outputLabel>
+                                <div  style="position: absolute; top: 278px; left: 470px; width: 50px; float: right">
+                                  <h:outputText id="ot_turnsec" class="turnsec" rendered="#{gameManager.game.endDate eq null}"/>
+                                </div>
+                              </h:panelGroup>  
+
+                              <h:panelGroup class="gamesetupframe" style='position: absolute; top: 325px; left: 295px; width: 237px; height: 81px;'
+                                            rendered="#{gameManager.gameState lt 4}"/>
+
+                              <h:panelGroup id="pg_glossary" class="glossarypg" rendered="#{gameManager.gameState lt 4}">
+                                <h:outputLabel style="position: absolute; top: 344px; left: 311px" >
+                                  Szótár ellenőrzése:
+                                </h:outputLabel>
+                                <h:panelGroup id="pg_testword">
+                                  <h:inputText id="it_testword" class="inputtextcheckword" maxlength="10" style="position: absolute; top: 369px; left: 309px; width:172px;height:20px" a:autofocus="true" 
+                                               value="#{gameManager.testWord}"/>
+                                </h:panelGroup>
+                                <p:defaultCommand target="btn_checkword" scope="pg_testword" />          
+
+                                <h:panelGroup id="pg_testresult" style="position: absolute; top: 370px; left: 464px;">
+                                  <h:graphicImage class="wordtestimage" url="/resources/images/wordok.png" style="margin-right: 3px;"
+                                                  rendered="#{gameManager.testResult == 1}"/>
+                                  <h:graphicImage class="wordtestimage" url="/resources/images/wordnok.png" style="margin-right: 3px;"
+                                                  rendered="#{gameManager.testResult == 2}"/>
+                                </h:panelGroup>
+
+                                <p:commandButton id="btn_checkword" class="buttonsmall3" style="position: absolute; top: 369px; left: 495px; text-align: center"
+                                                 value="" action="#{gameManager.checkWord()}" update="pg_testresult"/>  
+                              </h:panelGroup>
+
+                              <h:panelGroup class="gamesetupframe" style="position: absolute; top: 263px; left: 295px; width: 237px; height: 143px;"
+                                            rendered="#{gameManager.gameState eq 4}"/>
+                              <h:panelGroup id="pg_playerhits" style="position: absolute; top: 270px; left: 305px; width: 237px; height: 130px; border: 1px transparent;"
+                                            rendered="#{gameManager.gameState eq 4}">
+
+                                <h:panelGroup id="pg_hplayerhitsdata" style="position: absolute; top: 5px; left: 5px; width: 120px; height: 123px;border:1px transparent">
+                                  <ui:repeat value="#{gameManager.getHits(true,false)}" var="hit">
+                                    <div class="hitdataarea">
+                                      <h:outputText id="ot_hhitpos" value="#{hit.posString}:" class="hitpostext"/>
+                                      <h:outputText id="ot_hhitword" value="#{hit.word}" class="hitwordtext"/>
+                                      <h:outputText id="ot_hhitscore" value="#{hit.scoreString}" class="hitpostext"/>
+                                    </div><br/>
+                                  </ui:repeat>  
+                                </h:panelGroup>
+                                <h:panelGroup id="pg_vplayerhitsdata" style="position: absolute; top: 5px; left: 129px; width: 110px; height: 123px;border:1px transparent">
+                                  <ui:repeat value="#{gameManager.getHits(false,true)}" var="hit">
+                                    <div class="hitdataarea">
+                                      <h:outputText id="ot_vhitpos" value="#{hit.posString}:" class="hitpostext"/>
+                                      <h:outputText id="ot_vhitword" value="#{hit.word}" class="hitwordtext"/>
+                                      <h:outputText id="ot_vhitscore" value="#{hit.scoreString}" class="hitpostext"/>
+                                    </div><br/>
+                                  </ui:repeat>  
+                                </h:panelGroup>
+                              </h:panelGroup>
+                            </h:panelGroup> <!--pg_gameplayarea-->
+
+                            <p:commandButton id="btn_playrefresh" style="display:none" action="#{gameManager.debugGame('playrefresh')}" update="pg_gamemsg pg_gameboard dt_gameplayers pg_gameplaybuttons"/>
+                            <p:commandButton id="btn_playendrefresh" style="display:none" action="#{gameManager.debugGame('playendrefresh')}" update="pg_gameplay"/>
+
+                            <h:panelGroup id="pg_gameplaybuttons" style="position: absolute; top: 468px;">
+                              <p:commandButton id="btn_dropgame" class="gamebutton" style="width: 208px" value="Játék megszakítása" action="#{gameManager.dropGame()}"
+                                               rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers eq 1}">
+                                <p:confirm header="Megerősítés" message="Biztosan megszakítod a játékot?"/>
+                                <f:ajax execute="" render="pg_menu"/>
+                              </p:commandButton>
+                              <p:commandButton id="btn_quitgame" class="gamebutton" style="width: 208px" value="Játszma elhagyása" action="#{gameManager.quitGame(true)}"
+                                               rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers gt 1}">
+                                <p:confirm header="Megerősítés" message="Biztosan elhagyod az játszmat?"/>
+                                <f:ajax execute="" render="pg_menu"/>
+                              </p:commandButton>
+
+                              <p:commandButton id="btn_closegame" class="gamebutton fivecellbutton" value="Játszma bezárása" action="#{gameManager.quitGame(true)}"
+                                               rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2}" update="pg_menu"/>
+                              <p:commandButton id="btn_viewgamesetup" class="gamebutton fivecellbutton" value="Játszma beállításai" action="#{gameManager.switchGameViewMode()}" 
+                                               rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode == 1}" 
+                                               update="pg_main"/>
+                              <p:commandButton id="btn_removegame" class="gamebutton" style="width: 154px" value="Eltávolítás" action="#{gameManager.removeGame()}"
+                                               rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2 and loginData.admin == true}">
+                                <p:confirm header="Megerősítés" message="Biztosan eltávolítod az játszmat?"/>
+                                <f:ajax execute="" render="pg_menu"/>
+                              </p:commandButton>
                             </h:panelGroup>
-                          </h:panelGroup> <!--pg_gameplayarea-->
+                          </h:panelGroup> <!-- pg_gameplay -->
+                          <h:outputText id="ot_gamehist" style="display:none"/>
+                          <h:outputText id="ot_boardhits" style="display:none"/>
+                        </h:panelGroup> <!-- pg_gamemain -->
 
-                          <p:commandButton id="btn_playrefresh" style="display:none" action="#{gameManager.debugGame('playrefresh')}" update="pg_gamemsg pg_gameboard dt_gameplayers pg_gameplaybuttons"/>
-                          <p:commandButton id="btn_playendrefresh" style="display:none" action="#{gameManager.debugGame('playendrefresh')}" update="pg_gameplay"/>
+                        <h:panelGroup id="pg_adminpage" rendered="#{gameManager.menu eq 7}">
+                          <h:commandButton id="btn_loadwords" class="gamebutton" value="Szótár frissítése" action="#{glossaryManager.loadWords()}" rendered="#{loginData.admin == true}">
+                            <f:ajax execute="" render="pg_main"/>
+                          </h:commandButton>
+                          <br/>
+                          <h:commandButton id="btn_error1" class="gamebutton" value="Hiba teszt 1" action="#{errorBean.throwError1()}"/>
+                          <h:commandButton id="btn_error2" class="gamebutton" value="Hiba teszt 2" action="#{errorBean.throwError2()}"/>
+                          <h:commandButton id="btn_error3" class="gamebutton" value="Hiba teszt 3" action="#{errorBean.throwError3()}"/>
 
-                          <h:panelGroup id="pg_gameplaybuttons" style="position: absolute; top: 468px;">
-                            <p:commandButton id="btn_dropgame" class="gamebutton" style="width: 208px" value="Játék megszakítása" action="#{gameManager.dropGame()}"
-                                             rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers eq 1}">
-                              <p:confirm header="Megerősítés" message="Biztosan megszakítod a játékot?"/>
-                              <f:ajax execute="" render="pg_main"/>
-                            </p:commandButton>
-                            <p:commandButton id="btn_quitgame" class="gamebutton" style="width: 208px" value="Asztal elhagyása" action="#{gameManager.quitGame(true)}"
-                                             rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers gt 1}">
-                              <p:confirm header="Megerősítés" message="Biztosan elhagyod az asztalt?"/>
-                              <f:ajax execute="" render="pg_main"/>
-                            </p:commandButton>
+                          <h:commandButton id="btn_removelastplayer" class="gamebutton" value="Játékos eltávolítása" action="#{loginData.removeLastPlayer()}">
+                            <f:ajax execute="" render="pg_main"/>
+                          </h:commandButton>
 
-                            <p:commandButton id="btn_closegame" class="gamebutton fivecellbutton" value="Asztal bezárása" action="#{gameManager.quitGame(true)}"
-                                             rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2}" update="pg_main"/>
-                            <p:commandButton id="btn_viewgamesetup" class="gamebutton fivecellbutton" value="Asztal beállításai" action="#{gameManager.switchGameViewMode()}" 
-                                             rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode == 1}" 
-                                             update="pg_main"/>
-                            <p:commandButton id="btn_removegame" class="gamebutton" style="width: 154px" value="Eltávolítás" action="#{gameManager.removeGame()}"
-                                             rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2 and loginData.admin == true}">
-                              <p:confirm header="Megerősítés" message="Biztosan eltávolítod az asztalt?"/>
-                              <f:ajax execute="" render="pg_main"/>
-                            </p:commandButton>
-                          </h:panelGroup>
-                        </h:panelGroup> <!-- pg_gameplay -->
-                        <h:outputText id="ot_gamehist" style="display:none"/>
-                        <h:outputText id="ot_boardhits" style="display:none"/>
-                      </h:panelGroup> <!-- pg_gamemain -->
-                    </h:panelGroup> <!-- pg_main -->
-                    <p:commandButton id="btn_mainrefresh" style="display:none" action="#{gameManager.debugGame('mainrefresh')}" update="pg_main"/>
-                  </div>
-                </td>
-                <td style="width:290px;padding:10px;">
-                  <div style="position: relative;">
-                    <h:panelGroup id="pg_chatandrules">
-                      <h:panelGroup id="pg_rules" rendered="#{loginData.rulemode == true}">
-                        <div style="position: absolute; top:1px; left:0px">
-                          <h:outputText id="ot_rules" class="gridheader" style="width:287px;height:90px;" value="Játékszabályok:"/><br/><br/>
-                          <div class="rulestext" style="width:320px">
-                            A kezdő játékos kiválaszt egy betűt, melyet az összes játékosnak be kell írnia a saját 6x6-os négyzetrácsának valamelyik cellájába. 
-                            Ezután a soron következő játékos is választ egy betűt, melyet szintén az összes játékosnak fel kell írnia a saját táblájának egy még üresen álló cellájába. 
-                            Ez így folytatódik 36 fordulón keresztül, a teljes négyzetrács kitöltéséig. (Eddig a pontig a játékosok egymás tábláit nem láthatják.)
-                            A játék végén az egyes sorokban és oszlopokban kialakult leghosszabb (legalább kétbetűs) értelmes szavakért a játékosok a szavak hosszától függő pontszámokat kapják. 
-                            A játék győztese a legtöbb pontot gyűjtő játékos.<br/><br/>
-                            A játékosoknak az egyes betűket az időkorlát lejárta előtt el kell helyezniük a táblán, ellenkező esetben a betű véletlenszerű helyre kerül. 
-                            A betűmondásban soron következő játékos csak akkor választhat betűt, ha a játékostárs által választottat már beírta, és még az időkereten belül van. 
-                            Ha a játékosnak lejár a gondolkodási ideje, akkor a következő betű véletlenszerűen kerül meghatározásra.<br/><br/>
-                            A játékosok számára segítségképpen rendelkezésre áll egy szótár lekérdező funkció, amellyel ellenőrizhetik, hogy mely szavak minősülnek elfogadhatónak a játékban.
-                            A szótár tulajdonneveket, rövidítéseket és ragozott szavakat nem tartalmaz.
-                          </div>
-                        </div> 
-                      </h:panelGroup> <!-- pg_rules -->
+                          <h:commandButton id="btn_pagerefresh" class="gamebutton" style="display:none" value="Frissítés" action="#{loginData.refreshPage()}"/>
 
-                      <h:panelGroup id="pg_chat" rendered="#{loginData.rulemode == false}">
-                        <div style="position: absolute; top:1px; left:0px">
-                          <h:outputText id="ot_names" class="gridheader" style="width:287px;height:90px;" value="Játékosok (#{chatRoom.players.size()}):"/><br/>
-                          <h:inputTextarea id="ita_names" class="inputtextareasmall namesscroll" rows="100" cols="20" style="width:287px;height:81px;" 
-                                           readonly="true" value="#{loginData.nameList}"/>
-                          <script>
-                            $(".namesscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.1, cursoropacitymax: 0.4, cursorwidth: 6, cursorborderradius: 0, autohidemode: 'leave'});
-                          </script>
-                        </div>
-                        <div style="position: absolute; top:125px; left:0px">
-                          <h:outputText id="ot_chat" class="gridheader" value="Chat:"/><br/>
-                          <h:inputTextarea id="ita_messages" class="inputtextchatsmall chatscroll" rows="100" cols="20" 
-                                           style="width:320px;height:365px" readonly="true"/>
-                          <script>
-                            $(".chatscroll").niceScroll({cursorcolor: "#808571", cursoropacitymin: 0.1, cursoropacitymax: 0.4, cursorwidth: 6, cursorborderradius: 0,
-                              railpadding: {top: 0, right: 73, left: 0, bottom: 0}, autohidemode: 'leave'});
-                          </script>
-                        </div>
-                        <div style="position: absolute; top:523px; left:0px">
-                          <p:inputText id="it_message" class="inputtextchatsmall" placeholder="Írj valamit" style="width:284px;height:14px" 
-                                       value="#{loginData.message}"/>
-                        </div>
-                        <div style="position: absolute; top:523px; left:266px">
-                          <p:commandButton id="btn_sendmsg" class="buttonsmall" value="OK" style="width:30px"
-                                           action="#{loginData.sendMessage()}" process="@parent" update="it_message ita_messages2"/>  
-                        </div>
-                        <div style="position: absolute; top:0px; left:300px; height: 627px; width: 100px; background: #dee4b9; opacity: 0.0; z-index: 999999"></div>
-                      </h:panelGroup> <!-- pg_chat -->
-                      <p:defaultCommand target="btn_sendmsg" scope="pg_chat"/>
+                          <h:commandButton id="btn_admintomenu" class="gamebutton fivecellbutton" value="Vissza" action="#{gameManager.setMenu(0)}">
+                            <f:ajax execute="" render="pg_menu"/>
+                          </h:commandButton>
+                        </h:panelGroup>
 
-                      <h:commandButton id="btn_inv" value="" action="#{loginData.refresh()}" class="invisible" />
-                      <div style="position: absolute; top:573px; left: 25px; width: 220px;">
-                        <p:commandButton id="btn_logout" class="button2" value="Kilépés" action="#{gameManager.quit()}" disabled="#{loginData.entered == false}">
-                          <p:confirm header="Megerősítés" message="Biztosan kilépsz?"/>
-                          <f:ajax execute="btn_rules it_name" render="pageform" delay="1000"/>
-                        </p:commandButton>
-                      </div>  
-                      <div style="position: absolute; top:573px; left: 150px; width: 220px">
-                        <h:commandButton id="btn_rules"  class="button2" value="Szabályok" action="#{loginData.showRules()}" rendered="#{loginData.rulemode == false}">
-                          <f:ajax execute="btn_rules" render="pg_chatandrules"/>
-                        </h:commandButton>
+                      </h:panelGroup> <!-- pg_main -->
+                      <p:commandButton id="btn_mainrefresh" style="display:none" action="#{gameManager.debugGame('mainrefresh')}" update="pg_main"/>
+
+                      <div style="display: block; position: absolute; top: 24px; left: 10px; width: 550px;">
+                        <h:outputText id="ot_seconds2" value="#{loginData.seconds}" />
+                        <h:outputText id="ot_turnsec2" style="color:red" value="#{gameManager.remainingTurnSec}" />
+                        <h:panelGroup style="display:block">
+                          <h:outputText id="ot_gamestate2" value="#{gameManager.gameState}"/>/
+                          <h:outputText id="ot_gamestate" />/
+                          <h:outputText id="ot_playerstate" value="#{gameManager.playerState}"/>/
+                          <h:outputText id="ot_glossarysize" value="#{glossaryManager.words.size()}"/>
+                          <h:outputText id="ot_seconds" />
+                        </h:panelGroup>
+                        <h:outputText id="ot_gamesetup2" style="display:block; color:blue" value="#{gameManager.getGameSetupString()}"/>
+                        <h:outputText id="ot_gamehist2" style="display:block; color:brown" value="#{gameManager.getGameHistString()}"/>
+                        <h:outputText id="ot_boardhits2" style="display:block; color:purple" value="#{gameManager.getBoardHitsString()}"/>
+
+                        <div>
+                          <h:inputTextarea id="ita_messages2" class="inputtextchatsmall" rows="100" cols="20" 
+                                           style="width:360px;height:81px;display:none" readonly="true" value="#{loginData.chatMessageList}"/>
+                        </div>  
+                        <div>
+                          <h:inputTextarea id="ita_gamesinlobby2" class="inputtextsmall" rows="100" cols="20" 
+                                           style="width:287px;height:81px;float:left;display:none" readonly="true" value="#{gameManager.getGamesInLobbyString()}"/>
+                        </div>  
+                        <div>
+                          <h:inputTextarea id="ita_gamesinlobby" class="inputtextsmall" rows="100" cols="20" 
+                                           style="width:287px;height:81px;display:none" readonly="true"/>
+                        </div>  
+
+                        <p:poll id="poll_1s" interval="1" listener="#{gameManager.refresh()}" 
+                                process="@this" async="true" partialSubmit="true" widgetVar="poll"
+                                update="ot_seconds2 ot_turnsec2 ot_gamestate2 ot_playerstate ot_gamesetup2 ot_gamehist2 ita_messages2 ita_gamesinlobby2 ot_boardhits2" 
+                                oncomplete="mainPoll(xhr, status, args);"/>
                       </div>
-                      <div style="position: absolute; top:573px; left: 150px; width: 220px">
-                        <h:commandButton id="btn_chat"  class="button2" value="Chat" action="#{loginData.showChat()}" rendered="#{loginData.rulemode == true}">
-                          <f:ajax execute="btn_rules" render="pg_chatandrules"/>
-                        </h:commandButton>
-                      </div>
-                    </h:panelGroup> <!-- pg_chatandrules -->
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <h:commandButton id="btn_loadwords" class="gamebutton" value="Szótár frissítése" action="#{glossaryManager.loadWords()}" rendered="#{loginData.admin == true}">
-                    <f:ajax execute="" render="pg_main"/>
-                  </h:commandButton>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" style="display: none">
-                  <h:outputText id="ot_seconds2" value="#{loginData.seconds}" />
-                  <h:outputText id="ot_turnsec2" style="color:red" value="#{gameManager.remainingTurnSec}" />
-                  <h:panelGroup style="display:block">
-                    <h:outputText id="ot_gamestate2" value="#{gameManager.gameState}"/>/
-                    <h:outputText id="ot_gamestate" />/
-                    <h:outputText id="ot_playerstate" value="#{gameManager.playerState}"/>/
-                    <h:outputText id="ot_glossarysize" value="#{glossaryManager.words.size()}"/>
-                    <h:outputText id="ot_seconds" />
-                  </h:panelGroup>
-                  <h:outputText id="ot_gamesetup2" style="display:block; color:blue" value="#{gameManager.getGameSetupString()}"/>
-                  <h:outputText id="ot_gamehist2" style="display:block; color:brown" value="#{gameManager.getGameHistString()}"/>
-                  <h:outputText id="ot_boardhits2" style="display:block; color:purple" value="#{gameManager.getBoardHitsString()}"/>
 
-                  <div>
-                    <h:inputTextarea id="ita_names2" class="inputtextsmall" rows="100" cols="20" style="width:287px;height:81px;float:left;display:none" 
-                                     readonly="true" value="#{loginData.nameList}"/>
-                  </div>  
-                  <div>
-                    <h:inputTextarea id="ita_messages2" class="inputtextchatsmall" rows="100" cols="20" 
-                                     style="width:360px;height:81px;display:none" readonly="true" value="#{loginData.chatMessageList}"/>
-                  </div>  
-                  <div>
-                    <h:inputTextarea id="ita_gamesinlobby2" class="inputtextsmall" rows="100" cols="20" 
-                                     style="width:287px;height:81px;float:left;display:none" readonly="true" value="#{gameManager.getGamesInLobbyString()}"/>
-                  </div>  
-                  <div>
-                    <h:inputTextarea id="ita_gamesinlobby" class="inputtextsmall" rows="100" cols="20" 
-                                     style="width:287px;height:81px;display:none" readonly="true"/>
-                  </div>  
+                    </h:panelGroup> <!-- pg_mainpage -->
 
-                  <p:poll id="poll_1s" interval="1" listener="#{gameManager.refresh()}" 
-                          process="@this" async="true" partialSubmit="true" widgetVar="poll"
-                          update="ot_seconds2 ot_turnsec2 ot_gamestate2 ot_playerstate ot_names ot_gamesetup2 ot_gamehist2 ita_names2 ita_messages2 ita_gamesinlobby2 ot_boardhits2" 
-                          oncomplete="setMessages(xhr, status, args);"/>
-                </td>
-              </tr>
-            </table>  
-          </p>    
+                  </h:panelGroup> <!-- pg_menu -->
+                </div>  
+              </td>
+            </tr>
+          </table>  
+        </p>  
 
-          <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closeOnEscape="true" appendTo="@(body)" styleClass="confirmdialog">
-            <p:commandButton value="Igen" type="button" styleClass="ui-confirmdialog-yes"/>
-            <p:commandButton value="Nem" type="button" styleClass="ui-confirmdialog-no"/>
-          </p:confirmDialog>       
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closeOnEscape="true" appendTo="@(body)" styleClass="confirmdialog">
+          <p:commandButton value="Igen" type="button" styleClass="ui-confirmdialog-yes"/>
+          <p:commandButton value="Nem" type="button" styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog>       
 
-        </h:panelGroup> <!-- pg_mainpage -->
-
-        <h:panelGroup id="adminarea" rendered="#{loginData.admin == true}">
-          <h:commandButton id="btn_error1" class="gamebutton" value="Hiba teszt 1" action="#{errorBean.throwError1()}"/>
-          <h:commandButton id="btn_error2" class="gamebutton" value="Hiba teszt 2" action="#{errorBean.throwError2()}"/>
-          <h:commandButton id="btn_error3" class="gamebutton" value="Hiba teszt 3" action="#{errorBean.throwError3()}"/>
-
-          <h:commandButton id="btn_removelastplayer" class="gamebutton" value="Játékos eltávolítása" action="#{loginData.removeLastPlayer()}">
-            <f:ajax execute="" render="pg_main"/>
-          </h:commandButton>
-
-          <h:commandButton id="btn_pagerefresh" class="gamebutton" style="display:none" value="Frissítés" action="#{loginData.refreshPage()}"/>
-        </h:panelGroup>
+        gameState: #{gameManager.gameState} - menu: #{gameManager.menu} - lobbyMode: #{gameManager.lobbyMode}
       </h:form>
 
     </h:body>

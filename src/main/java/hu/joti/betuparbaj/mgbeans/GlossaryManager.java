@@ -68,7 +68,7 @@ public class GlossaryManager implements Serializable{
           easyVowelWords.put(modEntry, entry);
         }
       }
-
+      
       LOGGER.info("Alapszótár mérete: " + words.size());
       LOGGER.info("Hosszú mgh. szótár mérete: " + easyVowelWords.size());
     } else {

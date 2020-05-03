@@ -245,6 +245,60 @@ textarea{
   text-align: center;
 }
 
+.playersarea {
+  font-family: 'Itim', cursive;
+  font-size: 17px;	
+  color: #808571;
+  background-color: #f4f6e9;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: rgba(182,181,170,0.5); 
+  border-top-color: rgba(182,181,170,0.5); 
+  border-bottom-color: rgba(176,178,167,0.5);
+  border-right-color: rgba(176,178,167,0.5);
+  overflow: hidden;
+  resize: none;
+  text-align: center;
+}
+
+.aboutarea {
+  font-family: 'Itim', cursive;
+  font-size: 17px;	
+  color: #808571;
+  background-color: #f4f6e9;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: rgba(182,181,170,0.5); 
+  border-top-color: rgba(182,181,170,0.5); 
+  border-bottom-color: rgba(176,178,167,0.5);
+  border-right-color: rgba(176,178,167,0.5);
+  overflow: hidden;
+  resize: none;
+  text-align: center;
+}
+
+/*   midgreen1: #dee4b9; // RGB: 222 228 185
+   midgreen2: #c6ce92; // RGB: 198 206 146
+   midgreen3: #919b55; // RGB: 145 155 85
+   lightgreen1: #f9faee; // RGB: 249 250 238
+   lightgreen2: #f4f6e9; // RGB: 244 246 233 // háttér négyzetrács kitöltőszíne */
+
+.aboutareaheader {
+  font-family: 'Itim', cursive;
+  font-size: 19px;	
+  color: #555C23;
+  background-color: #e7eccc;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: rgba(182,181,170,0.5); 
+  border-top-color: rgba(182,181,170,0.5); 
+  border-bottom-color: rgba(176,178,167,0.5);
+  border-right-color: rgba(176,178,167,0.5);
+  overflow: hidden;
+  resize: none;
+  text-align: center;
+}
+
 .rulestext {
   font-family: 'Itim', cursive;
   font-size: 16px;	
@@ -522,6 +576,10 @@ textarea{
   width: 211px;
 }
 
+.eightcellbutton{
+  width: 242px;
+}
+
 .loginbutton {
   font-family: 'Itim', cursive;
   font-size: 16px;	
@@ -547,7 +605,58 @@ textarea{
   background-color: #c6ce92;
 }
 
+.menutext {
+  font-family: 'Itim', cursive;
+  font-size: 19px;	
+  font-weight: bold;
+  color: #808571;
+  padding: 0px;
+  margin: 3px;
+  vertical-align: top;
+  box-shadow: none;
+  opacity: 0.8;
+  text-align: center;
+}
+
+.menutext:hover {
+  color: #808571;
+}
+
+.menubutton {
+  font-family: 'Itim', cursive;
+  font-size: 20px;	
+  font-weight: bold;
+  border: none;
+  border-bottom:1px;
+  border-top:1px;
+  border-color: transparent;
+  color: #808571;
+  background: transparent;  
+  outline: 0;
+  padding: 0px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 0px;
+  height: 30px;
+  vertical-align: top;
+  box-shadow: none;
+  text-shadow: 0px 1px 0px white;
+  opacity: 0.8;
+}
+
+.menubutton:hover {
+  border-bottom:1px solid #808571;
+  border-top:1px solid #808571;
+  opacity: 1;
+} 
+
+.menubutton:disabled {
+  border-color: transparent;
+  opacity: 1.0;
+}
+
 .gamebutton {
+  display: inline-block;
   font-family: 'Itim', cursive;
   font-size: 16px;	
   font-weight: bold;
@@ -581,6 +690,11 @@ textarea{
   color: #A0A591;
   border-color: #A0A591;
   background-color: #f9faee;
+}
+
+.rightbutton{
+  margin-right: 0px;
+  margin-left: 8px;
 }
 
 .boardbuttonarea{
@@ -963,6 +1077,24 @@ textarea{
   padding-left: 10px;
 }
 
+.playerstable{
+  /*border-collapse: collapse;*/
+  border: 0px solid;
+  border-color: #808571;
+  border-bottom-color: #d9d8bf;
+  border-right-color: #d9d8bf;
+  /*background-color: #a8aceb;*/
+  font-family: 'Itim', cursive;
+  font-size: 16px;	
+  font-weight: normal;
+  color: #808571;
+  line-height: 1.0;
+  padding: 3px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  text-align: left;
+}
+
 .lobbytable{
   /*border-collapse: collapse;*/
   border: 0px solid;
@@ -1027,6 +1159,8 @@ textarea{
   text-overflow: ellipsis;
   vertical-align: middle;
   text-align: left;
+  position: absolute;
+  left:10px;
   display: inline-block;
   font-family: 'Itim', cursive;
   font-size: 16px;	
@@ -1538,6 +1672,7 @@ textarea{
   font-family: 'Itim', cursive;
   border: 2px solid;
   border-color: #808571;
+  padding: 2px;
 }
 
 /* Fejléc */
@@ -1576,8 +1711,10 @@ span.ui-confirm-dialog-message {
   background-color: #f9faee;
   color: #808571;
   text-align: center;
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: auto;
 }
 
 /* "Igen" gomb */

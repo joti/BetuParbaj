@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.xml.bind.DatatypeConverter;
 import org.apache.logging.log4j.LogManager;
@@ -164,8 +165,12 @@ public class LoginData implements Serializable {
     chatRoom.removeLastPlayer();
   }
 
-  public String getNameList() {
+  public List<String> getNameList() {
     return chatRoom.getNameList(name);
+  }
+
+  public String getNameListString() {
+    return chatRoom.getNameListString(name);
   }
 
   public String getName() {

@@ -4,7 +4,7 @@
 
   <groupId>hu.joti</groupId>
   <artifactId>betuparbaj</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.4.0</version>
   <packaging>war</packaging>
 
   <name>BetuParbaj</name>
