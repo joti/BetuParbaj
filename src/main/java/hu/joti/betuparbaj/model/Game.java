@@ -286,13 +286,17 @@ public class Game implements Serializable {
     }
   }
 
-  public void start() {
+  public void fillAvailableLetters(int sets){
     // betűkészlet összeállítása
     for (int i = 0; i < ALPHABET.length; i++) {
       if (!((ALPHABET[i].length() == 2 && !includeDigraphs) || (ALPHABET[i].equals("Y") && !includeY) || (ALPHABET[i].equals("X") && !includeX) || (VOWELTYPES[i] == 2 && !includeLongVowels))) {
-        availableLetters.put(ALPHABET[i], LETTERSET[i]);
+        availableLetters.put(ALPHABET[i], LETTERSET[i] * sets);
       }
     }
+  }
+  
+  public void start() {
+    fillAvailableLetters(1);
 
     // Ha véletlenszerű a játékosok sorrendje, akkor most beállítjuk
     if (randomOrder) {

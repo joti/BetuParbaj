@@ -258,7 +258,19 @@ textarea{
   border-right-color: rgba(176,178,167,0.5);
   overflow: hidden;
   resize: none;
-  text-align: center;
+  text-align: center; 
+}
+
+.playersareafading {
+  background: #808571 linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(0,0,0,0.2) 100%);  
+  
+  /*background-color: #f4f6e9 linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(244,246,233,0.9) 100%);*/
+  z-index: 999999;
+    /*linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(244,246,233,0.9) 100%);*/  
+  border: 3px solid red;
+  overflow: hidden;
+  resize: none;
+  text-align: center; 
 }
 
 .aboutarea {
@@ -285,7 +297,7 @@ textarea{
 
 .aboutareaheader {
   font-family: 'Itim', cursive;
-  font-size: 19px;	
+  font-size: 17px;	
   color: #555C23;
   background-color: #e7eccc;
   border-width: 2px;
@@ -303,12 +315,32 @@ textarea{
   font-family: 'Itim', cursive;
   font-size: 16px;	
   color: #555C23;
-  line-height: 1;
-  background-color: #f9faee;
-  padding: 3px;
+  line-height: 1.93;
+  background: transparent;
+  text-align: left;
+  padding: 23px;
+  padding-top: 25px;
   resize: none;
-  transform:scale(0.9,1.0);
-  transform-origin: left center;
+}
+
+.rulestitletext {
+  font-family: 'Itim', cursive;
+  font-size: 18px;	
+  color: #555C23;
+  line-height: 1.1;
+  background: transparent;
+  text-align: left;
+  padding: 0;
+  resize: none;
+}
+
+.rulesline{
+  width: 100%; 
+  margin:0 auto;
+  /*padding-bottom: 7px;*/
+  margin-top: 10px;
+  margin-bottom: 19px;
+  line-height:2px;
 }
 
 .inputtextchatsmall {
@@ -580,6 +612,14 @@ textarea{
   width: 242px;
 }
 
+.ninecellbutton{
+  width: 273px;
+}
+
+.tencellbutton{
+  width: 305px;
+}
+
 .loginbutton {
   font-family: 'Itim', cursive;
   font-size: 16px;	
@@ -627,32 +667,46 @@ textarea{
   font-size: 20px;	
   font-weight: bold;
   border: none;
-  border-bottom:1px;
-  border-top:1px;
+  border-bottom:2px;
+  border-top:2px;
   border-color: transparent;
   color: #808571;
-  background: transparent;  
+  /*background: transparent;*/  
+  background: #808571 linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(0,0,0,0.2) 100%);  
   outline: 0;
   padding: 0px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 0px;
-  height: 30px;
+  height: 61px;
   vertical-align: top;
   box-shadow: none;
   text-shadow: 0px 1px 0px white;
-  opacity: 0.8;
+  opacity: 0.15;
+  width: 314px;
 }
 
 .menubutton:hover {
-  border-bottom:1px solid #808571;
-  border-top:1px solid #808571;
-  opacity: 1;
+  border-bottom:2px solid #808571;
+  border-top:2px solid #808571;
+  background: #808571 linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(0,0,0,0.2) 100%);  
+  /*background: #808571 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%, rgba(255,255,255,0.8) 0%);*/  
+  opacity: 0.38;
 } 
 
 .menubutton:disabled {
   border-color: transparent;
   opacity: 1.0;
+}
+
+.visiblemenubutton1{
+  opacity: 0.2;
+  background: #808571 linear-gradient(to bottom, rgba(255,0,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(255,0,0,0.2) 100%);  
+}
+
+.visiblemenubutton2{
+  opacity: 0.2;
+  background: #808571 linear-gradient(to bottom, rgba(0,200,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(0,200,0,0.2) 100%);  
 }
 
 .gamebutton {

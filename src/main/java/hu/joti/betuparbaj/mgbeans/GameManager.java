@@ -20,6 +20,7 @@ import hu.joti.betuparbaj.model.RndLetterMode;
 import hu.joti.betuparbaj.model.ScoringMode;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
@@ -600,6 +601,20 @@ public class GameManager implements Serializable {
     return false;
   }
 
+  public boolean isInMenu(int... ids) {
+    if (ids.length == 0) {
+      return false;
+    }
+
+    for (int i = 0; i < ids.length; i++) {
+      if (ids[i] == menu) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public boolean isPlayerTurnOn(int player) {
     if (game == null)
       return false;
@@ -968,6 +983,22 @@ public class GameManager implements Serializable {
     return hits;
   }
 
+  public String getRandomLettersString(int length){
+    Game tmpgame = new Game(0, "random", true, true, true, true, Game.DEF_RANDOMPLACE, Game.DEF_RNDLETTERMODE,
+                         Game.DEF_MINPLAYERS, Game.DEF_MAXPLAYERS, Game.DEF_TIMELIMIT, Game.DEF_SCORING_MODE);
+    int sets = (length / 100) + 1;
+    tmpgame.fillAvailableLetters(sets);
+
+    StringBuilder letters = new StringBuilder("");
+    Random rnd = new Random();
+    int draw;
+
+    for (int i = 0; i < length; i++) {
+      letters.append(tmpgame.drawLetter()).append(".");
+    }
+    return letters.toString();
+  }
+  
   public String getSelectedLetter() {
     if (game != null) {
       return game.getSelectedLetter();

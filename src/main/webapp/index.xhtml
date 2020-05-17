@@ -22,8 +22,7 @@
       <h:outputStylesheet library="css" name="style.css" />
       <h:outputStylesheet library="css" name="simple-scrollbar.css" />
       <h:outputScript library="js" name="poll.js" />
-      <h:outputScript library="js" name="jquery.dataTables.min.js" />
-      <h:outputScript library="js" name="jquery.nicescroll.min.js" />
+      <h:outputScript library="js" name="misc.js" />
       <h:outputScript library="js" name="simple-scrollbar.min.js" />
 
       <h:form id="pageform" acceptcharset="UTF-8">
@@ -60,7 +59,7 @@
                       </div>
                     </h:panelGroup>                    
 
-                    <h:panelGroup id="pg_mainmenu" class="logintext" rendered="#{loginData.entered == true and gameManager.menu eq 0 and gameManager.gameState eq 0}">
+                    <h:panelGroup id="pg_mainmenu" rendered="#{loginData.entered == true and gameManager.menu eq 0 and gameManager.gameState eq 0}">
                       <div id="mainmenubg" class="gamebg" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
                       </div>
                       <div id="mainmenuarea" class="gamearea" style="position: absolute; left: 30px; top: 30px; width: 547px; height: 485px">
@@ -72,37 +71,55 @@
                       </div>
                       <div class="gamesetupframe" style="position: absolute; top: 293px; left: 388px; width: 175px; height: 207px;">
                       </div>
-                      <div style="position: absolute; display: block; top: 0px; left:0; right:180px">
-                        <div style="position: absolute; display: block; top: 88px; left:0; right:0">
-                          <h:commandButton id="btn_madminpage" class="menubutton threecellbutton" value="Admin" rendered="#{loginData.admin == true}"
+                      <div style="position: absolute; display: block; top: 0px; left:0; right:195px">
+                        <h:graphicImage style="position: absolute; top: 53px; left: 53px;" url="/resources/images/bp10x14.jpg" />
+
+                        <h:outputText id="ot_randomletters" style="display:none" value="#{gameManager.getRandomLettersString(140)}"/>
+                        <canvas id="cv_menu" style="position: absolute; top: 55px; left: 55px; width: 312px; height: 434px; border: none;"/>
+                        <script>letterstobg();</script>
+
+                        <div style="position: absolute; display: block; top: 526px; left:199px; right:0">
+                          <h:commandButton id="btn_madminpage" class="gamebutton fourcellbutton" value="Admin" rendered="#{loginData.admin == true}"
                                            action="#{gameManager.setMenu(7)}">
                             <f:ajax execute="" render="pg_menu"/>
                           </h:commandButton>
                         </div>
-                        <div style="position: absolute; display: block; top: 148px; left:60px; right:60px">
-                          <h:commandButton id="btn_mnewgame" class="menubutton eightcellbutton" value="Új játszma indítása" action="#{gameManager.createGame()}">
-                            <f:ajax execute="" render="pg_menu"/>
-                          </h:commandButton>
-                          <h:commandButton id="btn_mjoingame" class="menubutton eightcellbutton" value="Játszma folytatása" action="#{gameManager.createGame()}">
-                            <f:ajax execute="" render="pg_menu"/>
-                          </h:commandButton>
-                          <h:commandButton id="btn_mgamesinlobby" class="menubutton eightcellbutton" value="Csatlakozás játszmához" action="#{gameManager.setMenu(1)}">
-                            <f:ajax execute="" render="pg_menu"/>
-                          </h:commandButton>
-                          <h:commandButton id="btn_mgamesinprogress" class="menubutton eightcellbutton" value="Folyamatban lévő játszmák" action="#{gameManager.setMenu(2)}">
-                            <f:ajax execute="" render="pg_menu"/>
-                          </h:commandButton>
-                          <h:commandButton id="btn_mgamesfinished" class="menubutton eightcellbutton" value="Eredmények" action="#{gameManager.setMenu(3)}">
-                            <f:ajax execute="" render="pg_menu"/>
-                          </h:commandButton>
 
-                          <p:commandButton id="btn_logout" class="menubutton eightcellbutton" value="Kijelentkezés" action="#{gameManager.quit()}">
-                            <p:confirm header="Megerősítés" message="Biztosan kilépsz?"/>
-                            <f:ajax render="pg_menu" delay="1000"/>
-                          </p:commandButton>
-                        </div>  
+                        <!--Új játszma indítása-->
+                        <h:commandButton id="btn_mnewgame" class="menubutton visiblemenubutton1" style="position: absolute; top: 117px; left: 55px;"
+                                         value="" action="#{gameManager.createGame()}">
+                          <f:ajax execute="" render="pg_menu"/>
+                        </h:commandButton>
+                        
+                        <!--Játszma folytatása-->
+                        <h:commandButton id="btn_mjoingame" class="menubutton visiblemenubutton2" style="position: absolute; top: 179px; left: 55px;"
+                                         value="" action="#{gameManager.setMenu(2)}">
+                          <f:ajax execute="" render="pg_menu"/>
+                        </h:commandButton>
+                        <!--Induló játszmák-->
+                        <h:commandButton id="btn_mgamesinlobby" class="menubutton visiblemenubutton1" style="position: absolute; top: 242px; left: 55px;" 
+                                         value="" action="#{gameManager.setMenu(1)}">
+                          <f:ajax execute="" render="pg_menu"/>
+                        </h:commandButton>
+                        <!--Korábbi eredmények-->
+                        <h:commandButton id="btn_mgamesfinished" class="menubutton visiblemenubutton2" style="position: absolute; top: 304px; left: 55px;" 
+                                         value="" action="#{gameManager.setMenu(3)}">
+                          <f:ajax execute="" render="pg_menu"/>
+                        </h:commandButton>
+                        <!--A játék szabályai-->
+                        <h:commandButton id="btn_mrules" class="menubutton visiblemenubutton1" style="position: absolute; top: 366px; left: 55px;" 
+                                         value="" action="#{gameManager.setMenu(4)}">
+                          <f:ajax execute="" render="pg_menu"/>
+                        </h:commandButton>
+
+                        <!--Kilépés a játékból-->
+                        <p:commandButton id="btn_logout" class="menubutton visiblemenubutton2" style="position: absolute; top: 428px; left: 55px;" 
+                                         value="" action="#{gameManager.quit()}">
+                          <p:confirm header="Megerősítés" message="Biztosan kilépsz?"/>
+                          <f:ajax render="pg_menu" delay="1000"/>
+                        </p:commandButton>
                       </div>
-                      <div class="aboutareaheader" style="position: absolute; display: block; top: 54px; left:398px; right:61px; height: 31px;">
+                      <div class="aboutareaheader" style="position: absolute; display: block; top: 60px; left:398px; right:61px; height: 31px;">
                         JÁTÉKOSOK
                       </div>
                       <div class="playersarea" style="position: absolute; display: block; top: 85px; left:398px; right:61px; height: 186px;">
@@ -117,12 +134,16 @@
                         var el = document.querySelector('.playersarea');
                         SimpleScrollbar.initEl(el);
                       </script>
+                      <!--<div class="playersareafading" style="position: absolute; display: block; top: 255px; left:402px; right:65px; height: 10px;"">AAAA</div>-->
 
-                      <div class="aboutareaheader" style="position: absolute; display: block; top: 303px; left:398px; right:61px; height: 31px;">
+                      <h:graphicImage style="position: absolute; top: 245px; left:400px; right:65px; width: 152px; height: 28px; z-index: 999999;" url="/resources/images/plfading.png"/>
+
+                      <div class="aboutareaheader" style="position: absolute; display: block; top: 309px; left:398px; right:61px; height: 31px;">
                         NÉVJEGY
                       </div>
                       <div class="aboutarea" style="position: absolute; display: block; top: 334px; left:398px; right:61px; height: 154px;">
-                        v1.4.0
+                        v1.4.0<br/>
+                        <a href="https://github.com/joti/BetuParbaj/blob/master/changelog.md" target="_blank">Changelog</a>
                       </div>
 
                       <p:commandButton id="btn_menurefresh" style="display:none" action="#{gameManager.debugGame('menurefresh')}" update="dt_players"/>
@@ -134,7 +155,7 @@
                           <h:inputTextarea id="ita_names2" class="inputtextsmall" rows="100" cols="20" style="width:287px;height:81px;float:left;display:none" 
                                            readonly="true" value="#{loginData.nameList}"/>
                         </div>  
-                        <p:poll id="poll_1sm" interval="1" 
+                        <p:poll id="poll_1sm" interval="1" listener="#{loginData.refresh()}"
                                 process="@this" async="true" partialSubmit="true" widgetVar="poll"
                                 update="ita_names2" 
                                 oncomplete="menuPoll(xhr, status, args);"/>
@@ -143,15 +164,67 @@
 
                     <h:panelGroup id="pg_mainpage" style="position: absolute; top:24px; left: 30px" rendered="#{loginData.entered == true and (gameManager.menu gt 0 or gameManager.gameState gt 0)}">
                       <h:panelGroup id="pg_main" class="mainpg">
-                        <h:panelGroup id="pg_lobby" class="text" rendered="#{gameManager.isInGameState(0)}">
-                          <h:panelGroup id="lobbytitle1" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 1}">> Indításra váró játszmák</h:panelGroup>
-                          <h:panelGroup id="lobbytitle2" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 2}">>> Folyamatban lévő játszmák</h:panelGroup>
-                          <h:panelGroup id="lobbytitle3" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 3}">>>> Legutóbbi játszmák</h:panelGroup>
+                        <h:panelGroup id="pg_rules" class="text" rendered="#{gameManager.isInMenu(4)}">
+                          <h:panelGroup id="rulestitle" class="gameareatitle" rendered="#{gameManager.menu eq 4}">> Játékszabályok</h:panelGroup>
 
                           <div id="gamesetupbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
                           </div>
 
-                          <div style="position: absolute; top:37px; left:0px; height: 428px; width: 327px; background: #dee4b9; opacity: 0.0; z-index: 999999"></div>
+                          <div id="rules" class="gamearea" style="position: absolute; top: 37px; width: 547px">
+                            <div id="rulescontent" class="rulesscroll" style="height:422px;overflow-y:auto;width:547px;">
+                              <div class="rulestext">
+                              <span class="rulestitletext">A játék célja<br/><hr class="rulesline"/></span>
+                              A betűpárbaj játékban a játékosoknak egy 6x6-os négyzetrácsot kell megtölteniük betűkkel olymódon, hogy a sorokban és az oszlopokban minél hosszabb értelmes szavak alakuljanak ki.
+                              Az egyes betűket a játékosok felváltva választhatják ki (összesen tehát 36 db-ot, ennyi fordulóból áll a játék), 
+                              és minden játékosnak az éppen soron lévő játékos által megjelölt betűt kell elhelyeznie a saját táblájának egy még üresen álló cellájában.
+                              A játék végéig, tehát a teljes négyzetrács kitöltéséig a játékosok egymás tábláit nem láthatják.<br/><br/>
+                              A játék végén az egyes sorokban és oszlopokban kialakult leghosszabb (legalább kétbetűs, a játék szótárában szereplő) 
+                              szavakért a játékosok a szavak hosszától függő pontszámokat kapnak. A győztes a legtöbb pontot gyűjtő játékos.<br/><br/>
+                              
+                              <span class="rulestitletext">Gondolkodási idő<br/></span>
+                              <hr class="rulesline"/>
+                              A játékosoknak minden betű elhelyezésére előre meghatározott gondolkodási idő áll rendelkezésére. Amennyiben egy betűt nem sikerül időben lerakni, 
+                              akkor az (a játék beállításától függően) vagy véletlenszerű helyre kerül, vagy nem kerül fel a táblára.<br/><br/>
+                              A betűválasztásban soron következő játékos csak akkor jelölhet meg betűt, ha a játékostárs által választottat már elhelyezte a tábláján, és még az időkereten belül van. 
+                              Ha a játékosnak lejár a gondolkodási ideje, akkor a következő betű véletlenszerűen kerül meghatározásra.<br/><br/>
+
+                              <span class="rulestitletext">Játékmódok<br/></span>
+                              <hr class="rulesline"/>
+                              A betűpárbaj játék klasszikus változatában a játszmákat (ahogy arra a nevében szereplő &bdquo;párbaj&rdquo; szó is utal) két játékos vívja egymás ellen. 
+                              Ebben a játékban viszont akár 3 vagy 4 játékos is részt vehet egy játszmában, sőt, akár egyedül is játszható.<br/><br/>
+                              A játék kezdeti szakaszában (bizonyos számú fordulón keresztül) a betűk kiválasztása történhet a játékosok helyett a számítógép által.<br/><br/>
+
+                              <span class="rulestitletext">Szótár<br/></span>
+                              <hr class="rulesline"/>
+                              A táblák kiértékelése során csak a játék által használt szótárban szereplő szavak számítanak elfogadhatónak. Ez a szótár tulajdonneveket, rövidítéseket és ragozott szavakat nem tartalmaz.
+                              A játék folyamán lehetőség van annak ellenőrzésére, hogy egy adott szó szerepel-e a szótárban.<br/><br/>
+                              A szótár bővítése folyamatosan zajlik, kérlek, <a href="mailto: betuparbaj@gmail.com">jelezd</a>, ha értelmes, de a szótárban nem szereplő szavakat találsz.
+                              </div>
+                            </div>
+                          
+                            <script>
+                              var el = document.querySelector('.rulesscroll');
+                              SimpleScrollbar.initEl(el);
+                            </script>
+                          </div>
+
+                          <div id="rulesbuttons" style="position: absolute; top: 468px;">
+                            <h:commandButton id="btn_rulestomenu" class="gamebutton fivecellbutton" value="Vissza a menübe" action="#{gameManager.setMenu(0)}">
+                              <f:ajax execute="" render="pg_menu"/>
+                            </h:commandButton>
+                          </div>
+
+                          <h:graphicImage style="position: absolute; top: 433px; left:15px; right:0px;height: 28px; z-index: 999999;" url="/resources/images/plfading2.png"/>
+                          
+                        </h:panelGroup> <!--pg_rules-->
+
+                        <h:panelGroup id="pg_lobby" class="text" rendered="#{gameManager.isInMenu(1,2,3)}">
+                          <h:panelGroup id="lobbytitle1" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 1}">> Indításra váró játszmák</h:panelGroup>
+                          <h:panelGroup id="lobbytitle2" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 2}">> Folyamatban lévő játszmák</h:panelGroup>
+                          <h:panelGroup id="lobbytitle3" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 3}">> Legutóbbi játszmák</h:panelGroup>
+
+                          <div id="gamesetupbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
+                          </div>
 
                           <div id="lobby" class="gamearea" style="position: absolute; top: 37px; width: 547px">
                             <div id="lobbycontent" class="lobbyscroll" style='height:422px;overflow-y:auto;width:547px;'>
@@ -837,7 +910,7 @@
                       </h:panelGroup> <!-- pg_main -->
                       <p:commandButton id="btn_mainrefresh" style="display:none" action="#{gameManager.debugGame('mainrefresh')}" update="pg_main"/>
 
-                      <div style="display: block; position: absolute; top: 24px; left: 10px; width: 550px;">
+                      <div style="display: none; position: absolute; top: 24px; left: 10px; width: 550px;">
                         <h:outputText id="ot_seconds2" value="#{loginData.seconds}" />
                         <h:outputText id="ot_turnsec2" style="color:red" value="#{gameManager.remainingTurnSec}" />
                         <h:panelGroup style="display:block">
