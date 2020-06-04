@@ -272,7 +272,7 @@
                           </div>
                         </h:panelGroup> <!--pg_dict-->
 
-                        <h:panelGroup id="pg_lobby" class="text" rendered="#{gameManager.isInMenu(1,2,3)}">
+                        <h:panelGroup id="pg_lobby" class="text" rendered="#{gameManager.isInMenu(1,2,3) and gameManager.gameState eq 0}">
                           <h:panelGroup id="lobbytitle1" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 1}">&#8759; Indításra váró játszmák:</h:panelGroup>
                           <h:panelGroup id="lobbytitle2" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 2}">&#8759; Folyamatban lévő játszmák:</h:panelGroup>
                           <h:panelGroup id="lobbytitle3" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 3}">&#8759; Legutóbbi játszmák:</h:panelGroup>
@@ -915,25 +915,25 @@
 
                             <h:panelGroup id="pg_gameplaybuttons" style="position: absolute; top: 468px;">
                               <p:commandButton id="btn_dropgame" class="gamebutton" style="width: 208px" value="Játék megszakítása" action="#{gameManager.dropGame()}"
-                                               rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers eq 1}">
+                                               rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers eq 1}"
+                                               update="pg_menu">
                                 <p:confirm header="Megerősítés" message="Biztosan megszakítod a játékot?"/>
-                                <f:ajax execute="" render="pg_menu"/>
                               </p:commandButton>
                               <p:commandButton id="btn_quitgame" class="gamebutton" style="width: 208px" value="Játszma elhagyása" action="#{gameManager.quitGame(true)}"
-                                               rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers gt 1}">
+                                               rendered="#{gameManager.game.endDate == null and gameManager.game.numberOfActivePlayers gt 1}"
+                                               update="pg_menu">
                                 <p:confirm header="Megerősítés" message="Biztosan elhagyod az játszmat?"/>
-                                <f:ajax execute="" render="pg_menu"/>
                               </p:commandButton>
 
                               <p:commandButton id="btn_closegame" class="gamebutton fivecellbutton" value="Játszma bezárása" action="#{gameManager.quitGame(true)}"
                                                rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2}" update="pg_menu"/>
-                              <p:commandButton id="btn_viewgamesetup" class="gamebutton fivecellbutton" value="Játszma beállításai" action="#{gameManager.switchGameViewMode()}" 
+                              <p:commandButton id="btn_viewgamesetup" class="gamebutton sixcellbutton" value="Játszma beállításai" action="#{gameManager.switchGameViewMode()}" 
                                                rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode == 1}" 
                                                update="pg_main"/>
                               <p:commandButton id="btn_removegame" class="gamebutton" style="width: 154px" value="Eltávolítás" action="#{gameManager.removeGame()}"
-                                               rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2 and loginData.admin == true}">
+                                               rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2 and loginData.admin == true}"
+                                               update="pg_menu">
                                 <p:confirm header="Megerősítés" message="Biztosan eltávolítod az játszmat?"/>
-                                <f:ajax execute="" render="pg_menu"/>
                               </p:commandButton>
                             </h:panelGroup>
                           </h:panelGroup> <!-- pg_gameplay -->

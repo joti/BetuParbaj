@@ -1,13 +1,13 @@
 # Version history
 
 ## 1.4.0
-*2020-05-03*
+*2020-06-03*
 
 * Főmenü kialakítása:
-   - Innen gombnyomással érhető el a lobbi, a korábbi játszmák eredményei, ill. új játszma indítása.
+   - Innen gombnyomással érhető el a lobbi, a korábbi játszmák eredményei, új játszma indítása, illetve a játékszabályok.
    - Kijelentkezés csak a főmenüről elérhető.
-   - Innen nyitható a cset ablak is.
    - "Névjegy" adatok.
+   - A cset felület ideiglenesen nem elérhető.
 
 ## 1.3.0
 *2019-03-05*

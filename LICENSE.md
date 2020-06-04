@@ -2,7 +2,7 @@
 
 Betűpárbaj is licensed under the terms of the MIT license (below).
 
-__License Information for items used:__
+License Information for items used:
 
 * __SimpleScrollBar__ is published under the terms of the [MIT license](https://github.com/buzinas/simple-scrollbar/blob/master/LICENSE);
 Copyright (c) 2015-2017 Vitor Buzinaro.
