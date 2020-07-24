@@ -18,7 +18,7 @@
     <jstl.version>1.2</jstl.version>
     <mojarra.version>2.4.0</mojarra.version>
     <primefaces.version>5.3</primefaces.version>
-    <log4j.version>2.11.1</log4j.version>
+    <log4j.version>2.13.3</log4j.version>
     <postgresql.version>42.2.1</postgresql.version>
   </properties>
     
