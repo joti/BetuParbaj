@@ -498,6 +498,16 @@ textarea{
   line-height: 1.2;
 }
 
+.gamename {
+  font-family: 'Itim', cursive;
+  font-size: 18px;	
+  font-weight: bold;
+  color: #808571;
+  line-height: 1.7;
+  overflow: hidden;
+  text-shadow: 0px 1px 0px white;
+}
+
 .gameplayers { 
   background: transparent;
   float:left;   
@@ -681,8 +691,8 @@ textarea{
   border-top:2px;
   border-color: transparent;
   color: #808571;
-  /*background: transparent;*/  
-  background: #808571 linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(0,0,0,0.2) 100%);  
+  background: transparent;  
+  /*background: #808571 linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(0,0,0,0.2) 100%);*/  
   outline: 0;
   padding: 0px;
   padding-left: 5px;
@@ -699,9 +709,10 @@ textarea{
 .menubutton:hover {
   border-bottom:2px solid #808571;
   border-top:2px solid #808571;
-  background: #808571 linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(0,0,0,0.2) 100%);  
+  background: #f4f6e9 linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(244,246,233,0.0) 20%, rgba(244,246,233,0.0) 80%, rgba(0,0,0,0.4) 100%);  
   /*background: #808571 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%, rgba(255,255,255,0.8) 0%);*/  
-  opacity: 0.38;
+  opacity: 0.18;
+  cursor:pointer;
 } 
 
 .menubutton:disabled {
@@ -710,13 +721,14 @@ textarea{
 }
 
 .visiblemenubutton1{
-  opacity: 0.2;
-  background: #808571 linear-gradient(to bottom, rgba(255,0,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(255,0,0,0.2) 100%);  
+  opacity: 0.1;
+  background: #f4f6e9  
+  /* #808571 linear-gradient(to bottom, rgba(255,0,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(255,0,0,0.2) 100%)*/;  
 }
 
 .visiblemenubutton2{
-  opacity: 0.2;
-  background: #808571 linear-gradient(to bottom, rgba(0,200,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(0,200,0,0.2) 100%);  
+  opacity: 0.1;
+  background: #f4f6e9 /*linear-gradient(to bottom, rgba(0,200,0,0.2) 0%, rgba(244,246,233,0.9) 20%, rgba(244,246,233,0.9) 80%, rgba(0,200,0,0.2) 100%)*/;  
 }
 
 .gamebutton {
@@ -1123,6 +1135,59 @@ textarea{
   background-color: #c6ce92;
 }
 
+/* Lenyitás-bezárás gombok */
+.buttonsmall7 {
+  font-family: 'Itim', cursive;
+  font-size: 15px;	
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border: 2px solid;
+  border-radius: 2px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  margin-bottom: 1px;   
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  background-image: url("/resources/images/expand.png");  
+  outline: 0;
+  padding: 0px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.buttonsmall7:hover {
+  background-color: #c6ce92;
+}
+
+.buttonsmall8 {
+  font-family: 'Itim', cursive;
+  font-size: 15px;	
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border: 2px solid;
+  border-radius: 2px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  margin-bottom: 1px;   
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  background-image: url("/resources/images/collapse.png");  
+  outline: 0;
+  padding: 0px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.buttonsmall8:hover {
+  background-color: #c6ce92;
+}
+
 .table1header{
   border: 1px solid;
   border-color: #808571;
@@ -1206,8 +1271,8 @@ textarea{
   width: 100% ;  
   border-collapse: collapse;
   vertical-align: middle;
-  border-bottom: 1px dashed #b9b89f;
-  background-color: rgba(249,250,238,0.5);
+  /*border-bottom: 1px dashed #b9b89f;*/
+  /*background-color: rgba(249,250,238,0.5);*/
   line-height: 1.0;
 }
 
@@ -1232,7 +1297,7 @@ textarea{
 }
 
 .lobbyrowgamename{
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bolder;
   text-overflow: ellipsis;
 }
@@ -1246,7 +1311,7 @@ textarea{
   width: 40%;
   text-align: right;
   border: none;
-  background-color: rgba(249,250,238,0.5);
+  /*background-color: rgba(249,250,238,0.5);*/
 }
 
 .lobbyrowplayers{
@@ -1254,7 +1319,9 @@ textarea{
   width: 100% ;  
   border-collapse: collapse;
   border: none;
-  background: transparent;
+  background-color: rgba(249,250,238,0.5);
+  border-top: 1px dashed #b9b89f;
+  /*background: transparent;*/
 }
 
 .lobbyrowplayers td{

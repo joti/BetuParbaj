@@ -54,17 +54,22 @@ public class GameManager implements Serializable {
   private int menu;
   // befejeződött játék lekérdezésének módja: 1 - eredmény, 2 - setup
   private int gameViewMode;
+  // azon játszmák, amelyek szabályai láthatók a lobbiban
+  private Set<Integer> visibleGameRules;
 
   private List<Integer> letterIndices;
   private List<Integer> cellIndices;
   private String testWord;
   private int testResult;
+  private Set<String> missingWords;
 
   private static final Logger LOGGER = LogManager.getLogger(GameManager.class.getName());
 
   public GameManager() {
+    LOGGER.info("GameManager constructor");
     fadingGames = new HashSet<>();
     fadedGames = new HashSet<>();
+    visibleGameRules = new HashSet<>();
     myPosition = -1;
     gameViewMode = 0;
     password = "";
@@ -342,6 +347,25 @@ public class GameManager implements Serializable {
     lobby.getGamesInPrep().add(game);
   }
 
+  public boolean isGameRulesVisible(Game g){
+    if (g != null)
+      return visibleGameRules.contains(g.getId());
+    else
+      return false;
+  }
+
+  public void showGameRules(Game g){
+    if (g != null)
+      visibleGameRules.add(g.getId());
+    LOGGER.info(visibleGameRules.size());
+  }
+
+  public void hideGameRules(Game g){
+    if (g != null)
+      visibleGameRules.remove(g.getId());
+    LOGGER.info(visibleGameRules.size());
+  }
+  
   public boolean canJoinGame(Game g) {
     if (game != null || g == null || g.getOpenDate() == null || g.getEndDate() != null)
       return false;
@@ -380,6 +404,8 @@ public class GameManager implements Serializable {
       fillMyPosition();
       clearWord();
       gameViewMode = 0;
+      setMenu(0);
+      visibleGameRules.clear();
       password = "";
     }
   }
@@ -454,6 +480,7 @@ public class GameManager implements Serializable {
     if (game != null) {
       LOGGER.info(loginData.getName() + " opens game #" + game.getId());
       game.setOpenDate(new Date());
+      game.setOpeningPlayerName(loginData.getName());
       lobby.getGamesInPrep().remove(game);
       lobby.getGamesInLobby().add(game);
       password = password.trim();
@@ -1137,8 +1164,10 @@ public class GameManager implements Serializable {
     if (game != null && game.getStartDate() != null && !testWord.isEmpty()) {
       if (glossaryManager.includes(testWord, !game.isIncludeLongVowels()))
         testResult = 1;
-      else
+      else {
         testResult = 2;
+        missingWords.add(testWord);
+      }  
     } else
       testResult = 0;
     LOGGER.debug(loginData.getName() + " wordcheck: " + testWord + " -> " + testResult);
@@ -1292,7 +1321,24 @@ public class GameManager implements Serializable {
   }
 
   public void setMenu(int menu) {
+    visibleGameRules.clear();
     this.menu = menu;
+  }
+
+  public Set<Integer> getVisibleGameRules() {
+    return visibleGameRules;
+  }
+
+  public void setVisibleGameRules(Set<Integer> visibleGameRules) {
+    this.visibleGameRules = visibleGameRules;
+  }
+
+    public Set<String> getMissingWords() {
+    return missingWords;
+  }
+
+  public void setMissingWords(Set<String> missingWords) {
+    this.missingWords = missingWords;
   }
 
 }

@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 public class WordDaoPq implements WordDao, Serializable {
 
   private static final Logger LOGGER = LogManager.getLogger(WordDaoPq.class.getName());
+  private static final int WORD_LIMIT = 20;
 
   private static Connection getConnection() throws SQLException {
     // Heroku környezeti változón keresztül biztosítja a connection adatait
@@ -81,6 +84,93 @@ public class WordDaoPq implements WordDao, Serializable {
 
     LOGGER.info("No. of words in db glossary: " + words.size());
     return words;
+  }
+
+  public void saveAllWords(List<Word> words){
+
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    Set<String> glsWords = new TreeSet<>();
+    int wordNum = 0;
+
+    class Glossary{
+      int category;
+      String init = "";
+      String words = "";
+
+      public Glossary() {
+      }
+      
+      public Glossary(int category, String init, String words) {
+        this.category = category;
+        this.init = init;
+        this.words = words;
+      }
+    }
+    
+    List<Glossary> glossaries = new LinkedList<>();
+    Glossary glossary = null;
+    String init;
+//    String words;
+
+    /* rendezett listára készülünk */    
+    for (Word word : words) {
+      if (glossary == null || !glossary.init.equals(word.getPhrase().substring(0, 2)) || wordNum >= WORD_LIMIT){
+        LOGGER.info("szó: " + word.getPhrase());
+        if (glossary != null)
+          glossaries.add(glossary);
+        glossary = new Glossary();
+        wordNum = 0;
+      }
+      wordNum++;
+      glossary.category = word.getCategory();
+      glossary.init = word.getPhrase().substring(0, 2);
+      if (!glossary.words.isEmpty())
+        glossary.words = glossary.words + ",";
+      glossary.words = glossary.words + word.getPhrase();
+    }
+    if (glossary != null)
+      glossaries.add(glossary);
+
+//    for (Glossary glossary1 : glossaries) {
+//      LOGGER.info(glossary1.init + ": " + glossary1.words);
+//    }
+    LOGGER.info("glossaries.size: " + glossaries.size());
+    
+    try {
+      conn = getConnection();
+
+      pstmt = conn.prepareStatement("truncate glossary");
+      pstmt.execute();
+
+      pstmt = conn.prepareStatement("insert into glossary (gl_category, gl_init, gl_words) values (?, ?, ?);");
+
+      for (Glossary g : glossaries) {
+        pstmt.setInt(1, g.category);
+        pstmt.setString(2, g.init);
+        pstmt.setString(3, g.words);
+        pstmt.executeUpdate();
+      }
+      
+    } catch (SQLException ex) {
+      LOGGER.error(ex);
+    } finally {
+      if (pstmt != null) {
+        try {
+          pstmt.close();
+        } catch (SQLException ex) {
+          LOGGER.error(ex);
+        }
+      }
+      if (conn != null) {
+        try {
+          conn.close();
+        } catch (SQLException ex) {
+          LOGGER.error(ex);
+        }
+      }
+    }
+  
   }
   
 }

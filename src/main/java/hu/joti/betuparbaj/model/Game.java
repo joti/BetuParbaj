@@ -70,6 +70,15 @@ public class Game implements Serializable {
   private int maxPlayers;
   private int numberOfPlayers;
   private int adminPlayerPos;
+  private String openingPlayerName;
+
+  public String getOpeningPlayerName() {
+    return openingPlayerName;
+  }
+
+  public void setOpeningPlayerName(String openingPlayerName) {
+    this.openingPlayerName = openingPlayerName;
+  }
   private int numberOfActivePlayers;
   private boolean randomOrder;
   private boolean randomPlace;
@@ -739,8 +748,10 @@ public class Game implements Serializable {
       compareDate = endDate;
     } else if (startDate != null) {
       compareDate = startDate;
+      pre = "\u2022 ";
     } else if (openDate != null) {
       compareDate = openDate;
+      pre = "\u2022 ";
     } else
       return "";
 

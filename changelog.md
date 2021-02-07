@@ -1,16 +1,17 @@
 # Verziótörténet
 
 ## 1.4.0
-*2020-06-03*
+*2021-02-07*
 
 * Főmenü kialakítása:
    - Innen gombnyomással érhető el a lobbi, a korábbi játszmák eredményei, új játszma indítása, illetve a játékszabályok.
+   - A lobbiban a játszmára érvényes játékszabályok gombnyomásra jeleníthetők meg.
    - Kijelentkezés csak a főmenüről elérhető.
    - "Névjegy" adatok.
    - A cset felület ideiglenesen nem elérhető.
 
 ## 1.3.0
-*2019-03-05*
+*2020-03-05*
 
 * Új betűtípus (Courier helyett Itim) a teljes felületen. 
 * A login képernyőre kontakt információk kerülnek.

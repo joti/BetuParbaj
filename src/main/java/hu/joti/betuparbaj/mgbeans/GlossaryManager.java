@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Collections;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
 import org.apache.logging.log4j.LogManager;
@@ -42,11 +44,21 @@ public class GlossaryManager implements Serializable{
     loadWords();
   }
 
-  public void loadWords(){
-    WordDao wordDao = new WordDaoPq();
-    List<Word> wordList = wordDao.findAllWords();
+  public final void loadWords(){
+    loadWords(false);
+  }
 
-    if (wordList.isEmpty()){
+  public void loadWords(boolean forceTxt){
+   
+    WordDao wordDao;
+    List<Word> wordList = null;
+            
+    if (!forceTxt){
+      wordDao = new WordDaoPq();
+      wordList = wordDao.findAllWords();
+    }  
+
+    if (wordList == null){
       wordDao = new WordDaoTxt();
       wordList = wordDao.findAllWords();
     }
@@ -65,12 +77,13 @@ public class GlossaryManager implements Serializable{
 
         if (entry.contains("Í") || entry.contains("Ó") || entry.contains("Ő") || entry.contains("Ú") || entry.contains("Ű")){
           modEntry = entry.replaceAll("Í", "I").replaceAll("Ó", "O").replaceAll("Ő", "Ö").replaceAll("Ú", "U").replaceAll("Ű", "Ü");
-          easyVowelWords.put(modEntry, entry);
+          if (!easyVowelWords.containsKey(modEntry))
+            easyVowelWords.put(modEntry, entry);
         }
       }
       
       LOGGER.info("Alapszótár mérete: " + words.size());
-      LOGGER.info("Hosszú mgh. szótár mérete: " + easyVowelWords.size());
+      LOGGER.info("Hosszú mgh szótár mérete: " + easyVowelWords.size());
     } else {
       LOGGER.error("A szótár üres!");
     }
@@ -90,6 +103,25 @@ public class GlossaryManager implements Serializable{
     
     return "";
   }
+
+  public void saveWords(){
+    /* szövegfájl tartalma alapján glossary adatbázis újraépítése */
+    loadWords(true);
+
+    List<Word> wordList = new ArrayList<>(words.size());
+    
+    for (String word : words) {
+      Word w = new Word();
+      w.setCategory(1);
+      w.setPhrase(word);
+      wordList.add(w);
+    }
+    
+    Collections.sort(wordList);
+    
+    WordDaoPq wordDaoPq = new WordDaoPq();
+    wordDaoPq.saveAllWords(wordList);
+  } 
   
   public Hit findHit(String[] letters, boolean easyVowelRule, ScoringMode scoringMode){
     String word;
