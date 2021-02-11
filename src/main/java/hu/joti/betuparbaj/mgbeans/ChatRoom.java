@@ -43,7 +43,7 @@ public class ChatRoom implements Serializable {
   private static final Logger LOGGER = LogManager.getLogger(ChatRoom.class.getName());
   
   public static final boolean ONE_NAME_PER_ROW = true;
-  public static final String[] TESTPLAYERS = {"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm", "Ló Szerafin", "Zordonbordon", "Szörnyeteg Lajos"};
+  public static final String[] TESTPLAYERS = {/*"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm", "Ló Szerafin", "Zordonbordon", "Szörnyeteg Lajos"*/};
   public static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm");
 
   private Set<Player> players;

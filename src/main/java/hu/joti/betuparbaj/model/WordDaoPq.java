@@ -206,6 +206,9 @@ public class WordDaoPq implements WordDao, Serializable {
           glwords = rs.getString("gl_words") + "," + wordToSave;
         }
       }
+      
+      LOGGER.info("gl_id = " + glid);
+      LOGGER.info("gl_words = " + glwords);
 
       if (glid > 0) {
         pstmt = conn.prepareStatement("update glossary set gl_words = ? where gl_id = ?;");
@@ -288,13 +291,13 @@ public class WordDaoPq implements WordDao, Serializable {
         return 2;
 
       if (glwords.isEmpty()) {
+        pstmt = conn.prepareStatement("delete from glossary where gl_id = ?;");
+        pstmt.setInt(1, glid);
+        pstmt.executeUpdate();
+      } else {
         pstmt = conn.prepareStatement("update glossary set gl_words = ? where gl_id = ?;");
         pstmt.setString(1, glwords);
         pstmt.setInt(2, glid);
-        pstmt.executeUpdate();
-      } else {
-        pstmt = conn.prepareStatement("delete from glossary where gl_id = ?;");
-        pstmt.setInt(1, glid);
         pstmt.executeUpdate();
       }
 
