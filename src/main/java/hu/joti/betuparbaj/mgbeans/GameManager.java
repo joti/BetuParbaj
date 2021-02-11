@@ -60,6 +60,10 @@ public class GameManager implements Serializable {
   private List<Integer> letterIndices;
   private List<Integer> cellIndices;
   private String testWord;
+
+  private String managedWord;
+  private String manageWordMsg;
+  
   private int testResult;
   private Set<String> missingWords;
 
@@ -70,6 +74,7 @@ public class GameManager implements Serializable {
     fadingGames = new HashSet<>();
     fadedGames = new HashSet<>();
     visibleGameRules = new HashSet<>();
+    missingWords  = new HashSet<>();
     myPosition = -1;
     gameViewMode = 0;
     password = "";
@@ -1178,6 +1183,42 @@ public class GameManager implements Serializable {
     testResult = 0;
   }
 
+  public void saveManagedWord(){
+    int result = glossaryManager.saveWord(managedWord);
+    switch (result){
+      case 0 : 
+        manageWordMsg = "Mentés sikeres.";
+        break;
+      case 1 :  
+        manageWordMsg = "A megadott szó nem megfelelő.";
+        break;
+      case 2 :  
+        manageWordMsg = "A szó már létezik a szótárban.";
+        break;
+      case 3 :  
+        manageWordMsg = "Mentés sikertelen.";
+        break;
+    }   
+  }
+
+  public void delManagedWord(){
+    int result = glossaryManager.deleteWord(managedWord);
+    switch (result){
+      case 0 : 
+        manageWordMsg = "Mentés sikeres.";
+        break;
+      case 1 :  
+        manageWordMsg = "A megadott szó nem megfelelő.";
+        break;
+      case 2 :  
+        manageWordMsg = "A szó nem található a szótárban.";
+        break;
+      case 3 :  
+        manageWordMsg = "Mentés sikertelen.";
+        break;
+    }   
+  }
+  
   public List<Integer> getAllNumOfPlayers() {
     return Arrays.asList(Game.NUM_OF_PLAYERS);
   }
@@ -1339,6 +1380,22 @@ public class GameManager implements Serializable {
 
   public void setMissingWords(Set<String> missingWords) {
     this.missingWords = missingWords;
+  }
+
+  public String getManagedWord() {
+    return managedWord;
+  }
+
+  public void setManagedWord(String managedWord) {
+    this.managedWord = managedWord;
+  }
+
+  public String getManageWordMsg() {
+    return manageWordMsg;
+  }
+
+  public void setManageWordMsg(String manageWordMsg) {
+    this.manageWordMsg = manageWordMsg;
   }
 
 }

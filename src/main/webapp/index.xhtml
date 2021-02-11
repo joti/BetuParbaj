@@ -125,6 +125,7 @@
                           <f:ajax render="pg_menu" delay="1000"/>
                         </p:commandButton>
                       </div>
+
                       <div class="aboutareaheader" style="position: absolute; display: block; top: 60px; left:398px; right:61px; height: 31px;">
                         &#8759; Játékosok &#8759;
                       </div>
@@ -984,7 +985,18 @@
 
                           <h:commandButton id="btn_pagerefresh" class="gamebutton" style="display:none" value="Frissítés" action="#{loginData.refreshPage()}"/>
 
-                          <h:commandButton id="btn_admintomenu" class="gamebutton fivecellbutton" value="Vissza" action="#{gameManager.setMenu(0)}">
+                          <h:panelGroup id="pg_manageword">
+                            <div style="position: absolute; top: 127px; left: 12px; width: 500px; height: 62px;">
+                              <h:inputText id="it_managedword" class="inputtextcheckword" maxlength="10" style="width: 172px;" value="#{gameManager.managedWord}"/>
+                              <p:commandButton id="btn_savemanagedword" class="gamebutton" style="margin-left: 12px;" value="Szó hozzáadása" action="#{gameManager.saveManagedWord()}" update="pg_manageword"/>
+                              <p:commandButton id="btn_delmanagedword" class="gamebutton" value="Szó törlése" action="#{gameManager.delManagedWord()}" update="pg_manageword"/>
+                            </div> 
+                            <div style="position: absolute; top:160px; left: 50px; right: 93px">
+                              <h:outputText id="ot_managewordmsg" value="#{gameManager.manageWordMsg}" class="errortext"/>
+                            </div>
+                          </h:panelGroup>>
+                          
+                          <h:commandButton id="btn_admintomenu" class="gamebutton fivecellbutton" style="position: absolute; top: 469px; left: 309px; width:172px;" value="Vissza" action="#{gameManager.setMenu(0)}">
                             <f:ajax execute="" render="pg_menu"/>
                           </h:commandButton>
                         </h:panelGroup>

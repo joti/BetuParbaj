@@ -104,6 +104,18 @@ public class GlossaryManager implements Serializable{
     return "";
   }
 
+  public int saveWord(String word) {
+    WordDaoPq wordDaoPq = new WordDaoPq();
+    int result = wordDaoPq.saveWord(word);
+    return result;
+  }
+
+  public int deleteWord(String word) {
+    WordDaoPq wordDaoPq = new WordDaoPq();
+    int result = wordDaoPq.deleteWord(word);
+    return result;
+  }
+  
   public void saveWords(){
     /* szövegfájl tartalma alapján glossary adatbázis újraépítése */
     loadWords(true);
