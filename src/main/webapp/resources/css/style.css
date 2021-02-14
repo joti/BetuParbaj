@@ -556,6 +556,22 @@ textarea{
   opacity: 0.8;
 }
 
+.gamebght { 
+  height: 427px;
+}
+
+.gamebght3 { 
+  height: 303px;
+}
+
+.lobbyscrollht { 
+  height: 422px;
+}
+
+.lobbyscrollht3 { 
+  height: 298px;
+}
+
 .gamesetupframe { 
   /*background: transparent;*/
   background: rgba(182,201,170,0.06);

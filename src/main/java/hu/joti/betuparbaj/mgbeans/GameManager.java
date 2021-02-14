@@ -18,13 +18,18 @@ import hu.joti.betuparbaj.model.Game;
 import hu.joti.betuparbaj.model.Hit;
 import hu.joti.betuparbaj.model.RndLetterMode;
 import hu.joti.betuparbaj.model.ScoringMode;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Part;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -66,6 +71,8 @@ public class GameManager implements Serializable {
   
   private int testResult;
   private Set<String> missingWords;
+
+  private Part file;
 
   private static final Logger LOGGER = LogManager.getLogger(GameManager.class.getName());
 
@@ -1165,6 +1172,20 @@ public class GameManager implements Serializable {
     return game.ALPHABET[index];
   }
 
+  public String getGameSetupBgClass() {
+    if (menu == 3 && getGameState() == 0)
+      return "gamebg gamebght3";
+    else
+      return "gamebg gamebght";
+  }
+
+  public String getLobbyScrollClass() {
+    if (menu == 3 && getGameState() == 0)
+      return "lobbyscroll lobbyscrollht3";
+    else
+      return "lobbyscroll lobbyscrollht";
+  }
+
   public void checkWord() {
     if (game != null && game.getStartDate() != null && !testWord.isEmpty()) {
       if (glossaryManager.includes(testWord, !game.isIncludeLongVowels()))
@@ -1218,6 +1239,36 @@ public class GameManager implements Serializable {
         break;
     }   
   }
+  
+  public void saveGame(){
+    LOGGER.info("Saving game...");
+  }
+
+  /*public void loadGame(){
+    LOGGER.info("Loading game...");
+  }*/
+
+  public void loadGame() {
+    LOGGER.info("Reading uploaded file.....");
+    String fileName = "";
+    if (file != null){
+      fileName = file.getName();
+    }  
+    
+    LOGGER.info(file == null);
+    LOGGER.info(fileName);
+    
+    /*if (file != null && !"".equals(file.getFileName())) {
+      try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputstream(), "UTF-8"))) {
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            LOGGER.info(line);
+        }
+      } catch (Exception ex) {
+          LOGGER.error("Error uploading the file", ex);
+      }
+    }*/
+  }  
   
   public List<Integer> getAllNumOfPlayers() {
     return Arrays.asList(Game.NUM_OF_PLAYERS);
@@ -1398,4 +1449,12 @@ public class GameManager implements Serializable {
     this.manageWordMsg = manageWordMsg;
   }
 
+  public Part getFile() {
+    return file;
+  }
+
+  public void setFile(Part file) {
+    this.file = file;
+  }
+  
 }
