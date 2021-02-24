@@ -925,6 +925,31 @@ textarea{
   background-color: #c6ce92;
 }
 
+.browsebutton {
+  font-family: 'Itim', cursive;
+  font-size: 14px;	
+  font-weight: bold;
+  border: 2px solid;
+  border-radius: 3px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  outline: 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 3px;
+  padding-right: 3px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+}
+
+.browsebutton:hover {
+  background-color: #c6ce92;
+}
+
 .gameplayerbutton {
   font-family: 'Itim', cursive;
   font-size: 16px;	
@@ -1924,6 +1949,21 @@ span.ui-confirm-dialog-message {
 .ui-button-text-only.ui-button-text{
   line-height: 1.0;
   padding: 1px 1px 1px 1px;
+}
+
+/* Hibaüzenet */
+.ui-message-error-icon {
+  display: none;
+}
+
+.ui-message.ui-message-error.ui-widget.ui-corner-all {
+  background: transparent;
+  border: none;
+  font-family: 'Itim', cursive;
+  font-size: 18px;	
+  font-weight: normal;
+  color: red;
+  line-height: 1;
 }
 
 /*FB és Github gombok*/

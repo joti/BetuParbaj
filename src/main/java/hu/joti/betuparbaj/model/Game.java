@@ -18,6 +18,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class Game implements Serializable {
 
+  private static final long SerialVersionUID = 1L;
+
   public static final Integer[] NUM_OF_PLAYERS = {2, 3, 4};
   public static final Integer[] TIMELIMITS = {15, 20, 30, 45, 60, 90, 120};
   public static final int TURN0_TIMELIMIT = 15;
@@ -71,14 +73,6 @@ public class Game implements Serializable {
   private int numberOfPlayers;
   private int adminPlayerPos;
   private String openingPlayerName;
-
-  public String getOpeningPlayerName() {
-    return openingPlayerName;
-  }
-
-  public void setOpeningPlayerName(String openingPlayerName) {
-    this.openingPlayerName = openingPlayerName;
-  }
   private int numberOfActivePlayers;
   private boolean randomOrder;
   private boolean randomPlace;
@@ -86,6 +80,7 @@ public class Game implements Serializable {
   private Date openDate; // A játék elérhetővé válik a lobbyban, játékosok csatlakozására vár
   private Date startDate; // A játék elindul
   private Date endDate; // A játék véget ér
+  private transient boolean uploaded; // Fájlból betöltött játék
 
   private Map<String, Integer> availableLetters;
   private String[] selectedLetters;
@@ -1010,4 +1005,20 @@ public class Game implements Serializable {
     this.preselectedLetter = preselectedLetter;
   }
 
+  public boolean isUploaded() {
+    return uploaded;
+  }
+
+  public void setUploaded(boolean uploaded) {
+    this.uploaded = uploaded;
+  }
+
+  public String getOpeningPlayerName() {
+    return openingPlayerName;
+  }
+
+  public void setOpeningPlayerName(String openingPlayerName) {
+    this.openingPlayerName = openingPlayerName;
+  }
+  
 }

@@ -1,5 +1,12 @@
 # Verziótörténet
 
+## 1.5.0
+*2021-02-24*
+
+* Játszma mentése és betöltése:
+   - A véget ért játszmákról mentés készíthető.
+   - A mentett játszmaadatok a "Játszma betöltése" menüpontban ismét megjeleníthetők.
+
 ## 1.4.0
 *2021-02-07*
 

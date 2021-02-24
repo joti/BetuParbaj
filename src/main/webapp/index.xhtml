@@ -107,13 +107,13 @@
                                          value="" action="#{gameManager.setMenu(3)}">
                           <f:ajax execute="" render="pg_menu"/>
                         </h:commandButton>
-                        <!--A játék szabályai-->
-                        <h:commandButton id="btn_mrules" class="menubutton visiblemenubutton1" style="position: absolute; top: 304px; left: 55px;" 
+                        <!--Játszma betöltése-->
+                        <h:commandButton id="btn_mdict" class="menubutton visiblemenubutton2" style="position: absolute; top: 304px; left: 55px;" 
                                          value="" action="#{gameManager.setMenu(4)}">
                           <f:ajax execute="" render="pg_menu"/>
                         </h:commandButton>
-                        <!--Szótár bővítése-->
-                        <h:commandButton id="btn_mdict" class="menubutton visiblemenubutton2" style="position: absolute; top: 366px; left: 55px;" 
+                        <!--A játék szabályai-->
+                        <h:commandButton id="btn_mrules" class="menubutton visiblemenubutton1" style="position: absolute; top: 366px; left: 55px;" 
                                          value="" action="#{gameManager.setMenu(5)}">
                           <f:ajax execute="" render="pg_menu"/>
                         </h:commandButton>
@@ -150,21 +150,25 @@
                       </div>
                       <div class="aboutarea" style="position: absolute; display: block; top: 334px; left:398px; right:61px; height: 154px;">
                         <div style="position: absolute; top: 8px; left: 0; right: 0;">
-                          Betűpárbaj v1.4.0
+                          Betűpárbaj v1.5.0
                         </div>
                         <div style="position: absolute; top: 30px; left: 0; right: 0; font-size: 12px;"><a href="https://github.com/joti/BetuParbaj/blob/menu/CHANGELOG.md" target="_blank">Verziótörténet</a></div>
                         <div style="position: absolute; top: 50px; left: 0; right: 0; font-size: 12px;"><a href="https://github.com/joti/BetuParbaj/blob/menu/PRIVACY.md" target="_blank">Adatvédelem</a></div>
 
                         <div style="position: absolute; top: 71px; left: 0; right: 0;">
                           <div style="position: absolute; left: 10px; top: 2px">Kapcsolat:</div>
-                          <div class="facebook-share" style="position: absolute; left: 86px;" 
-                               onclick="window.open('mailto: betuparbaj@gmail.com'); return false;">
-                            <i class="fa fa-envelope fa-2x share-icon"></i>
-                          </div>
-                          <div class="facebook-share" style="position: absolute; left: 118px;" 
-                               onclick="window.open('https://github.com/joti/betuparbaj'); return false;">
-                            <i class="fa fa-github-square fa-2x share-icon"></i>
-                          </div>
+                          <a href="mailto: betuparbaj@gmail.com">
+                            <div class="facebook-share" style="position: absolute; left: 86px;" 
+                                 onclick="window.open('mailto: betuparbaj@gmail.com'); return false;">
+                              <i class="fa fa-envelope fa-2x share-icon"></i>
+                            </div>
+                          </a>  
+                          <a href="https://github.com/joti/betuparbaj/issues">
+                            <div class="facebook-share" style="position: absolute; left: 118px;" 
+                                 onclick="window.open('https://github.com/joti/betuparbaj/issues'); return false;">
+                              <i class="fa fa-github-square fa-2x share-icon"></i>
+                            </div>
+                          </a>
                         </div>
 
                         <div style="position: absolute; top: 99px; left: 0; right: 0;">
@@ -199,7 +203,7 @@
 
                     <h:panelGroup id="pg_mainpage" style="position: absolute; top:24px; left: 30px" rendered="#{loginData.entered == true and (gameManager.menu gt 0 or gameManager.gameState gt 0)}">
                       <h:panelGroup id="pg_main" class="mainpg">
-                        <h:panelGroup id="pg_rules" class="text" rendered="#{gameManager.isInMenu(4)}">
+                        <h:panelGroup id="pg_rules" class="text" rendered="#{gameManager.isInMenu(5)}">
                           <h:panelGroup id="rulestitle" class="gameareatitle">&#8759; Játékszabályok &#8759;</h:panelGroup>
 
                           <div id="rulesbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
@@ -231,7 +235,8 @@
 
                                 <span class="rulestitletext">Szótár<br/></span>
                                 <hr class="rulesline"/>
-                                A táblák kiértékelése során csak a játék által használt szótárban szereplő szavak számítanak elfogadhatónak. Ez a szótár tulajdonneveket, rövidítéseket és ragozott szavakat nem tartalmaz.
+                                A táblák kiértékelése során csak a játék által használt szótárban szereplő szavak számítanak elfogadhatónak. A szótár alapját a wiktionary.org szókészlete képezi. 
+                                A szótár tulajdonneveket, rövidítéseket és ragozott szavakat nem tartalmaz.
                                 A játék folyamán lehetőség van annak ellenőrzésére, hogy egy adott szó szerepel-e a szótárban.<br/><br/>
                                 A szótár bővítése folyamatosan zajlik, kérlek, <a href="mailto: betuparbaj@gmail.com">jelezd</a>, ha értelmes, de a szótárban nem szereplő szavakat találsz.
                               </div>
@@ -253,25 +258,47 @@
 
                         </h:panelGroup> <!--pg_rules-->
 
-                        <h:panelGroup id="pg_dict" class="text" rendered="#{gameManager.isInMenu(5)}">
-                          <h:panelGroup id="dicttitle" class="gameareatitle">&#8759; Szótár bővítése &#8759;</h:panelGroup>
+                        <h:panelGroup id="pg_loadgame" class="text" rendered="#{gameManager.isInMenu(4)}">
+                          <h:panelGroup id="loadgametitle" class="gameareatitle">&#8759; Mentett játszma betöltése &#8759;</h:panelGroup>
 
-                          <div id="dictbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
+                          <div id="loadbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
                           </div>
 
-                          <div id="dictarea" class="gamearea" style="position: absolute; top: 37px; width: 547px; height:422px;">
-                            <div class="gamesetupframe" style='position: absolute; top: 13px; left: 12px; width: 519px; height: 393px;'>
-                              <div style="position:relative; top:10px;">Fejlesztés alatt...
+                          <div id="loadarea" class="gamearea" style="position: absolute; top: 37px; width: 547px; height:422px;">
+                            <div class="gamesetupframe" style="position: absolute; top: 13px; left: 12px; width: 519px; height: 393px;">
+                              <div class="rulestext" style="position: absolute; top: 17px; left: 23px; right: 23px; text-align: center;">
+                                A korábban elmentett játszma végeredményének újbóli megtekintéséhez válaszd ki a mentett állományt,<br/> majd nyomd meg a "Megnyitás" gombot!
                               </div>
+                              <div style="position: absolute; top: 164px; left: 43px; right: 43px; text-align: center;">
+                                <input id="in_filename" class="inputtextmedium" style="width: 233px" placeholder="" disabled="disabled" value=""/>
+                                <h:outputLabel for="if_loadgame" class="browsebutton" style="margin-left: 8px;" value="Fájl kiválasztása..."></h:outputLabel>
+                                <h:inputFile  id="if_loadgame" value="#{gameManager.file}" style="width: 0px; height: 0px;">
+                                  <f:validator validatorId="fileValidator"/>
+                                </h:inputFile>  
+                                <!--<h:outputText id="in_filename" style="border: 1px solid red; width:100px;" value="ABCD"/>-->
+                                <script>getfilename();</script>
+                              </div> 
+                              <div style="position: absolute; top: 227px; left:0px; right: 0px; text-align: center;">
+                                <f:ajax disabled="true">
+                                  <h:commandButton value="Megnyitás" type="submit" class="loginbutton fourcellbutton" action="#{gameManager.loadGame()}"></h:commandButton>                            
+                                </f:ajax> 
+                              </div> 
+                              <div style="position: absolute; top: 294px; left:0px; right: 0px; text-align: center;">
+                                <p:message id="ms_loadgame" for="if_loadgame">
+                                  <p:effect type="fade" event="load" delay="4000">  
+                                    <f:param name="mode" value="'hide'"/>
+                                  </p:effect>                          
+                                </p:message>
+                              </div>  
                             </div>
                           </div>
 
-                          <div id="dictbuttons" style="position: absolute; top: 468px;">
-                            <h:commandButton id="btn_dicttomenu" class="gamebutton fivecellbutton" value="Vissza a menübe" action="#{gameManager.setMenu(0)}">
+                          <div id="loadbuttons" style="position: absolute; top: 468px;">
+                            <h:commandButton id="btn_loadtomenu" class="gamebutton fivecellbutton" value="Vissza a menübe" action="#{gameManager.setMenu(0)}">
                               <f:ajax execute="" render="pg_menu"/>
                             </h:commandButton>
                           </div>
-                        </h:panelGroup> <!--pg_dict-->
+                        </h:panelGroup> <!--pg_loadgame-->
 
                         <h:panelGroup id="pg_lobby" class="text" rendered="#{gameManager.isInMenu(1,2,3) and gameManager.gameState eq 0}">
                           <h:panelGroup id="lobbytitle1" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 1}">&#8759; Indításra váró játszmák &#8759;</h:panelGroup>
@@ -279,12 +306,12 @@
                           <h:panelGroup id="lobbytitle3" class="gameareatitle" rendered="#{gameManager.lobbyMode eq 3}">&#8759; Legutóbbi játszmák &#8759;</h:panelGroup>
 
                           <!--<div id="gamesetupbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>-->
-                          <div id="gamesetupbg" class="#{gameManager.getGameSetupBgClass()}" style="position: absolute; top: 37px; width: 549px;">
+                          <div id="gamesetupbg" class="gamebg gamebght" style="position: absolute; top: 37px; width: 549px;">
                           </div>
 
                           <div id="lobby" class="gamearea" style="position: absolute; top: 37px; width: 547px">
                             <!--<div id="lobbycontent" class="lobbyscroll" style='height:422px;overflow-y:auto;width:547px;'>-->
-                            <div id="lobbycontent" class="#{gameManager.getLobbyScrollClass()}" style='overflow-y:auto;width:547px;'>
+                            <div id="lobbycontent" class="lobbyscroll lobbyscrollht" style='overflow-y:auto;width:547px;'>
                               <h:dataTable id="dt_lobby" class="lobbytable" style="width:100%;"
                                            value="#{gameManager.getGamesFromLobby()}" var="game">
                                 <h:column>
@@ -418,24 +445,6 @@
                           </div>
                         </h:panelGroup> <!--pg_lobby-->
 
-                        <h:panelGroup id="pg_loadgame" class="text" style="position: absolute; top: 342px;left:0px;text-align: left; width: 549px;" rendered="#{gameManager.isInMenu(3) and gameManager.gameState eq 0}">
-                          <h:panelGroup id="lobbytitle4" class="gameareatitle">&#8759; Mentett játszma betöltése &#8759;</h:panelGroup>
-
-                          <div id="loadgamebg" class="gamebg" style="position: absolute; top: 37px; width: 549px; height: 85px;">
-                          </div>
-
-                          <div id="loadgamearea" class="gamearea" style="position: absolute; top: 37px; width: 547px; height: 80px;">
-                            <div class="gamesetupframe" style="position: absolute; top: 13px; left: 13px; width: 519px; height: 50px;">
-                            </div>
-                            <div style="position: absolute; top: 24px; left: 31px;">
-                            <h:inputFile  id="if_loadgame" value="#{gameManager.file}" required="true" requiredMessage="Please upload a file" alt="upload file"></h:inputFile>  
-                            <f:ajax disabled="true">
-                            <h:commandButton value="Megnyitás" type="submit" action="#{gameManager.loadGame()}" style="color: red;"></h:commandButton>                            
-                            </f:ajax> 
-                            </div> 
-                          </div>
-                        </h:panelGroup> <!--pg_loadgame-->
-                        
                         <h:panelGroup id="pg_gamemain" class="gamemainpg" style="position: absolute; top: 0px; width: 554px; text-align: left;">
 
                           <h:panelGroup id="pg_gamesetup" class="text" rendered="#{gameManager.isInGameState(1, 2) or (gameManager.isInGameState(4) and gameManager.gameViewMode eq 2)}">
@@ -752,7 +761,7 @@
 
                             <h:panelGroup id="pg_gamesetupbuttons" style="position: absolute; top: 468px; text-align: left;">
                               <p:commandButton class="gamebutton fivecellbutton" value="Játszma eldobása" action="#{gameManager.dropGame()}"
-                                               rendered="#{gameManager.game.boards.size() eq 1}" 
+                                               rendered="#{gameManager.game.boards.size() eq 1 and gameManager.game.endDate == null}" 
                                                update="pg_menu"/>
                               <p:commandButton class="gamebutton sixcellbutton" value="Játszma elhagyása" action="#{gameManager.quitGame(true)}"
                                                rendered="#{gameManager.game.boards.size() gt 1 and gameManager.game.startDate == null}" 
@@ -975,7 +984,7 @@
                                                rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode == 1}" 
                                                update="pg_main"/>
                               <p:commandButton id="btn_savegame" class="gamebutton sixcellbutton" value="Játszma letöltése" action="#{gameManager.saveGame()}" 
-                                               rendered="#{gameManager.game.endDate != null}"/>
+                                               rendered="#{gameManager.game.endDate != null and gameManager.game.uploaded == false}" ajax="false"/>
                               <p:commandButton id="btn_removegame" class="gamebutton" style="width: 154px" value="Eltávolítás" action="#{gameManager.removeGame()}"
                                                rendered="#{gameManager.game.endDate != null and gameManager.gameViewMode != 2 and loginData.admin == true}"
                                                update="pg_menu">
@@ -1056,7 +1065,7 @@
                         <p:poll id="poll_1s" interval="1" listener="#{gameManager.refresh()}" 
                                 process="@this" async="true" partialSubmit="true" widgetVar="poll"
                                 update="ot_seconds2 ot_turnsec2 ot_gamestate2 ot_playerstate ot_gamesetup2 ot_gamehist2 ita_messages2 ita_gamesinlobby2 ot_boardhits2" 
-                                oncomplete="mainPoll(xhr, status, args);" rendered="#{not (gameManager.isInMenu(3) and gameManager.gameState eq 0)}"/>
+                                oncomplete="mainPoll(xhr, status, args);" rendered="#{not gameManager.isInMenu(4)}"/>
                       </div>
 
                     </h:panelGroup> <!-- pg_mainpage -->

@@ -1,6 +1,7 @@
 function letterstobg() {
 
   var cv_menu = document.getElementById("cv_menu");
+  console.log("letterstobg");
   if (cv_menu !== null) {
     var ot_randomletters = document.getElementById("pageform:ot_randomletters");
     var lettersstr = ot_randomletters.innerHTML;
@@ -11,12 +12,12 @@ function letterstobg() {
                     "", "F", "O", "LY", "T", "A", "T", "Á", "S", "A",
                     "", "", "I", "N", "D", "U", "L", "Ó", "", "",
                     "", "J", "Á", "T", "SZ", "M", "Á", "K", "", "",
-                    "", "", "K", "O", "R", "Á", "B", "B", "I", "",
-                    "", "E", "R", "E", "D", "M", "É", "NY", "E", "K",
+                    "", "L", "E", "G", "U", "T", "Ó", "B", "B", "I",
+                    "E", "R", "E", "D", "M", "É", "N", "Y", "E", "K",
+                    "", "", "J", "Á", "T", "SZ", "M", "A", "", "",
+                    "", "B", "E", "T", "Ö", "L", "T", "É", "S", "E",
                     "", "A", "", "J", "Á", "T", "É", "K", "", "",
                     "", "S", "Z", "A", "B", "Á", "LY", "A", "I", "",
-                    "", "", "S", "Z", "Ó", "T", "Á", "R", "", "",
-                    "", "B", "Ő", "V", "Í", "T", "É", "S", "E", "",
                     "", "", "K", "I", "L", "É", "P", "É", "S", "",
                     "A", "", "J", "Á", "T", "É", "K", "B", "Ó", "L"];
     
@@ -116,3 +117,19 @@ function drawWordRect(ctx, line, startpos, length, altcolor) {
   ctx.stroke();
 }
 
+function getfilename() {
+  var if_loadgame = document.getElementById("pageform:if_loadgame");
+  if (if_loadgame !== null) {
+    var in_filename = document.getElementById("in_filename");
+    if (in_filename !== null){
+      if_loadgame.onchange = function () {
+        if (this.files[0]){
+          in_filename.value = this.files[0].name;
+        } else {
+          in_filename.value = "";
+        }  
+      };                                  
+    }
+  }  
+
+}

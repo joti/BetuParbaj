@@ -18,18 +18,24 @@ import hu.joti.betuparbaj.model.Game;
 import hu.joti.betuparbaj.model.Hit;
 import hu.joti.betuparbaj.model.RndLetterMode;
 import hu.joti.betuparbaj.model.ScoringMode;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipException;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -50,12 +56,14 @@ public class GameManager implements Serializable {
 
   private Game game;
   private Game prevGame;
+  private Game inputGame;
   private Set<Integer> fadingGames;
   private Set<Integer> fadedGames;
   private String password;
   private int myPosition;
 
-  // menü: 0 - főmenü, 1 - megnyitott játékok, 2 - folyamatban lévő játékok, 3 - befejeződött játékok, 4 - játékszabályok, 5 - üzenetküldés, 6 - szótár, 7 - admin oldal
+  // menü (korábbi): 0 - főmenü, 1 - megnyitott játékok, 2 - folyamatban lévő játékok, 3 - befejeződött játékok, 4 - játékszabályok, 5 - szótár, 7 - admin oldal
+  // menü (új):      0 - főmenü, 1 - megnyitott játékok, 2 - folyamatban lévő játékok, 3 - befejeződött játékok, 4 - mentett játék, 5 - játékszabályok, 7 - admin oldal
   private int menu;
   // befejeződött játék lekérdezésének módja: 1 - eredmény, 2 - setup
   private int gameViewMode;
@@ -68,7 +76,7 @@ public class GameManager implements Serializable {
 
   private String managedWord;
   private String manageWordMsg;
-  
+
   private int testResult;
   private Set<String> missingWords;
 
@@ -81,7 +89,7 @@ public class GameManager implements Serializable {
     fadingGames = new HashSet<>();
     fadedGames = new HashSet<>();
     visibleGameRules = new HashSet<>();
-    missingWords  = new HashSet<>();
+    missingWords = new HashSet<>();
     myPosition = -1;
     gameViewMode = 0;
     password = "";
@@ -359,25 +367,25 @@ public class GameManager implements Serializable {
     lobby.getGamesInPrep().add(game);
   }
 
-  public boolean isGameRulesVisible(Game g){
+  public boolean isGameRulesVisible(Game g) {
     if (g != null)
       return visibleGameRules.contains(g.getId());
     else
       return false;
   }
 
-  public void showGameRules(Game g){
+  public void showGameRules(Game g) {
     if (g != null)
       visibleGameRules.add(g.getId());
     LOGGER.info(visibleGameRules.size());
   }
 
-  public void hideGameRules(Game g){
+  public void hideGameRules(Game g) {
     if (g != null)
       visibleGameRules.remove(g.getId());
     LOGGER.info(visibleGameRules.size());
   }
-  
+
   public boolean canJoinGame(Game g) {
     if (game != null || g == null || g.getOpenDate() == null || g.getEndDate() != null)
       return false;
@@ -485,6 +493,7 @@ public class GameManager implements Serializable {
       clearWord();
       prevGame = game;
       game = null;
+      inputGame = null;
     }
   }
 
@@ -539,6 +548,10 @@ public class GameManager implements Serializable {
     }
 
     if (lobby.getGamesFinished().contains(game)) {
+      return true;
+    }
+
+    if (game == inputGame) {
       return true;
     }
 
@@ -1022,9 +1035,9 @@ public class GameManager implements Serializable {
     return hits;
   }
 
-  public String getRandomLettersString(int length){
+  public String getRandomLettersString(int length) {
     Game tmpgame = new Game(0, "random", true, true, true, true, Game.DEF_RANDOMPLACE, Game.DEF_RNDLETTERMODE,
-                         Game.DEF_MINPLAYERS, Game.DEF_MAXPLAYERS, Game.DEF_TIMELIMIT, Game.DEF_SCORING_MODE);
+            Game.DEF_MINPLAYERS, Game.DEF_MAXPLAYERS, Game.DEF_TIMELIMIT, Game.DEF_SCORING_MODE);
     int sets = (length / 100) + 1;
     tmpgame.fillAvailableLetters(sets);
 
@@ -1037,7 +1050,7 @@ public class GameManager implements Serializable {
     }
     return letters.toString();
   }
-  
+
   public String getSelectedLetter() {
     if (game != null) {
       return game.getSelectedLetter();
@@ -1172,20 +1185,6 @@ public class GameManager implements Serializable {
     return game.ALPHABET[index];
   }
 
-  public String getGameSetupBgClass() {
-    if (menu == 3 && getGameState() == 0)
-      return "gamebg gamebght3";
-    else
-      return "gamebg gamebght";
-  }
-
-  public String getLobbyScrollClass() {
-    if (menu == 3 && getGameState() == 0)
-      return "lobbyscroll lobbyscrollht3";
-    else
-      return "lobbyscroll lobbyscrollht";
-  }
-
   public void checkWord() {
     if (game != null && game.getStartDate() != null && !testWord.isEmpty()) {
       if (glossaryManager.includes(testWord, !game.isIncludeLongVowels()))
@@ -1193,7 +1192,7 @@ public class GameManager implements Serializable {
       else {
         testResult = 2;
         missingWords.add(testWord);
-      }  
+      }
     } else
       testResult = 0;
     LOGGER.debug(loginData.getName() + " wordcheck: " + testWord + " -> " + testResult);
@@ -1204,72 +1203,132 @@ public class GameManager implements Serializable {
     testResult = 0;
   }
 
-  public void saveManagedWord(){
+  public void saveManagedWord() {
     int result = glossaryManager.saveWord(managedWord);
-    switch (result){
-      case 0 : 
+    switch (result) {
+      case 0:
         manageWordMsg = "Mentés sikeres.";
         break;
-      case 1 :  
+      case 1:
         manageWordMsg = "A megadott szó nem megfelelő.";
         break;
-      case 2 :  
+      case 2:
         manageWordMsg = "A szó már létezik a szótárban.";
         break;
-      case 3 :  
+      case 3:
         manageWordMsg = "Mentés sikertelen.";
         break;
-    }   
+    }
   }
 
-  public void delManagedWord(){
+  public void delManagedWord() {
     int result = glossaryManager.deleteWord(managedWord);
-    switch (result){
-      case 0 : 
+    switch (result) {
+      case 0:
         manageWordMsg = "Mentés sikeres.";
         break;
-      case 1 :  
+      case 1:
         manageWordMsg = "A megadott szó nem megfelelő.";
         break;
-      case 2 :  
+      case 2:
         manageWordMsg = "A szó nem található a szótárban.";
         break;
-      case 3 :  
+      case 3:
         manageWordMsg = "Mentés sikertelen.";
         break;
-    }   
-  }
-  
-  public void saveGame(){
-    LOGGER.info("Saving game...");
+    }
   }
 
-  /*public void loadGame(){
-    LOGGER.info("Loading game...");
-  }*/
+  public void saveGame() {
+    if (game == null)
+      return;
+
+    LOGGER.info("Saving game...");
+
+    String fileName = game.getName().toLowerCase().replaceAll("á", "a").replaceAll("é", "e").replaceAll("í", "i").
+            replaceAll("ó", "o").replaceAll("ö", "o").replaceAll("ő", "o").replaceAll("ú", "u").replaceAll("ü", "u").replaceAll("ű", "u").replaceAll(" ", "_").replaceAll("/", "_");
+    fileName += ".bpj";
+    LOGGER.info(fileName);
+
+    FacesContext fc = FacesContext.getCurrentInstance();
+    HttpServletResponse response = (HttpServletResponse) fc.getExternalContext().getResponse();
+
+    response.reset();
+    response.setContentType("text/plain");
+    /*response.setContentLength(contentLength);*/
+    response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+    OutputStream output;
+
+    try {
+      output = response.getOutputStream();
+
+      GZIPOutputStream gz = new GZIPOutputStream(output);
+      ObjectOutputStream oos = new ObjectOutputStream(gz);
+
+      oos.writeObject(game);
+      oos.flush();
+      oos.close();
+    } catch (IOException ex) {
+      LOGGER.error("Error while saving.");
+    }
+
+    LOGGER.info(response.getContentType());
+    fc.responseComplete();
+  }
 
   public void loadGame() {
-    LOGGER.info("Reading uploaded file.....");
     String fileName = "";
-    if (file != null){
+    if (file != null) {
       fileName = file.getName();
-    }  
-    
+    }
+
+    LOGGER.info("Reading uploaded file: " + fileName);
+
+    InputStream input = null;
+    String fileContent;
+    inputGame = null;
+
+    try {
+      input = file.getInputStream();
+
+      GZIPInputStream gis = new GZIPInputStream(input);
+      ObjectInputStream ois = new ObjectInputStream(gis);
+
+      inputGame = (Game) ois.readObject();
+      ois.close();
+
+      if (inputGame == null)
+        LOGGER.info("Játék null");
+      else
+        LOGGER.info("Játék neve: " + inputGame.getName());
+
+    } catch (ZipException ex) {
+      LOGGER.info("Hiba: ZipException");
+    } catch (IOException e) {
+      LOGGER.info("Hiba: IOException");
+    } catch (ClassNotFoundException ex) {
+      LOGGER.info("Hiba: ClassNotFound");
+    }
+
+    if (inputGame != null) {
+      LOGGER.info("Játék vége: " + inputGame.getEndDate());
+      menu = 0;
+      file = null;
+      inputGame.setUploaded(true);
+      viewGame(inputGame);
+    }
+  }
+
+  public String getFileName() {
     LOGGER.info(file == null);
-    LOGGER.info(fileName);
-    
-    /*if (file != null && !"".equals(file.getFileName())) {
-      try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputstream(), "UTF-8"))) {
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            LOGGER.info(line);
-        }
-      } catch (Exception ex) {
-          LOGGER.error("Error uploading the file", ex);
-      }
-    }*/
-  }  
-  
+    if (file != null) {
+      LOGGER.info(file.getSubmittedFileName());
+      return file.getSubmittedFileName();
+    } else
+      return "Nincs kiválasztva fájl.";
+  }
+
   public List<Integer> getAllNumOfPlayers() {
     return Arrays.asList(Game.NUM_OF_PLAYERS);
   }
@@ -1425,7 +1484,7 @@ public class GameManager implements Serializable {
     this.visibleGameRules = visibleGameRules;
   }
 
-    public Set<String> getMissingWords() {
+  public Set<String> getMissingWords() {
     return missingWords;
   }
 
@@ -1456,5 +1515,5 @@ public class GameManager implements Serializable {
   public void setFile(Part file) {
     this.file = file;
   }
-  
+
 }

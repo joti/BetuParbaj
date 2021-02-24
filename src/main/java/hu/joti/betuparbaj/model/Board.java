@@ -13,6 +13,8 @@ import java.util.Random;
  */
 public class Board implements Serializable {
 
+  private static final long SerialVersionUID = 1L;
+  
   public static final int BOARD_SIZE = 6;
   public static final String[] ROW_CODES = {"A","B","C","D","E","F"};
   public static final String[] COLUMN_CODES = {"1","2","3","4","5","6"};
