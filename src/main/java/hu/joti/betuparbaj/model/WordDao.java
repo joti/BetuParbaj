@@ -9,5 +9,6 @@ import java.util.List;
 public interface WordDao {
 
   List<Word> findAllWords();
+  void saveAllWords(List<Word> words);
 
 }

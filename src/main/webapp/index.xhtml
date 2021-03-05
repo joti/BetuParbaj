@@ -54,9 +54,10 @@
                       <div style="position: absolute; top:273px; left: 0px; right: 93px">
                         <h:outputText id="ot_error" value="#{loginData.error}" class="errortext"/>
                       </div>
-                      <div class="logintextsmall" style="position: absolute; top:367px; left:0; right:0">
+                      <div class="logintextsmall" style="position: absolute; top:336px; left:0; right:0">
                         Amennyiben észrevételed van a játékkal kapcsolatban,<br/>vagy hibát találtál (elnézést érte!), akkor kérlek,<br/> 
-                        írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!
+                        írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!<br/>
+                        Az adatvédelemmel kapcsolatos tudnivalókról <a href="privacy.xhtml" target="_blank">itt</a> olvashatsz.
                       </div>
                     </h:panelGroup>                    
 
@@ -68,9 +69,9 @@
 
                       <div class="gamesetupframe" style="position: absolute; top: 44px; left: 44px; width: 330px; height: 456px;">
                       </div>
-                      <div class="gamesetupframe" style="position: absolute; top: 44px; left: 388px; width: 175px; height: 237px;">
+                      <div class="gamesetupframe" style="position: absolute; top: 44px; left: 388px; width: 175px; height: 268px;">
                       </div>
-                      <div class="gamesetupframe" style="position: absolute; top: 293px; left: 388px; width: 175px; height: 207px;">
+                      <div class="gamesetupframe" style="position: absolute; top: 324px; left: 388px; width: 175px; height: 176px;">
                       </div>
                       <div style="position: absolute; display: block; top: 0px; left:0; right:195px">
                         <h:graphicImage style="position: absolute; top: 53px; left: 53px;" url="/resources/images/bp10x14.jpg" />
@@ -129,7 +130,7 @@
                       <div class="aboutareaheader" style="position: absolute; display: block; top: 60px; left:398px; right:61px; height: 31px;">
                         &#8759; Játékosok &#8759;
                       </div>
-                      <div class="playersarea" style="position: absolute; display: block; top: 85px; left:398px; right:61px; height: 186px;">
+                      <div class="playersarea" style="position: absolute; display: block; top: 85px; left:398px; right:61px; height: 217px;">
                         <h:dataTable id="dt_players" class="playerstable" style="width:100%;"
                                      value="#{loginData.nameList}" var="name">
                           <h:column>
@@ -143,19 +144,19 @@
                       </script>
                       <!--<div class="playersareafading" style="position: absolute; display: block; top: 255px; left:402px; right:65px; height: 10px;"">AAAA</div>-->
 
-                      <h:graphicImage style="position: absolute; top: 245px; left:400px; right:65px; width: 152px; height: 28px; z-index: 999999;" url="/resources/images/plfading.png"/>
+                      <h:graphicImage style="position: absolute; top: 276px; left:400px; right:65px; width: 152px; height: 28px; z-index: 99999;" url="/resources/images/plfading.png"/>
 
-                      <div class="aboutareaheader" style="position: absolute; display: block; top: 309px; left:398px; right:61px; height: 31px;">
+                      <div class="aboutareaheader" style="position: absolute; display: block; top: 339px; left:398px; right:61px; height: 31px;">
                         &#8759; Névjegy &#8759;
                       </div>
-                      <div class="aboutarea" style="position: absolute; display: block; top: 334px; left:398px; right:61px; height: 154px;">
-                        <div style="position: absolute; top: 8px; left: 0; right: 0;">
+                      <div class="aboutarea" style="position: absolute; display: block; top: 365px; left:398px; right:61px; height: 123px;">
+                        <div style="position: absolute; top: 6px; left: 0; right: 0;">
                           Betűpárbaj v1.5.0
                         </div>
-                        <div style="position: absolute; top: 30px; left: 0; right: 0; font-size: 12px;"><a href="https://github.com/joti/BetuParbaj/blob/menu/CHANGELOG.md" target="_blank">Verziótörténet</a></div>
-                        <div style="position: absolute; top: 50px; left: 0; right: 0; font-size: 12px;"><a href="https://github.com/joti/BetuParbaj/blob/menu/PRIVACY.md" target="_blank">Adatvédelem</a></div>
+                        <div style="position: absolute; top: 26px; left: 0; right: 0; font-size: 10px;"><a href="https://github.com/joti/BetuParbaj/blob/menu/CHANGELOG.md" target="_blank">Verziótörténet</a></div>
+                        <!--<div style="position: absolute; top: 50px; left: 0; right: 0; font-size: 12px;"><a href="https://github.com/joti/BetuParbaj/blob/menu/PRIVACY.md" target="_blank">Adatvédelem</a></div>-->
 
-                        <div style="position: absolute; top: 71px; left: 0; right: 0;">
+                        <div style="position: absolute; top: 45px; left: 0; right: 0;">
                           <div style="position: absolute; left: 10px; top: 2px">Kapcsolat:</div>
                           <a href="mailto: betuparbaj@gmail.com">
                             <div class="facebook-share" style="position: absolute; left: 86px;" 
@@ -171,7 +172,7 @@
                           </a>
                         </div>
 
-                        <div style="position: absolute; top: 99px; left: 0; right: 0;">
+                        <div style="position: absolute; top: 72px; left: 0; right: 0;">
                           <div style="position: absolute; left: 10px; top: 2px">Megosztás:</div>
                           <div class="facebook-share" style="position: absolute; left: 86px;" 
                                onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('http://www.betuparbaj.hu/'), 'facebook-share-dialog', 'width=626,height=436'); return false;">
@@ -182,10 +183,10 @@
                             <i class="fa fa-twitter fa-2x share-icon"></i>
                           </div>
                         </div>
-                        <div style="position: absolute; top: 132px; left: 0; right: 0; font-size: 12px;">@ 2021 Tihon József</div>
+                        <div style="position: absolute; top: 104px; left: 0; right: 0; font-size: 10px;">@ 2020-2021 Tihon József</div>
                       </div>
 
-                      <p:commandButton id="btn_menurefresh" style="display:none" action="#{gameManager.debugGame('menurefresh')}" update="dt_players"/>
+                      <p:commandButton id="btn_menurefresh" style="display:none" action="#{gameManager.debugGame('menurefresh')}" update="dt_players"/>                      
 
                       <div style="display: block; position: absolute; top: 24px; left: 10px; width: 550px;">
                         <div>
@@ -254,7 +255,7 @@
                             </h:commandButton>
                           </div>
 
-                          <h:graphicImage style="position: absolute; top: 433px; left:15px; right:0px;height: 28px; z-index: 999999;" url="/resources/images/plfading2.png"/>
+                          <h:graphicImage style="position: absolute; top: 433px; left:15px; right:0px;height: 28px; z-index: 99999;" url="/resources/images/plfading2.png"/>
 
                         </h:panelGroup> <!--pg_rules-->
 
@@ -1001,10 +1002,15 @@
                           <h:commandButton id="btn_loadwords" class="gamebutton" value="Szótár frissítése" action="#{glossaryManager.loadWords()}" rendered="#{loginData.admin == true}">
                             <f:ajax execute="" render="pg_main"/>
                           </h:commandButton>
+                          <br/>
                           <!-- Szótár fájl alapján adatbázis újratöltése -->
-                          <h:commandButton id="btn_savewords" class="gamebutton" value="Szótár mentése" action="#{glossaryManager.saveWords()}" rendered="#{loginData.admin == true}">
-                            <f:ajax execute="" render="pg_main"/>
-                          </h:commandButton>
+                          <p:commandButton id="btn_savewords" class="gamebutton" value="Szótár mentése adatbázisba" action="#{glossaryManager.saveWordsToDB()}" rendered="#{loginData.admin == true}" update="pg_main">
+                            <p:confirm header="Megerősítés" message="Biztosan felülírod az adatbázis tartalmát?"/>
+                          </p:commandButton>
+                          <!-- Adatbázis alapján szótár fájl frissítése -->
+                          <p:commandButton id="btn_savewordstxt" class="gamebutton" value="Szótár mentése fájlba" action="#{glossaryManager.saveWordsToFile()}" rendered="#{loginData.admin == true}" update="pg_main">
+                            <p:confirm header="Megerősítés" message="Biztosan felülírod a szótárfájl tartalmát?"/>
+                          </p:commandButton>
                           <br/>
                           <h:commandButton id="btn_error1" class="gamebutton" value="Hiba teszt 1" action="#{errorBean.throwError1()}"/>
                           <h:commandButton id="btn_error2" class="gamebutton" value="Hiba teszt 2" action="#{errorBean.throwError2()}"/>
@@ -1027,6 +1033,7 @@
                             </div>
                           </h:panelGroup>>
 
+                          <a onclick="fullscreen()" href="javascript:void(0);">Toggle FullScreen</a>                          
                           <h:commandButton id="btn_admintomenu" class="gamebutton fivecellbutton" style="position: absolute; top: 469px; left: 309px; width:172px;" value="Vissza" action="#{gameManager.setMenu(0)}">
                             <f:ajax execute="" render="pg_menu"/>
                           </h:commandButton>

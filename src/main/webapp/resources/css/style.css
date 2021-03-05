@@ -273,6 +273,22 @@ textarea{
   text-align: center; 
 }
 
+.chatarea {
+  font-family: 'Itim', cursive;
+  font-size: 17px;	
+  color: #808571;
+  background-color: #f4f6e9;
+  border-width: 2px;
+  border-style: solid;
+  border-left-color: rgba(182,181,170,0.5); 
+  border-top-color: rgba(182,181,170,0.5); 
+  border-bottom-color: rgba(146,148,137,0.7);
+  border-right-color: rgba(146,148,137,0.7);
+  overflow: hidden;
+  resize: none;
+  text-align: center; 
+}
+
 .aboutarea {
   font-family: 'Itim', cursive;
   font-size: 14px;	
@@ -1008,6 +1024,30 @@ textarea{
 }
 
 .button2:hover {
+  background-color: #c6ce92;
+}
+
+#btn_sendmsg {
+  font-family: 'Itim', cursive;
+  font-size: 13px;	
+  font-weight: bold;
+  border: 2px solid;
+  border-radius: 3px;
+  border-left-color: #b9b89f; 
+  border-top-color: #b9b89f; 
+  border-bottom-color: #808571;
+  border-right-color: #808571;
+  color: #808571;
+  background: #dee4b9 linear-gradient(to bottom, rgba(255,255,255,0.8) 0%,rgba(255,255,255,0) 100%);  
+  outline: 0;
+  padding: 2px;
+  height: 24px;
+  text-align: center;
+  text-shadow: 0px 1px 0px white;
+  box-shadow: 0 0 0 0;
+}
+
+#btn_sendmsg:hover {
   background-color: #c6ce92;
 }
 
@@ -1829,6 +1869,7 @@ textarea{
   color: red;
 }
 
+
 /************************/
 /* ConfirmDialog elemei */
 /************************/
@@ -1842,6 +1883,7 @@ textarea{
   border: 2px solid;
   border-color: #808571;
   padding: 2px;
+  z-index: 100000;
 }
 
 /* Fejléc */
@@ -1964,6 +2006,10 @@ span.ui-confirm-dialog-message {
   font-weight: normal;
   color: red;
   line-height: 1;
+}
+
+.ui-dialog {
+  z-index: 100000 !important;
 }
 
 /*FB és Github gombok*/

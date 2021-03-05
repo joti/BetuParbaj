@@ -18,6 +18,7 @@ import hu.joti.betuparbaj.model.Player;
 import hu.joti.betuparbaj.model.RndLetterMode;
 import hu.joti.betuparbaj.model.ScoringMode;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.Executors;
@@ -235,17 +236,20 @@ public class ChatRoom implements Serializable {
   }
   
   public List<String> getNameList(String myName) {
-    List<String> namesList = new ArrayList<>();
+    List<String> namesList = new LinkedList<>();
+    String myNameExt = null;
 
     for (Player player : players) {
       String name = player.getName();
       if (name.equals(myName))
-        name += " (én)";
-
-      namesList.add(name);
+        myNameExt = name + " (én)";
+      else
+        namesList.add(name);
     }
 
     Collections.sort(namesList, Collator.getInstance(new Locale("hu", "HU")));
+    if (myNameExt != null)
+      namesList.add(0, myNameExt);
     return namesList;
   }
 

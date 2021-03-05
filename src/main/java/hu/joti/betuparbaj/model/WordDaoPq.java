@@ -86,6 +86,7 @@ public class WordDaoPq implements WordDao, Serializable {
     return words;
   }
 
+  @Override
   public void saveAllWords(List<Word> words) {
 
     Connection conn = null;

@@ -30,5 +30,16 @@
             <from-outcome>error</from-outcome>
             <to-view-id>/error.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>privacy</from-outcome>
+            <to-view-id>/privacy.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/privacy.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>index</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

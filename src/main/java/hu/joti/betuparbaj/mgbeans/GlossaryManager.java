@@ -116,7 +116,7 @@ public class GlossaryManager implements Serializable{
     return result;
   }
   
-  public void saveWords(){
+  public void saveWordsToDB(){
     /* szövegfájl tartalma alapján glossary adatbázis újraépítése */
     loadWords(true);
 
@@ -133,6 +133,25 @@ public class GlossaryManager implements Serializable{
     
     WordDaoPq wordDaoPq = new WordDaoPq();
     wordDaoPq.saveAllWords(wordList);
+  } 
+
+  public void saveWordsToFile(){
+    /* glossary adatbázis mentése fájlba */
+    loadWords();
+
+    List<Word> wordList = new ArrayList<>(words.size());
+    
+    for (String word : words) {
+      Word w = new Word();
+      w.setCategory(1);
+      w.setPhrase(word);
+      wordList.add(w);
+    }
+    
+    Collections.sort(wordList);
+    
+    WordDaoTxt wordDaoTxt = new WordDaoTxt();
+    wordDaoTxt.saveAllWords(wordList);
   } 
   
   public Hit findHit(String[] letters, boolean easyVowelRule, ScoringMode scoringMode){

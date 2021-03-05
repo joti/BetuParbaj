@@ -2,9 +2,13 @@ package hu.joti.betuparbaj.model;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.context.FacesContext;
@@ -51,4 +55,20 @@ public class WordDaoTxt implements WordDao, Serializable {
     return words;
   }
 
+  @Override
+  public void saveAllWords(List<Word> words) {
+    try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(absolutePath), StandardCharsets.UTF_8)) {
+
+      for (Word word : words) {
+   		osw.write(word.getPhrase() + "\r\n");
+      }
+
+    } catch (FileNotFoundException ex) {
+      LOGGER.error(ex);
+    } catch (IOException ex) {
+      LOGGER.error(ex);
+    }
+
+  }
+  
 }
