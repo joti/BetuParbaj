@@ -28,8 +28,8 @@
 
       <h:form id="pageform" acceptcharset="UTF-8" enctype="multipart/form-data">
         <p align="center">
-          <table align="center" style="border-width:3px ;border-color: black" width="640px">
-            <tr style="height:722px" valign="top">
+          <table align="center" width="640px">
+            <tr style="height:627px;" valign="top">
               <td style="width:630px;padding:10px;background-image:url(#{facesContext.externalContext.requestContextPath}/resources/images/bpbg.jpg);background-repeat: no-repeat;">
                 <div style="position: relative; text-align: center; width:100%; height: 100%; top: 61px;">
                   <h:panelGroup id="pg_menu">
@@ -57,7 +57,7 @@
                       <div class="logintextsmall" style="position: absolute; top:336px; left:0; right:0">
                         Amennyiben észrevételed van a játékkal kapcsolatban,<br/>vagy hibát találtál (elnézést érte!), akkor kérlek,<br/> 
                         írd meg <a href="mailto: betuparbaj@gmail.com">ímélben</a> avagy a játék <a href="https://github.com/joti/BetuParbaj/issues" target="_blank">GitHub oldalán</a>!<br/>
-                        Az adatvédelemmel kapcsolatos tudnivalókról <a href="privacy.xhtml" target="_blank">itt</a> olvashatsz.
+                        Ha tetszett a játék, köszönöm, ha megosztod másokkal is!
                       </div>
                     </h:panelGroup>                    
 
@@ -69,10 +69,12 @@
 
                       <div class="gamesetupframe" style="position: absolute; top: 44px; left: 44px; width: 330px; height: 456px;">
                       </div>
-                      <div class="gamesetupframe" style="position: absolute; top: 44px; left: 388px; width: 175px; height: 268px;">
+                      <div class="gamesetupframe" style="position: absolute; top: 44px; left: 388px; width: 175px; height: 112px;">
                       </div>
-                      <div class="gamesetupframe" style="position: absolute; top: 324px; left: 388px; width: 175px; height: 176px;">
+                      <div class="gamesetupframe" style="position: absolute; top: 169px; left: 388px; width: 175px; height: 329px;">
                       </div>
+<!--                      <div class="gamesetupframe" style="position: absolute; top: 417px; left: 388px; width: 175px; height: 83px;">
+                      </div>-->
                       <div style="position: absolute; display: block; top: 0px; left:0; right:195px">
                         <h:graphicImage style="position: absolute; top: 53px; left: 53px;" url="/resources/images/bp10x14.jpg" />
 
@@ -109,30 +111,38 @@
                           <f:ajax execute="" render="pg_menu"/>
                         </h:commandButton>
                         <!--Játszma betöltése-->
-                        <h:commandButton id="btn_mdict" class="menubutton visiblemenubutton2" style="position: absolute; top: 304px; left: 55px;" 
+                        <h:commandButton id="btn_mdict" class="menubutton visiblemenubutton1" style="position: absolute; top: 304px; left: 55px;" 
                                          value="" action="#{gameManager.setMenu(4)}">
                           <f:ajax execute="" render="pg_menu"/>
                         </h:commandButton>
-                        <!--A játék szabályai-->
-                        <h:commandButton id="btn_mrules" class="menubutton visiblemenubutton1" style="position: absolute; top: 366px; left: 55px;" 
+                        <!--Szabályok-->
+                        <h:commandButton id="btn_mrules" class="menubutton visiblemenubutton2" style="position: absolute; top: 366px; left: 55px;" 
                                          value="" action="#{gameManager.setMenu(5)}">
                           <f:ajax execute="" render="pg_menu"/>
                         </h:commandButton>
 
-                        <!--Kilépés a játékból-->
-                        <p:commandButton id="btn_logout" class="menubutton visiblemenubutton1" style="position: absolute; top: 428px; left: 55px;" 
-                                         value="" action="#{gameManager.quit()}">
-                          <p:confirm header="Megerősítés" message="Biztosan kilépsz?"/>
-                          <f:ajax render="pg_menu" delay="1000"/>
-                        </p:commandButton>
+                        <!--A játék névjegye-->
+                        <h:commandButton id="btn_mabout" class="menubutton visiblemenubutton1" style="position: absolute; top: 428px; left: 55px;" 
+                                         value="" action="#{gameManager.setMenu(6)}">
+                          <f:ajax execute="" render="pg_menu"/>
+                        </h:commandButton>
                       </div>
 
-                      <div class="aboutareaheader" style="position: absolute; display: block; top: 60px; left:398px; right:61px; height: 31px;">
-                        &#8759; Játékosok &#8759;
+                      <div class="aboutareaheader" style="position: absolute; display: block; top: 61px; left:398px; right:61px; height: 31px;">
+                        Belépve mint:
                       </div>
-                      <div class="playersarea" style="position: absolute; display: block; top: 85px; left:398px; right:61px; height: 217px;">
+                      <h:inputText id ="it_playername" class="inputname2" style="position: absolute; top: 87px; left:402px; width: 144px; text-align: center;" value="#{loginData.name}" maxlength="20" disabled="true"/>
+                      <p:commandButton id="btn_logout" class="loginbutton threecellbutton" style="position: absolute; left: 434px; top: 121px;" value="Kilépés" action="#{gameManager.quit()}">
+                        <p:confirm header="Megerősítés" message="Biztosan kilépsz?"/>
+                        <f:ajax render="pg_menu" delay="1000"/>
+                      </p:commandButton>
+
+                      <div class="aboutareaheader" style="position: absolute; display: block; top: 185px; left:398px; right:61px; height: 31px;">
+                        További játékosok:
+                      </div>
+                      <div class="playersarea" style="position: absolute; display: block; top: 209px; left:398px; right:61px; height: 279px;">
                         <h:dataTable id="dt_players" class="playerstable" style="width:100%;"
-                                     value="#{loginData.nameList}" var="name">
+                                     value="#{loginData.getNameList(true)}" var="name">
                           <h:column>
                             #{name}
                           </h:column>
@@ -144,47 +154,7 @@
                       </script>
                       <!--<div class="playersareafading" style="position: absolute; display: block; top: 255px; left:402px; right:65px; height: 10px;"">AAAA</div>-->
 
-                      <h:graphicImage style="position: absolute; top: 276px; left:400px; right:65px; width: 152px; height: 28px; z-index: 99999;" url="/resources/images/plfading.png"/>
-
-                      <div class="aboutareaheader" style="position: absolute; display: block; top: 339px; left:398px; right:61px; height: 31px;">
-                        &#8759; Névjegy &#8759;
-                      </div>
-                      <div class="aboutarea" style="position: absolute; display: block; top: 365px; left:398px; right:61px; height: 123px;">
-                        <div style="position: absolute; top: 6px; left: 0; right: 0;">
-                          Betűpárbaj v1.5.0
-                        </div>
-                        <div style="position: absolute; top: 26px; left: 0; right: 0; font-size: 10px;"><a href="https://github.com/joti/BetuParbaj/blob/menu/CHANGELOG.md" target="_blank">Verziótörténet</a></div>
-                        <!--<div style="position: absolute; top: 50px; left: 0; right: 0; font-size: 12px;"><a href="https://github.com/joti/BetuParbaj/blob/menu/PRIVACY.md" target="_blank">Adatvédelem</a></div>-->
-
-                        <div style="position: absolute; top: 45px; left: 0; right: 0;">
-                          <div style="position: absolute; left: 10px; top: 2px">Kapcsolat:</div>
-                          <a href="mailto: betuparbaj@gmail.com">
-                            <div class="facebook-share" style="position: absolute; left: 86px;" 
-                                 onclick="window.open('mailto: betuparbaj@gmail.com'); return false;">
-                              <i class="fa fa-envelope fa-2x share-icon"></i>
-                            </div>
-                          </a>  
-                          <a href="https://github.com/joti/betuparbaj/issues">
-                            <div class="facebook-share" style="position: absolute; left: 118px;" 
-                                 onclick="window.open('https://github.com/joti/betuparbaj/issues'); return false;">
-                              <i class="fa fa-github-square fa-2x share-icon"></i>
-                            </div>
-                          </a>
-                        </div>
-
-                        <div style="position: absolute; top: 72px; left: 0; right: 0;">
-                          <div style="position: absolute; left: 10px; top: 2px">Megosztás:</div>
-                          <div class="facebook-share" style="position: absolute; left: 86px;" 
-                               onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('http://www.betuparbaj.hu/'), 'facebook-share-dialog', 'width=626,height=436'); return false;">
-                            <i class="fa fa-facebook-square fa-2x share-icon"></i>
-                          </div>
-                          <div class="facebook-share" style="position: absolute; left: 118px;" 
-                               onclick="window.open('http://twitter.com/share'); return false;">
-                            <i class="fa fa-twitter fa-2x share-icon"></i>
-                          </div>
-                        </div>
-                        <div style="position: absolute; top: 104px; left: 0; right: 0; font-size: 10px;">@ 2020-2021 Tihon József</div>
-                      </div>
+                      <h:graphicImage style="position: absolute; top: 462px; left:400px; right:65px; width: 152px; height: 28px; z-index: 99999;" url="/resources/images/plfading.png"/>
 
                       <p:commandButton id="btn_menurefresh" style="display:none" action="#{gameManager.debugGame('menurefresh')}" update="dt_players"/>                      
 
@@ -259,6 +229,73 @@
 
                         </h:panelGroup> <!--pg_rules-->
 
+                        <h:panelGroup id="pg_about" class="text" rendered="#{gameManager.isInMenu(6)}">
+                          <h:panelGroup id="abouttitle" class="gameareatitle">&#8759; Névjegy &#8759;</h:panelGroup>
+
+                          <div id="aboutbg" class="gamebg" style='position: absolute; top: 37px; width: 549px; height: 427px'>
+                          </div>
+
+                          <div id="aboutarea" class="gamearea" style="position: absolute; top: 37px; width: 547px">
+                            <div id="aboutcontent" class="aboutscroll" style="height:422px;overflow-y:auto;width:547px;">
+                              <div class="abouttext">
+                                <span class="abouttitletext">Betűpárbaj v1.6.0<br/></span>
+                                <div class="aboutlinefading" style="position: absolute; top: 69px;"/>
+                                
+                                <div style="position: absolute; top: 88px; left: 30px; right: 30px;">
+                                A 90-es években televíziós vetélkedők nyomán népszerűvé vált<br/>nyelvi játék ingyenes és reklámmentes webes változata.<br/>
+                                Készítette: Tihon József<br/><br/>
+                                </div>
+                                <div class="aboutlinefading" style="position: absolute; top: 194px;"/>
+
+                                <div style="position: absolute; top: 213px; left: 30px; right: 30px;">
+                                Észrevételeidet, javaslataidat kérlek,<br/>írd meg ímélben vagy a játék GitHub oldalán:<br/>
+                                </div>
+
+                                <div class="aboutlinefading" style="position: absolute; top: 319px;"/>
+
+                                <div style="position: absolute; top: 335px; left: 30px; right: 30px;">Ha tetszett a játék, oszd meg másokkal is:</div>
+
+                                <a href="mailto: betuparbaj@gmail.com">
+                                  <div class="facebook-share" style="position: absolute; left: 244px; top: 278px;" 
+                                       onclick="window.open('mailto: betuparbaj@gmail.com'); return false;">
+                                    <i class="fa fa-envelope fa-2x share-icon"></i>
+                                  </div>
+                                </a>  
+                                <a href="https://github.com/joti/betuparbaj/issues">
+                                  <div class="facebook-share" style="position: absolute; left: 276px; top: 278px;" 
+                                       onclick="window.open('https://github.com/joti/betuparbaj/issues'); return false;">
+                                    <i class="fa fa-github-square fa-2x share-icon"></i>
+                                  </div>
+                                </a>
+                                
+                                <div title="Megosztás Facebookon" class="facebook-share" style="position: absolute; left: 244px; top: 371px;" 
+                                     onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('http://www.betuparbaj.hu/'), 'facebook-share-dialog', 'width=626,height=436'); return false;">
+                                  <i class="fa fa-facebook-square fa-2x share-icon"></i>
+                                </div>
+                                <div title="Megosztás Twitterenn" class="facebook-share" style="position: absolute; left: 276px; top: 371px;" 
+                                     onclick="window.open('http://twitter.com/share'); return false;">
+                                  <i class="fa fa-twitter fa-2x share-icon"></i>
+                                </div>
+                                
+                              </div>
+                            </div>
+
+                            <script>
+                              var el = document.querySelector('.aboutscroll');
+                              SimpleScrollbar.initEl(el);
+                            </script>
+                          </div>
+
+                          <div id="aboutbuttons" style="position: absolute; top: 468px;">
+                            <h:commandButton id="btn_abouttomenu" class="gamebutton fivecellbutton" value="Vissza a menübe" action="#{gameManager.setMenu(0)}">
+                              <f:ajax execute="" render="pg_menu"/>
+                            </h:commandButton>
+                          </div>
+
+                          <h:graphicImage style="position: absolute; top: 433px; left:15px; right:0px;height: 28px; z-index: 99999;" url="/resources/images/plfading2.png"/>
+
+                        </h:panelGroup> <!--pg_about-->
+                        
                         <h:panelGroup id="pg_loadgame" class="text" rendered="#{gameManager.isInMenu(4)}">
                           <h:panelGroup id="loadgametitle" class="gameareatitle">&#8759; Mentett játszma betöltése &#8759;</h:panelGroup>
 
@@ -1033,7 +1070,7 @@
                             </div>
                           </h:panelGroup>>
 
-                          <a onclick="fullscreen()" href="javascript:void(0);">Toggle FullScreen</a>                          
+                          <a onclick="switchFullScreen()" href="javascript:void(0);">Toggle FullScreen</a>                          
                           <h:commandButton id="btn_admintomenu" class="gamebutton fivecellbutton" style="position: absolute; top: 469px; left: 309px; width:172px;" value="Vissza" action="#{gameManager.setMenu(0)}">
                             <f:ajax execute="" render="pg_menu"/>
                           </h:commandButton>
@@ -1084,6 +1121,30 @@
                 </div>
               </td>
             </tr>
+            <tr style="height:25px;" valign="top">
+              <td>
+                <table>
+                  <tr class="footertext">
+                    <td style="width: 425px;">
+                      <div style="position: relative; text-align: left; width:100%; height: 100%; top: 0px; display: inline-block;">
+                        <a id="a_fullscreen" onclick="switchFullScreen()" href="javascript:void(0);">Váltás teljes képernyőre</a>                          
+                        <script>addFSEventListener();</script>
+                        <a id="a_sslurl" style="margin-left: 10px;" href="https://betuparbaj.herokuapp.com">SSL verzió</a>
+                        <script>setUrlStyle();</script>
+                        <a style="margin-left: 10px;" href="privacy.xhtml" target="_blank">Adatvédelem</a>
+                        <a style="margin-left: 10px;" href="https://github.com/joti/BetuParbaj/blob/menu/CHANGELOG.md" target="_blank">Verziótörténet</a>
+                      </div>
+                    </td>
+                    <td style="width: 195px;">
+                      <div id="div_other" style="position: relative; text-align: right; width:100%; height: 100%; top: 0px;">
+                        <!--@ 2020-2021-->
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
           </table>  
         </p>  
 

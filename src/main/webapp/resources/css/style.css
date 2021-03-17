@@ -103,6 +103,15 @@ textarea{
   line-height: 1;
 }
 
+.footertext {
+  font-family: 'Itim', cursive;
+  font-size: 12px;	
+  font-weight: normal;
+  color: #555C23;
+  line-height: 1;
+  background: transparent;
+}
+
 .inputname {
   font-family: 'Itim', cursive;
   font-size: 18px;	
@@ -115,6 +124,22 @@ textarea{
   background: transparent;
   border-width: 0 0 2px;
   border-color: #808571;
+}
+
+.inputname2 {
+  font-family: 'Itim', cursive;
+  font-size: 18px;	
+  font-weight: normal;
+  color: #555C23;
+  line-height: 1;
+  /*background-color: #f8fceb;*/
+  padding: 2px;
+  padding-bottom: 1px;
+  background: transparent;
+  /*border-width: 0 0 2px;*/
+  border-width: 0;
+  border-style: dotted;
+  border-color: #919b55;
 }
 
 .inputtextmedium {
@@ -327,8 +352,8 @@ textarea{
   text-align: center;*/
   border: 0;
   background: transparent;
-  text-align: left;  
-  font-size: 18px;	
+  text-align: center;  
+  font-size: 16px;	
   font-weight: bold;
   /*line-height: 1.7;*/
   color: #808571;
@@ -366,6 +391,60 @@ textarea{
   margin-top: 10px;
   margin-bottom: 19px;
   line-height:2px;
+}
+
+.aboutline{
+  /*width: 100%;*/ 
+  line-height:2px;
+  border: 2px solid;
+  color: #808571;
+  left: 150px; 
+  right: 150px;
+  border-left-color: #d9d8bf; 
+  border-top-color: #d9d8bf;
+  border-bottom-color: #b0b5a1;
+  border-right-color: #b0b5a1;
+  opacity: 0.6;
+}
+
+.aboutlinefading {
+  height: 2px;
+  background-color: #b0b5a1;
+  left: 150px; 
+  right: 150px;
+  margin: 0 auto;
+  background-image: linear-gradient(left , white 2%, #d9d8bf 50%, white 98%);
+  background-image: -o-linear-gradient(left , white 2%, #d9d8bf 50%, white 98%);
+  background-image: -moz-linear-gradient(left , white 2%, #d9d8bf 50%, white 98%);
+  background-image: -webkit-linear-gradient(left , white 2%, #d9d8bf 50%, white 98%);
+  background-image: -ms-linear-gradient(left , white 2%, #d9d8bf 50%, white 98%);
+  background-image: -webkit-gradient( linear, left bottom, right bottom, color-stop(0.02, white), color-stop(0.5, gray), color-stop(0.98, white) );
+  opacity: 0.6;
+}
+
+.abouttext {
+  font-family: 'Itim', cursive;
+  font-size: 16px;	
+  /*color: #555C23;*/
+  color: #808571;
+  line-height: 1.93;
+  background: transparent;
+  text-align: center;
+  padding: 23px;
+  padding-top: 25px;
+  resize: none;
+}
+
+.abouttitletext {
+  font-family: 'Itim', cursive;
+  font-size: 18px;	
+  /*color: #555C23;*/
+  color: #808571;
+  line-height: 1.1;
+  background: transparent;
+  text-align: center;
+  padding: 0;
+  resize: none;
 }
 
 .inputtextchatsmall {

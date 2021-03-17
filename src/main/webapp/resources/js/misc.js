@@ -7,20 +7,20 @@ function letterstobg() {
     var lettersstr = ot_randomletters.innerHTML;
     var letters = lettersstr.split(".");
     var captions = ["", "Ú", "J", "", "J", "Á", "T", "SZ", "M", "A",
-                    "", "I", "N", "D", "Í", "T", "Á", "S", "A", "", 
-                    "", "", "J", "Á", "T", "SZ", "M", "A", "", "",
-                    "", "F", "O", "LY", "T", "A", "T", "Á", "S", "A",
-                    "", "", "I", "N", "D", "U", "L", "Ó", "", "",
-                    "", "J", "Á", "T", "SZ", "M", "Á", "K", "", "",
-                    "", "L", "E", "G", "U", "T", "Ó", "B", "B", "I",
-                    "E", "R", "E", "D", "M", "É", "N", "Y", "E", "K",
-                    "", "", "J", "Á", "T", "SZ", "M", "A", "", "",
-                    "", "B", "E", "T", "Ö", "L", "T", "É", "S", "E",
-                    "", "A", "", "J", "Á", "T", "É", "K", "", "",
-                    "", "S", "Z", "A", "B", "Á", "LY", "A", "I", "",
-                    "", "", "K", "I", "L", "É", "P", "É", "S", "",
-                    "A", "", "J", "Á", "T", "É", "K", "B", "Ó", "L"];
-    
+      "", "I", "N", "D", "Í", "T", "Á", "S", "A", "",
+      "", "", "J", "Á", "T", "SZ", "M", "A", "", "",
+      "", "F", "O", "LY", "T", "A", "T", "Á", "S", "A",
+      "", "", "I", "N", "D", "U", "L", "Ó", "", "",
+      "", "J", "Á", "T", "SZ", "M", "Á", "K", "", "",
+      "", "L", "E", "G", "U", "T", "Ó", "B", "B", "I",
+      "E", "R", "E", "D", "M", "É", "N", "Y", "E", "K",
+      "", "", "J", "Á", "T", "SZ", "M", "A", "", "",
+      "", "B", "E", "T", "Ö", "L", "T", "É", "S", "E",
+      "", "", "A", "", "J", "Á", "T", "É", "K", "",
+      "", "S", "Z", "A", "B", "Á", "LY", "A", "I", "",
+      "", "", "A", "", "J", "Á", "T", "É", "K", "",
+      "", "", "N", "É", "V", "J", "E", "GY", "E", ""];
+
     cv_menu.width = 312;
     cv_menu.height = 434;
 
@@ -35,7 +35,7 @@ function letterstobg() {
       for (var col = 0; col < 10; col++) {
         let index = row * 10 + col;
         let letter;
-        if (captions[index] !== ""){
+        if (captions[index] !== "") {
           letter = captions[index];
           ctx.fillStyle = "#707561";
           if (wstart < 0)
@@ -43,19 +43,19 @@ function letterstobg() {
         } else {
           letter = letters[index];
           ctx.fillStyle = "rgba(128,133,113,0.25)";
-          if (wstart >= 0){
+          if (wstart >= 0) {
             wlength = col - wstart;
           }
-        }  
-        if (col === 9 && wstart >= 0 && wlength === 0){
+        }
+        if (col === 9 && wstart >= 0 && wlength === 0) {
           wlength = 10 - wstart;
         }
 
         /* 2. paraméter: horizontális, 3. paraméter: vertikális pozíció */
         ctx.fillText(letter, 31 * col + 17, 31 * row + 23, 40);
-        
-        if (wlength > 0){
-          drawWordRect(ctx, row, wstart, wlength, (row % 4 === 0 || row %4 === 1 ? true : false) );
+
+        if (wlength > 0) {
+          drawWordRect(ctx, row, wstart, wlength, (row % 4 === 0 || row % 4 === 1 ? true : false));
           wlength = 0;
           wstart = -1;
         }
@@ -102,18 +102,18 @@ function drawWordRect(ctx, line, startpos, length, altcolor) {
 
   ctx.beginPath();
   ctx.lineWidth = 1.5;
-  
+
   starty = starty + 2;
   ctx.setLineDash([4, 2]);
-  
-  if (altcolor){
+
+  if (altcolor) {
     ctx.strokeStyle = "rgb(108, 168, 83)";
   } else {
     ctx.strokeStyle = "rgb(219, 50, 50)";
-  }  
-    
+  }
+
   ctx.rect(startx, starty, widthx, widthy);
-  
+
   ctx.stroke();
 }
 
@@ -121,44 +121,102 @@ function getfilename() {
   var if_loadgame = document.getElementById("pageform:if_loadgame");
   if (if_loadgame !== null) {
     var in_filename = document.getElementById("in_filename");
-    if (in_filename !== null){
+    if (in_filename !== null) {
       if_loadgame.onchange = function () {
-        if (this.files[0]){
+        if (this.files[0]) {
           in_filename.value = this.files[0].name;
         } else {
           in_filename.value = "";
-        }  
-      };                                  
+        }
+      };
     }
-  }  
+  }
 }
 
-function fullscreen() {
-    var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
-        (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
-        (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
-        (document.msFullscreenElement && document.msFullscreenElement !== null);
+function switchFullScreen() {
+  var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+          (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+          (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+          (document.msFullscreenElement && document.msFullscreenElement !== null);
 
-    var docElm = document.documentElement;
-    if (!isInFullScreen) {
-        if (docElm.requestFullscreen) {
-            docElm.requestFullscreen();
-        } else if (docElm.mozRequestFullScreen) {
-            docElm.mozRequestFullScreen();
-        } else if (docElm.webkitRequestFullScreen) {
-            docElm.webkitRequestFullScreen();
-        } else if (docElm.msRequestFullscreen) {
-            docElm.msRequestFullscreen();
-        }
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        }
+  var docElm = document.documentElement;
+  var a_fullscreen = document.getElementById("a_fullscreen");
+  
+  console.log(a_fullscreen === null);
+  if (a_fullscreen !== null)
+    console.log(a_fullscreen.innerHTML);
+  
+  if (!isInFullScreen) {
+    if (docElm.requestFullscreen) {
+      docElm.requestFullscreen();
+    } else if (docElm.mozRequestFullScreen) {
+      docElm.mozRequestFullScreen();
+    } else if (docElm.webkitRequestFullScreen) {
+      docElm.webkitRequestFullScreen();
+    } else if (docElm.msRequestFullscreen) {
+      docElm.msRequestFullscreen();
     }
+    a_fullscreen.innerHTML = "Kilépés a teljes képernyőből";
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+    a_fullscreen.innerHTML = "Váltás teljes képernyőre";
+  }
+}
+
+function addFSEventListener() {
+  document.addEventListener('fullscreenchange', exitHandler);
+  document.addEventListener('webkitfullscreenchange', exitHandler);
+  document.addEventListener('mozfullscreenchange', exitHandler);
+  document.addEventListener('MSFullscreenChange', exitHandler);
+}
+
+function exitHandler() {
+  var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+          (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+          (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+          (document.msFullscreenElement && document.msFullscreenElement !== null);
+
+  var a_fullscreen = document.getElementById("a_fullscreen");
+  if (!isInFullScreen) {
+    a_fullscreen.innerHTML = "Váltás teljes képernyőre";
+  } else {
+    a_fullscreen.innerHTML = "Kilépés a teljes képernyőből";
+  }
+}    
+
+//function setFSLabel() {
+//  var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+//          (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+//          (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+//          (document.msFullscreenElement && document.msFullscreenElement !== null);
+//
+//  var a_fullscreen = document.getElementById("a_fullscreen");
+//  if (!isInFullScreen) {
+//    a_fullscreen.innerHTML = "Váltás teljes képernyőre";
+//  } else {
+//    a_fullscreen.innerHTML = "Kilépés a teljes képernyőből";
+//  }
+//}
+
+function setUrlStyle() {
+  var x = document.URL;
+  console.log(x);
+  console.log(x.startsWith("http:"));
+  console.log(x.includes("localhost"));
+  var div_sslurl = document.getElementById("a_sslurl");
+  if (x.startsWith("https")){
+    div_sslurl.style.display = "none"; 
+  }
+  if (x.includes("localhost")){
+    div_sslurl.style.color = "purple"; 
+  }
+
 }

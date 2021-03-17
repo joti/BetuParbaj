@@ -1,5 +1,13 @@
 # Verziótörténet
 
+## 1.6.0
+*2021-03-18*
+
+* Teljes képernyős nézetre váltás
+* SSL link
+* Saját játékosnév külön keretben kerül megjelenítésre, a Kilépés gomb is ide kerül át
+* Névjegy menü
+
 ## 1.5.0
 *2021-02-24*
 

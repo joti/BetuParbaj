@@ -44,7 +44,7 @@ public class ChatRoom implements Serializable {
   private static final Logger LOGGER = LogManager.getLogger(ChatRoom.class.getName());
   
   public static final boolean ONE_NAME_PER_ROW = true;
-  public static final String[] TESTPLAYERS = {/*"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm", "Ló Szerafin", "Zordonbordon", "Szörnyeteg Lajos"*/};
+  public static final String[] TESTPLAYERS = {/*"Aromó", "Nagy Zoárd", "Mikkamakka", "Bruckner Szigfrid", "Vacskamati", "Maminti", "Dömdödöm", "Ló Szerafin", "Zordonbordon", "Szörnyeteg Lajos", "Gepárd Géza", "Medve Medárd", "Szürkevarjú Szeréna", "Dr. Zirzur"*/};
   public static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm");
 
   private Set<Player> players;
@@ -236,14 +236,19 @@ public class ChatRoom implements Serializable {
   }
   
   public List<String> getNameList(String myName) {
+    return getNameList(myName, false);
+  }
+
+  public List<String> getNameList(String myName, boolean exclMyName) {
     List<String> namesList = new LinkedList<>();
     String myNameExt = null;
 
     for (Player player : players) {
       String name = player.getName();
-      if (name.equals(myName))
-        myNameExt = name + " (én)";
-      else
+      if (name.equals(myName)) {
+        if (!exclMyName)
+          myNameExt = name + " (én)";
+      } else
         namesList.add(name);
     }
 
@@ -252,7 +257,7 @@ public class ChatRoom implements Serializable {
       namesList.add(0, myNameExt);
     return namesList;
   }
-
+  
   public String getNameListString(String myName) {
     String namesString = "";
     List<String> namesList = getNameList(myName);

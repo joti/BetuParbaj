@@ -169,6 +169,10 @@ public class LoginData implements Serializable {
     return chatRoom.getNameList(name);
   }
 
+  public List<String> getNameList(boolean exclMyName) {
+    return chatRoom.getNameList(name, exclMyName);
+  }
+
   public String getNameListString() {
     return chatRoom.getNameListString(name);
   }

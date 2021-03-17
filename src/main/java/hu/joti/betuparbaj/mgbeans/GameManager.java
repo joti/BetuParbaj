@@ -63,7 +63,7 @@ public class GameManager implements Serializable {
   private int myPosition;
 
   // menü (korábbi): 0 - főmenü, 1 - megnyitott játékok, 2 - folyamatban lévő játékok, 3 - befejeződött játékok, 4 - játékszabályok, 5 - szótár, 7 - admin oldal
-  // menü (új):      0 - főmenü, 1 - megnyitott játékok, 2 - folyamatban lévő játékok, 3 - befejeződött játékok, 4 - mentett játék, 5 - játékszabályok, 7 - admin oldal
+  // menü (új):      0 - főmenü, 1 - megnyitott játékok, 2 - folyamatban lévő játékok, 3 - befejeződött játékok, 4 - mentett játék, 5 - játékszabályok, 6 - névjegy, 7 - admin oldal
   private int menu;
   // befejeződött játék lekérdezésének módja: 1 - eredmény, 2 - setup
   private int gameViewMode;
