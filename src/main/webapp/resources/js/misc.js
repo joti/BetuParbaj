@@ -6,7 +6,10 @@ function letterstobg() {
     var ot_randomletters = document.getElementById("pageform:ot_randomletters");
     var lettersstr = ot_randomletters.innerHTML;
     var letters = lettersstr.split(".");
-    var captions = ["", "Ú", "J", "", "J", "Á", "T", "SZ", "M", "A",
+    var captions = [
+      "", "", "A", "", "J", "Á", "T", "É", "K", "",
+      "", "S", "Z", "A", "B", "Á", "LY", "A", "I", "",
+      "", "Ú", "J", "", "J", "Á", "T", "SZ", "M", "A",
       "", "I", "N", "D", "Í", "T", "Á", "S", "A", "",
       "", "", "J", "Á", "T", "SZ", "M", "A", "", "",
       "", "F", "O", "LY", "T", "A", "T", "Á", "S", "A",
@@ -16,8 +19,6 @@ function letterstobg() {
       "E", "R", "E", "D", "M", "É", "N", "Y", "E", "K",
       "", "", "J", "Á", "T", "SZ", "M", "A", "", "",
       "", "B", "E", "T", "Ö", "L", "T", "É", "S", "E",
-      "", "", "A", "", "J", "Á", "T", "É", "K", "",
-      "", "S", "Z", "A", "B", "Á", "LY", "A", "I", "",
       "", "", "A", "", "J", "Á", "T", "É", "K", "",
       "", "", "N", "É", "V", "J", "E", "GY", "E", ""];
 

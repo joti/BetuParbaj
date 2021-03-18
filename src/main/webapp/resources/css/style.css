@@ -21,6 +21,10 @@ a:visited {
   color: #919b55;
 }
 
+p:empty{
+  display: none;
+}
+
 input{
   outline: none;
   box-shadow: none;
