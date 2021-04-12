@@ -459,9 +459,15 @@ public class Game implements Serializable {
       gameHist += (board.getPlayer().isActive() ? "." : "?");
     }
     gameHist += ":";
-    if (turn >= 0)
+    if (turn >= 0){
       gameHist += ":";
-
+      if (turn < 10)
+        gameHist += "0" + turn;
+      else
+        gameHist += turn;
+      gameHist += ":";
+    }
+      
     for (int i = 0; i < turn; i++) {
       if (i > 0)
         gameHist += ",";

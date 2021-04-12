@@ -38,6 +38,7 @@ public class LoginData implements Serializable {
   private boolean admin;
   private Date time;
   private int seconds;
+  private boolean muted;
 
   private static final Logger LOGGER = LogManager.getLogger(LoginData.class.getName());
 
@@ -243,6 +244,14 @@ public class LoginData implements Serializable {
 
   public void setAdmin(boolean admin) {
     this.admin = admin;
+  }
+
+  public boolean isMuted() {
+    return muted;
+  }
+
+  public void setMuted(boolean muted) {
+    this.muted = muted;
   }
   
 }

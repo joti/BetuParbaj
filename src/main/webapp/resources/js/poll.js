@@ -1,3 +1,5 @@
+var ticking = false;
+
 function menuPoll(xhr, status, args) {
   var ita_prevnames = document.getElementById("pageform:ita_names");
   if (ita_prevnames !== null) {
@@ -121,15 +123,25 @@ function mainPoll(xhr, status, args) {
 
     if (ot_prevturnsec !== null) {
       if (ot_prevturnsec.innerHTML !== ot_newturnsec.innerHTML) {
+        var prevval = ot_prevturnsec.innerHTML;
         ot_prevturnsec.innerHTML = ot_newturnsec.innerHTML;
         if ((ot_playerstate.innerHTML < 1) || (ot_prevturnsec.innerHTML > 999)) {
           ot_prevturnsec.style.display = "none";
+          ticking = false;
         } else {
           ot_prevturnsec.style.display = "block";
           if (ot_playerstate.innerHTML > 2) {
             ot_prevturnsec.style.color = "#dee4b9";
+            if (ticking) {
+//              console.log("STOP TICK");
+              stopSound(29);
+            }
           } else if (ot_prevturnsec.innerHTML < 10) {
             ot_prevturnsec.style.color = "red";
+            if (prevval >= 10){
+              ticking = true;
+              playSound(29);
+            }
           } else {
             ot_prevturnsec.style.color = "#555c23";
           }
@@ -147,8 +159,41 @@ function mainPoll(xhr, status, args) {
 
     if (ot_prevgamehist !== null) {
       if (ot_prevgamehist.innerHTML !== ot_newgamehist.innerHTML) {
+        var last = "";
+        var newlast = "";
+        if (ot_prevgamehist.innerHTML.length > 0)
+          last = (ot_prevgamehist.innerHTML).charAt(ot_prevgamehist.innerHTML.length-1);
+        
+        var pos = ot_prevgamehist.innerHTML.indexOf("::");
+        if (pos > -1){
+          var prevturn = ot_prevgamehist.innerHTML.substring(pos + 2, pos + 4);
+          pos = ot_newgamehist.innerHTML.indexOf("::");
+          var newturn = ot_newgamehist.innerHTML.substring(pos + 2, pos + 4);
+//          console.log("turn " + prevturn + " -> " + newturn);
+          if (newturn !== prevturn){
+            playSound(41);
+          }
+        }  
+        
         ot_prevgamehist.innerHTML = ot_newgamehist.innerHTML;
         needplayrefresh = true;
+
+        if (ot_newgamehist.innerHTML.length > 0)
+          newlast = (ot_newgamehist.innerHTML).charAt(ot_newgamehist.innerHTML.length-1);
+        
+        if (last !== "4" && newlast === "4"){
+          console.log("TIME OVER!");
+          playSound(28);
+        } else if (last === "" && newlast === "}"){
+          console.log("START!");
+          playSound(40);
+        } else if (last !== "+" && last !== "" && newlast === "+"){
+          console.log("WIN!");
+          playSound(73);
+        } else if (last !== "-" && last !== "" && newlast === "-"){
+          console.log("LOSE!");
+          playSound(74);
+        }
 
         if ((ot_newgamehist.innerHTML).charAt(0) === "[")
           needplayendrefresh = true;

@@ -1,5 +1,11 @@
 # Verziótörténet
 
+## 1.7.0
+*2021-04-12*
+
+* Hangeffektek gombnyomásokhoz és a játék különféle eseményeihez
+* Némítás gomb
+
 ## 1.6.0
 *2021-03-18*
 

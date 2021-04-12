@@ -193,20 +193,6 @@ function exitHandler() {
   }
 }    
 
-//function setFSLabel() {
-//  var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
-//          (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
-//          (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
-//          (document.msFullscreenElement && document.msFullscreenElement !== null);
-//
-//  var a_fullscreen = document.getElementById("a_fullscreen");
-//  if (!isInFullScreen) {
-//    a_fullscreen.innerHTML = "Váltás teljes képernyőre";
-//  } else {
-//    a_fullscreen.innerHTML = "Kilépés a teljes képernyőből";
-//  }
-//}
-
 function setUrlStyle() {
   var x = document.URL;
   console.log(x);
@@ -219,5 +205,98 @@ function setUrlStyle() {
   if (x.includes("localhost")){
     div_sslurl.style.color = "purple"; 
   }
+}
 
+function playSound(num){
+  console.log(num);
+  var stopTick = false;
+  var chkTick = false;
+  
+  switch(num) {
+  case 1: au_elem = document.getElementById('au_btnlogin'); break;
+  case 2: au_elem = document.getElementById('au_btnlogout'); break;
+  case 3: au_elem = document.getElementById('au_btnjoin'); break;
+  case 4: au_elem = document.getElementById('au_btnmenu'); break;
+  case 5: au_elem = document.getElementById('au_btnback'); break;
+  case 6: au_elem = document.getElementById('au_btnother'); break;
+  case 20: au_elem = document.getElementById('au_letter'); stopTick = true; break;
+  case 21: au_elem = document.getElementById('au_letter'); break;
+  case 22: au_elem = document.getElementById('au_letterback'); break;
+  case 23: au_elem = document.getElementById('au_letterok'); stopTick = true; break;
+  case 25: au_elem = document.getElementById('au_board'); chkTick = true; break;
+  case 26: au_elem = document.getElementById('au_board1'); break;
+  case 27: au_elem = document.getElementById('au_board2'); chkTick = true; break;
+  case 28: au_elem = document.getElementById('au_timeover'); stopTick = true; break;
+  case 29: au_elem = document.getElementById('au_tick'); break;
+  case 30: au_elem = document.getElementById('au_checkbox'); break;
+  case 31: au_elem = document.getElementById('au_combo1'); break;
+  case 32: au_elem = document.getElementById('au_combo2'); break;
+  case 33: au_elem = document.getElementById('au_btnsub'); break;
+  case 34: au_elem = document.getElementById('au_btnadd'); break;
+  case 37: au_elem = document.getElementById('au_btnopen'); break;
+  case 38: au_elem = document.getElementById('au_btnstart'); break;
+  case 39: au_elem = document.getElementById('au_btndrop'); break;
+  case 40: au_elem = document.getElementById('au_start'); break;
+  case 41: au_elem = document.getElementById('au_newround'); break;
+  case 70: au_elem = document.getElementById('au_wordok'); break;
+  case 71: au_elem = document.getElementById('au_wordnok'); break;
+  case 72: au_elem = document.getElementById('au_btnquit'); stopTick = true; break;
+  case 73: au_elem = document.getElementById('au_win'); stopTick = true; break;
+  case 74: au_elem = document.getElementById('au_lose'); stopTick = true; break;
+  }   
+  console.log(au_elem === null);
+
+  if (chkTick){
+    var ot_gamehist = document.getElementById("pageform:ot_gamehist");
+    if (ot_gamehist !== null) {
+      if (ot_gamehist.innerHTML.length > 1)
+        if ((ot_gamehist.innerHTML).charAt(ot_gamehist.innerHTML.length - 2) === "0")
+          stopTick = true;
+    }
+  }
+
+  if (stopTick){
+    stopSound(29);
+  }  
+  
+  if (au_elem !== null){
+    au_elem.volume = 0.4;
+    au_elem.play();
+  }
+}
+
+function stopSound(num){
+  console.log(num);
+  
+  switch(num) {
+  case 29: au_stop = document.getElementById('au_tick'); break;
+  }   
+  console.log(au_stop === null);
+  if (au_stop !== null){
+    au_stop.pause();
+    au_stop.currentTime = 0;    
+  }
+}
+
+function checkwordSound(){
+  console.log("checkwordSound");
+  im_wordchk = document.getElementById('pageform:im_wordok');
+  if (im_wordchk !== null){
+    playSound(70);
+  } else {
+    im_wordchk = document.getElementById('pageform:im_wordnok');
+    if (im_wordchk !== null){
+      playSound(71);
+    }
+  }
+}
+
+function boardBtnClick(el){
+  if (el !== null){
+    var tick = '\u2713';
+    if (el.innerHTML.includes(tick))
+      playSound(27);
+    else
+      playSound(26);
+  }  
 }

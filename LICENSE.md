@@ -9,6 +9,7 @@ Copyright (c) 2015-2017 Vitor Buzinaro.
 * __Font-awesome free icons__ are used per its [CC BY 4.0 License](https://fontawesome.com/license/free).
 * __Itim font__ is published under the [SIL Open Font License, 1.1](http://scripts.sil.org/OFL);
 Copyright (c) 2015 Cadson Demak, Copyright (c) 2014 Pablo Impallari.
+* __Sound effects__ obtained from [ZapSplat.com](https://www.zapsplat.com/). Attribution required.
 
 ---
 

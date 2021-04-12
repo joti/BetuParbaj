@@ -743,6 +743,7 @@ public class GameManager implements Serializable {
        1 - a játékos betűt rak le
        2 - a játékos betűt választ
        3 - a játékos a többi játékosra / a következő forduló kezdetére vár
+       4 - a játékos kifutott az idejéből és a következő forduló kezdetére vár
      */
     if (getGameState() != 3) {
       return 0;
@@ -753,8 +754,10 @@ public class GameManager implements Serializable {
     }
 
     int turn = game.getTurn();
+    Board board = game.getBoards().get(myPosition);
+    
     if (turn >= 0) {
-      if (game.getBoards().get(myPosition).getTotalLetterCount() < turn) // A játékos még nem rakta le az aktuális betűt
+      if (board.getTotalLetterCount() < turn) // A játékos még nem rakta le az aktuális betűt
       {
         return 1;
       }
@@ -763,7 +766,17 @@ public class GameManager implements Serializable {
         return 2;
       }
     }
+    
+    // A betű elhelyezése nem sikerült időben
+    if (turn > 0 && ( (!game.isRandomPlace() && board.getUnplacedLetters().containsKey(turn)) || (game.isRandomPlace() && board.isRandomPlaced(turn)) ) ) {
+      return 4;
+    }
 
+    // A következő betű kiválasztása nem sikerült időben
+    else if (turn >= 0 && turn < 36 && myPosition == game.getCurrentPlayer() && game.getRandomLetters()[turn] && game.canPlayerSelectLetter()) {
+      return 4;
+    }
+    
     return 3;
   }
 
@@ -789,14 +802,44 @@ public class GameManager implements Serializable {
   public String getGameHistString() {
     String gameHistString = "";
     if (game != null && game.getStartDate() != null) {
-      gameHistString = game.getGameHistString() + "->" + getPlayerState();
+      String needSelectLetter = (myPosition == game.getCurrentPlayer() && game.canPlayerSelectLetter())?"1":"0";
+      gameHistString = game.getGameHistString() + "->" + needSelectLetter + getPlayerState();
       if (game.getTurn() == -1) {
         gameHistString += "{" + getRemainingTurnSec() + "}";
+      }
+      if (game.getEndDate() != null){
+        gameHistString += "=" + getPlayerPlaceString();
       }
     }
     return gameHistString;
   }
 
+  public String getPlayerPlaceString(){
+    if (game == null || game.getEndDate() == null)
+      return "";
+    
+    int count = 0;
+    String placeString = "";
+    boolean win = false;
+    
+    for (Board b : game.getBoards()) {
+      if (b.getPlace() == 1)
+        count++;
+      if (b.getPlayer().getName().equals(loginData.getName()))
+        placeString += b.getPlace();
+    }
+    if (placeString.equals("1")){
+      if (count < game.getBoards().size())
+        win = true;
+    }
+    if (win)
+      placeString += "+";
+    else
+      placeString += "-";
+
+    return placeString;
+  }
+  
   public String getBoardHitsString() {
     if (game != null && game.getEndDate() != null && myPosition >= 0) {
       Board board = game.getBoards().get(myPosition);
@@ -828,7 +871,7 @@ public class GameManager implements Serializable {
       } else if (game.getNumberOfPlayers() > 1) {
         msg = String.format("\n\n\nA játék véget ért.\n\nA győztes:\n\n%s", name);
       } else {
-        msg = "\n\n\n\n\n\nA játék véget ért.";
+        msg = "\n\n\n\n\nA játék véget ért.";
       }
     } else {
       int turn = game.getTurn();
@@ -891,7 +934,7 @@ public class GameManager implements Serializable {
         if (game.getPreselectedLetter().isEmpty())
           msg = "\nVálaszd ki\na következő betűt!";
         else
-          msg = "\n\n\nA kiválasztott betű:";
+          msg = "\n\nA kiválasztott betű:";
       } else {
         // Kifutottunk az időből
         if (intermission) {
