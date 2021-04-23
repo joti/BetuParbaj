@@ -271,7 +271,7 @@
                           <div id="aboutarea" class="gamearea" style="position: absolute; top: 37px; width: 547px">
                             <div id="aboutcontent" class="aboutscroll" style="height:422px;overflow-y:auto;width:547px;">
                               <div class="abouttext">
-                                <span class="abouttitletext">Betűpárbaj v1.7.0<br/></span>
+                                <span class="abouttitletext">Betűpárbaj v1.7.1<br/></span>
                                 <div style="position: absolute; top: 55px; left: 30px; right: 30px;">
                                   <a class="footertext" style="margin-left: 10px;" href="https://github.com/joti/BetuParbaj/blob/master/CHANGELOG.md" target="_blank">Verziótörténet</a>
                                 </div>
@@ -843,16 +843,16 @@
                             <h:outputText id="ot_gamesetup" style="display:none"/>
 
                             <h:panelGroup id="pg_gamesetupbuttons" style="position: absolute; top: 468px; text-align: left;">
-                              <p:commandButton class="gamebutton fivecellbutton" value="Játszma eldobása" action="#{gameManager.dropGame()}" onclick="playSound(39);"
+                              <p:commandButton class="gamebutton fivecellbutton" value="Játszma eldobása" action="#{gameManager.dropGame()}" onclick="hideTooltips(); playSound(39);"
                                                rendered="#{gameManager.game.boards.size() eq 1 and gameManager.game.endDate == null}" 
                                                update="pg_menu"/>
-                              <p:commandButton class="gamebutton sixcellbutton" value="Játszma elhagyása" action="#{gameManager.quitGame(true)}" onclick="playSound(39);"
+                              <p:commandButton class="gamebutton sixcellbutton" value="Játszma elhagyása" action="#{gameManager.quitGame(true)}" onclick="hideTooltips(); playSound(39);"
                                                rendered="#{gameManager.game.boards.size() gt 1 and gameManager.game.startDate == null}" 
                                                update="pg_menu"/>
                               <p:commandButton class="gamebutton sixcellbutton" value="Játszma megnyitása" action="#{gameManager.openGame()}" onclick="playSound(37);"
                                                rendered="#{gameManager.game.openDate == null}"
                                                update="pg_main"/>
-                              <p:commandButton class="gamebutton fivecellbutton" value="Játék indítása" action="#{gameManager.startGame()}" onclick="playSound(38);" 
+                              <p:commandButton class="gamebutton fivecellbutton" value="Játék indítása" action="#{gameManager.startGame()}" onclick="hideTooltips(); playSound(38);" 
                                                rendered="#{(gameManager.game.openDate != null or gameManager.game.minPlayers eq 1) and gameManager.game.startDate == null}" 
                                                disabled="#{gameManager.game.numberOfPlayers lt gameManager.game.minPlayers or gameManager.myGamePos ne gameManager.game.adminPlayerPos}"
                                                update="pg_main"/>
@@ -1074,6 +1074,8 @@
                                 <p:confirm header="Megerősítés" message="Biztosan eltávolítod a játszmát?"/>
                               </p:commandButton>
                             </h:panelGroup>
+                            <script>hideTooltips();</script>
+                              
                           </h:panelGroup> <!-- pg_gameplay -->
                           <h:outputText id="ot_gamehist" style="display:none; position: absolute; top: -15px; left: 5px;"/>
                           <h:outputText id="ot_boardhits" style="display:none"/>

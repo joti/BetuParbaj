@@ -1,5 +1,10 @@
 # Verziótörténet
 
+## 1.7.1
+*2021-04-23*
+
+* Javítás: a játszma indulásakor a képernyőn ragadhattak tooltipek
+
 ## 1.7.0
 *2021-04-12*
 

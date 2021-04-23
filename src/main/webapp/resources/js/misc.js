@@ -300,3 +300,10 @@ function boardBtnClick(el){
       playSound(26);
   }  
 }
+
+function hideTooltips(){
+  var elems = document.getElementsByClassName("tooltiptext");
+  for(var i = 0; i < elems.length; i++){
+    elems[i].style.display = "none";
+  }
+}
