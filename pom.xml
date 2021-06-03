@@ -17,7 +17,7 @@
     <cdi.version>1.2</cdi.version>
     <jstl.version>1.2</jstl.version>
     <mojarra.version>2.4.0</mojarra.version>
-    <primefaces.version>5.3</primefaces.version>
+    <primefaces.version>6.0</primefaces.version>
     <log4j.version>2.14.1</log4j.version>
     <postgresql.version>42.2.1</postgresql.version>
   </properties>
