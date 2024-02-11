@@ -6,6 +6,7 @@ import hu.joti.betuparbaj.model.Word;
 import hu.joti.betuparbaj.model.WordDao;
 import hu.joti.betuparbaj.model.WordDaoTxt;
 import hu.joti.betuparbaj.model.WordDaoPq;
+import hu.joti.betuparbaj.model.WordDaoMysql;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +41,9 @@ public class GlossaryManager implements Serializable{
     
     words = new TreeSet<>();
     easyVowelWords = new TreeMap<>();
+    System.out.println("GlossaryManager konstruktor");
 
-    loadWords();
+    loadWords(false);
   }
 
   public final void loadWords(){
@@ -54,10 +56,17 @@ public class GlossaryManager implements Serializable{
     List<Word> wordList = null;
             
     if (!forceTxt){
-      wordDao = new WordDaoPq();
+      wordDao = new WordDaoMysql();
       wordList = wordDao.findAllWords();
+      System.out.println(wordList == null);
+              
+      if (wordList == null){
+        wordDao = new WordDaoPq();
+        wordList = wordDao.findAllWords();
+      }
     }  
 
+    System.out.println(wordList == null);
     if (wordList == null){
       wordDao = new WordDaoTxt();
       wordList = wordDao.findAllWords();
@@ -105,14 +114,14 @@ public class GlossaryManager implements Serializable{
   }
 
   public int saveWord(String word) {
-    WordDaoPq wordDaoPq = new WordDaoPq();
-    int result = wordDaoPq.saveWord(word);
+    WordDaoMysql wordDaoMysql = new WordDaoMysql();
+    int result = wordDaoMysql.saveWord(word);
     return result;
   }
 
   public int deleteWord(String word) {
-    WordDaoPq wordDaoPq = new WordDaoPq();
-    int result = wordDaoPq.deleteWord(word);
+    WordDaoMysql wordDaoMysql = new WordDaoMysql();
+    int result = wordDaoMysql.deleteWord(word);
     return result;
   }
   
@@ -131,8 +140,8 @@ public class GlossaryManager implements Serializable{
     
     Collections.sort(wordList);
     
-    WordDaoPq wordDaoPq = new WordDaoPq();
-    wordDaoPq.saveAllWords(wordList);
+    WordDaoMysql wordDaoMysql = new WordDaoMysql();
+    wordDaoMysql.saveAllWords(wordList);
   } 
 
   public void saveWordsToFile(){
