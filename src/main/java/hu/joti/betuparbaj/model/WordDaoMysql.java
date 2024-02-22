@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class WordDaoMysql implements WordDao, Serializable{
 
-  private static final Logger LOGGER = LogManager.getLogger(WordDaoPq.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(WordDaoMysql.class.getName());
   private static final int WORD_LIMIT = 20;
 
   private static Connection getConnection() {

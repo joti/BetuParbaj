@@ -5,7 +5,6 @@ import hu.joti.betuparbaj.model.ScoringMode;
 import hu.joti.betuparbaj.model.Word;
 import hu.joti.betuparbaj.model.WordDao;
 import hu.joti.betuparbaj.model.WordDaoTxt;
-import hu.joti.betuparbaj.model.WordDaoPq;
 import hu.joti.betuparbaj.model.WordDaoMysql;
 import java.io.Serializable;
 import java.util.List;
@@ -59,11 +58,6 @@ public class GlossaryManager implements Serializable{
       wordDao = new WordDaoMysql();
       wordList = wordDao.findAllWords();
       System.out.println(wordList == null);
-              
-      if (wordList == null){
-        wordDao = new WordDaoPq();
-        wordList = wordDao.findAllWords();
-      }
     }  
 
     System.out.println(wordList == null);
