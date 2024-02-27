@@ -193,20 +193,6 @@ function exitHandler() {
   }
 }    
 
-function setUrlStyle() {
-  var x = document.URL;
-  console.log(x);
-  console.log(x.startsWith("http:"));
-  console.log(x.includes("localhost"));
-  var div_sslurl = document.getElementById("a_sslurl");
-  if (x.startsWith("https")){
-    div_sslurl.style.display = "none"; 
-  }
-  if (x.includes("localhost")){
-    div_sslurl.style.color = "purple"; 
-  }
-}
-
 function playSound(num){
   console.log(num);
   var stopTick = false;

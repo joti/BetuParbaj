@@ -1,5 +1,11 @@
 # Verziótörténet
 
+## 1.8.0
+*2024-02-26*
+
+* A játék új szerverre költözik
+
+
 ## 1.7.1
 *2021-04-23*
 
