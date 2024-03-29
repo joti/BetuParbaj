@@ -1054,6 +1054,8 @@
                                                update="pg_menu">
                                 <p:confirm header="Megerősítés" message="Biztosan eltávolítod a játszmát?"/>
                               </p:commandButton>
+                              <p:commandButton id="btn_addtofingames" class="gamebutton sixcellbutton" value="Legutóbbiakhoz adás" action="#{gameManager.addGameToFinGames()}" onclick="playSound(6);"
+                                               rendered="#{gameManager.game.endDate != null and gameManager.game.uploaded == true and loginData.admin == true}" ajax="false"/>
                             </h:panelGroup>
                             <script>hideTooltips();</script>
                               

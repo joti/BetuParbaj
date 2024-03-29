@@ -24,6 +24,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -290,15 +291,18 @@ public class GameManager implements Serializable {
   }
 
   public List<Game> getGamesFromLobby() {
+    List<Game> games = null;
     switch (getLobbyMode()) {
       case 1:
-        return lobby.getGamesInLobby();
+        games = lobby.getGamesInLobby();
+        break;
       case 2:
-        return lobby.getGamesInProgress();
+        games = lobby.getGamesInProgress();
+        break;
       case 3:
-        return lobby.getGamesFinished();
+        games = lobby.getGamesFinished();
     }
-    return null;
+    return games;
   }
 
   public String getGamesInLobbyString() {
@@ -1363,6 +1367,10 @@ public class GameManager implements Serializable {
     }
   }
 
+  public void addGameToFinGames(){
+    lobby.addToFinished(game);
+  }
+  
   public String getFileName() {
     LOGGER.info(file == null);
     if (file != null) {

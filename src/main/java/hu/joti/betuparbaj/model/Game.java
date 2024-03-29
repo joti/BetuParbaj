@@ -1026,5 +1026,19 @@ public class Game implements Serializable {
   public void setOpeningPlayerName(String openingPlayerName) {
     this.openingPlayerName = openingPlayerName;
   }
+
+//  @Override
+//  public int compareTo(Game o) {
+//    if (endDate == null && o.endDate != null)
+//      return 1;
+//    else if (endDate != null && o.endDate == null)
+//      return -1;
+//    else if (endDate != null && o.endDate != null)
+//      return (int)(o.endDate.getTime() - endDate.getTime());
+//    else {
+//      return o.id - id;
+//    }
+//      
+//  }
   
 }

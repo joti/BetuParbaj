@@ -1,5 +1,6 @@
 package hu.joti.betuparbaj.mgbeans;
 
+import comparators.FinishedGameComparator;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,7 @@ import hu.joti.betuparbaj.model.Player;
 import java.util.Iterator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -73,8 +75,14 @@ public class Lobby implements Serializable {
   public void addToFinished(Game game) {
     gamesInProgress.remove(game);
     gamesFinished.add(game);
-    if (gamesFinished.size() > FINISHEDGAMES_MAXNUM) {
-      gamesFinished.remove(0);
+
+    Collections.sort(gamesFinished, new FinishedGameComparator());
+    for (Game game1 : gamesFinished) {
+      System.out.println(game1.getId() + " - " + game1.getName());
+    }
+    
+    while (gamesFinished.size() > FINISHEDGAMES_MAXNUM) {
+      gamesFinished.remove(FINISHEDGAMES_MAXNUM);
     }
   }
 
