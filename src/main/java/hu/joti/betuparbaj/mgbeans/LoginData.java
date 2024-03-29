@@ -72,8 +72,8 @@ public class LoginData implements Serializable {
     } else if (chatRoom.getPlayerNames().contains(name)) {
       error = "Ez a név már foglalt.";
     } else {
-      if (name.contains("::")){
-        String[] parts = name.split("::");
+      if (name.contains(":-:")){
+        String[] parts = name.split(":-:");
         if (isAdminLogin(parts[0])){
           admin = true;
           name = parts[1];
