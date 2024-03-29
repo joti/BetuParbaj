@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package comparators;
+package hu.joti.betuparbaj.comparators;
 
 import hu.joti.betuparbaj.model.Game;
 import java.util.Comparator;

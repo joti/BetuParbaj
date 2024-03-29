@@ -1,6 +1,6 @@
 package hu.joti.betuparbaj.mgbeans;
 
-import comparators.FinishedGameComparator;
+import hu.joti.betuparbaj.comparators.FinishedGameComparator;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
