@@ -40,7 +40,9 @@ public class GlossaryManager implements Serializable{
     
     words = new TreeSet<>();
     easyVowelWords = new TreeMap<>();
-    System.out.println("GlossaryManager konstruktor");
+    
+    String env = System.getProperty("app.env");
+    LOGGER.info("Environment: " + env);
 
     loadWords(false);
   }

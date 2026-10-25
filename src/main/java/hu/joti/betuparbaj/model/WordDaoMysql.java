@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -240,7 +241,7 @@ public class WordDaoMysql implements WordDao, Serializable{
         pstmt = conn.prepareStatement("insert into glossary (gl_category, gl_init, gl_words) values (?, ?, ?);");
         pstmt.setInt(1, 1);
         pstmt.setString(2, wordToSave.substring(0, 2));
-        pstmt.setString(3, glwords);
+        pstmt.setString(3, wordToSave);
         pstmt.executeUpdate();
       }
 
@@ -343,6 +344,58 @@ public class WordDaoMysql implements WordDao, Serializable{
     }
     return 0;
 
+  }
+
+  public int saveEvent(String eventType, Date eventTime, String details) {
+
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+
+    class Event {
+
+      private Date loginTime; 
+      private String playerAlias;
+
+      public Event() {
+      }
+
+      public Event(Date loginTime, String name) {
+        this.loginTime = loginTime;
+        this.playerAlias = name;
+      }
+    }
+
+    /*try {
+      conn = getConnection();
+      
+      pstmt = conn.prepareStatement("insert into login (gl_category, gl_init, gl_words) values (?, ?, ?);");
+      pstmt.setInt(1, 1);
+      pstmt.setString(2, wordToSave.substring(0, 2));
+      pstmt.setString(3, glwords);
+      pstmt.executeUpdate();
+      
+      
+    } catch (SQLException ex) {
+      LOGGER.error(ex);
+      return 3;
+    } finally {
+      if (pstmt != null) {
+        try {
+          pstmt.close();
+        } catch (SQLException ex) {
+          LOGGER.error(ex);
+        }
+      }
+      if (conn != null) {
+        try {
+          conn.close();
+        } catch (SQLException ex) {
+          LOGGER.error(ex);
+        }
+      }
+    }*/
+    return 0;
+    
   }
   
 }

@@ -17,5 +17,6 @@ buildNumber.properties
 faces-config.NavData
 
 ### Others ###
+/.codex/
 notes/
 src/main/webapp/META-INF/context.xml

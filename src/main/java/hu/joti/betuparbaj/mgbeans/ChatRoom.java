@@ -17,6 +17,7 @@ import hu.joti.betuparbaj.model.Message;
 import hu.joti.betuparbaj.model.Player;
 import hu.joti.betuparbaj.model.RndLetterMode;
 import hu.joti.betuparbaj.model.ScoringMode;
+import hu.joti.betuparbaj.model.WordDaoMysql;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
@@ -155,6 +156,10 @@ public class ChatRoom implements Serializable {
     m.setTime(loginTime);
     messages.add(m);
     Collections.sort(messages);
+
+//    WordDaoMysql wordDaoMysql = new WordDaoMysql();
+//    wordDaoMysql.saveLogin(name, loginTime);
+
   }
 
   public void removePlayer(String name) {

@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import hu.joti.betuparbaj.model.Message;
 import hu.joti.betuparbaj.model.Player;
+import hu.joti.betuparbaj.model.WordDaoMysql;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -89,7 +90,9 @@ public class LoginData implements Serializable {
       rulemode = false;
       time = new Date();
       seconds = 0;
+
       chatRoom.addPlayer(name, time);
+
     }
   }
 

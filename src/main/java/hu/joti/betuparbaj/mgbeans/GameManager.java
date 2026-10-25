@@ -6,6 +6,7 @@
 package hu.joti.betuparbaj.mgbeans;
 
 import hu.joti.betuparbaj.model.Board;
+import hu.joti.betuparbaj.model.GameArchive;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,19 +21,20 @@ import hu.joti.betuparbaj.model.RndLetterMode;
 import hu.joti.betuparbaj.model.ScoringMode;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
+
+
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipException;
+
+
+
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
+import javax.faces.application.FacesMessage;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import org.apache.logging.log4j.LogManager;
@@ -1287,83 +1289,64 @@ public class GameManager implements Serializable {
   }
 
   public void saveGame() {
-    if (game == null)
+    if (game == null || game.getEndDate() == null || loginData == null || !loginData.isEntered()) {
       return;
-
-    LOGGER.info("Saving game...");
-
-    String fileName = game.getName().toLowerCase().replaceAll("á", "a").replaceAll("é", "e").replaceAll("í", "i").
-            replaceAll("ó", "o").replaceAll("ö", "o").replaceAll("ő", "o").replaceAll("ú", "u").replaceAll("ü", "u").replaceAll("ű", "u").replaceAll(" ", "_").replaceAll("/", "_");
-    fileName += ".bpj";
-    LOGGER.info(fileName);
-
-    FacesContext fc = FacesContext.getCurrentInstance();
-    HttpServletResponse response = (HttpServletResponse) fc.getExternalContext().getResponse();
-
-    response.reset();
-    response.setContentType("text/plain");
-    /*response.setContentLength(contentLength);*/
-    response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-
-    OutputStream output;
-
-    try {
-      output = response.getOutputStream();
-
-      GZIPOutputStream gz = new GZIPOutputStream(output);
-      ObjectOutputStream oos = new ObjectOutputStream(gz);
-
-      oos.writeObject(game);
-      oos.flush();
-      oos.close();
-    } catch (IOException ex) {
-      LOGGER.error("Error while saving.");
     }
 
-    LOGGER.info(response.getContentType());
-    fc.responseComplete();
+    FacesContext context = FacesContext.getCurrentInstance();
+    byte[] archive;
+
+    // Előbb elkészítjük a mentést, hogy hiba esetén még ne kezdődjön el a HTTP-válasz.
+    try {
+      archive = GameArchive.write(game);
+    } catch (IOException ex) {
+      LOGGER.error("Játszmamentés sikertelen.", ex);
+      context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+              "A játszmamentés nem készíthető el.", null));
+      return;
+    }
+
+    String fileName = game.getName().toLowerCase(java.util.Locale.ROOT)
+            .replaceAll("[^a-z0-9_-]", "_");
+    if (fileName.isEmpty()) {
+      fileName = "jatszma";
+    }
+
+    HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+    response.reset();
+    response.setContentType("application/octet-stream");
+    response.setContentLength(archive.length);
+    response.setHeader("X-Content-Type-Options", "nosniff");
+    response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + ".bpj\"");
+
+    try (OutputStream output = response.getOutputStream()) {
+      output.write(archive);
+    } catch (IOException ex) {
+      LOGGER.error("Játszmamentés átvitele sikertelen.", ex);
+    }
+
+    context.responseComplete();
   }
 
   public void loadGame() {
-    String fileName = "";
-    if (file != null) {
-      fileName = file.getName();
-    }
-
-    LOGGER.info("Reading uploaded file: " + fileName);
-
-    InputStream input = null;
-    String fileContent;
     inputGame = null;
 
-    try {
-      input = file.getInputStream();
-
-      GZIPInputStream gis = new GZIPInputStream(input);
-      ObjectInputStream ois = new ObjectInputStream(gis);
-
-      inputGame = (Game) ois.readObject();
-      ois.close();
-
-      if (inputGame == null)
-        LOGGER.info("Játék null");
-      else
-        LOGGER.info("Játék neve: " + inputGame.getName());
-
-    } catch (ZipException ex) {
-      LOGGER.info("Hiba: ZipException");
-    } catch (IOException e) {
-      LOGGER.info("Hiba: IOException");
-    } catch (ClassNotFoundException ex) {
-      LOGGER.info("Hiba: ClassNotFound");
+    // A bejelentkezést itt is ellenőrizzük, nem csak a felületen és a validátorban.
+    if (loginData == null || !loginData.isEntered() || file == null) {
+      return;
     }
 
-    if (inputGame != null) {
-      LOGGER.info("Játék vége: " + inputGame.getEndDate());
+    try (InputStream input = file.getInputStream()) {
+      inputGame = GameArchive.read(input, loginData.isAdmin());
       menu = 0;
-      file = null;
-      inputGame.setUploaded(true);
       viewGame(inputGame);
+    } catch (IOException ex) {
+      LOGGER.warn("Játszmafeltöltés elutasítva: {}", ex.getClass().getSimpleName());
+      FacesContext.getCurrentInstance().addMessage("pageform:if_loadgame",
+              new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                      "A fájl nem megfelelő. Régi mentést csak admin tölthet be.", null));
+    } finally {
+      file = null;
     }
   }
 
